@@ -37,7 +37,25 @@ export default function Assignments() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tabs = ['All', 'Active', 'Draft', 'Archived'];
-  const filteredAssignments = mockAssignments.filter(a => activeTab === 'All' || a.status === activeTab);
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const filteredAssignments = mockAssignments.filter((assignment) => {
+    const matchesTab = activeTab === 'All' || assignment.status === activeTab;
+    if (!matchesTab) return false;
+
+    if (!normalizedSearch) return true;
+
+    const queryText = [
+      assignment.title,
+      assignment.description,
+      assignment.status,
+      ...assignment.tags,
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    return queryText.includes(normalizedSearch);
+  });
 
   return (
     <div className="w-full max-w-[1200px] mx-auto text-white">
