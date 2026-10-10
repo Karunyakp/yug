@@ -10,6 +10,7 @@ export default function Login() {
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
+    localStorage.setItem('isAuthenticated', 'true');
     navigate('/');
   };
 

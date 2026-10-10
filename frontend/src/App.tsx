@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { Shield, LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command, UserCircle2, Gem } from 'lucide-react';
 
 import Dashboard from './components/Dashboard';
@@ -30,7 +30,7 @@ const Sidebar = () => {
           </div>
           <div>
             <h1 className="text-white font-bold text-xl leading-none">CodeGuard AI</h1>
-            <span className="text-[10px] text-gray-500 font-semibold tracking-wider">MYNTRA EDITION</span>
+            <span className="text-[10px] text-gray-500 font-semibold tracking-wider">PRO EDITION</span>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ const Sidebar = () => {
             <h3 className="text-white font-medium text-sm">Upgrade to Pro</h3>
           </div>
           <p className="text-xs text-gray-400 mb-4 relative z-10 leading-relaxed">
-            Unlimited AST comparisons, bulk export, Myntra-grade reports.
+            Unlimited AST comparisons, bulk export, enterprise-grade reports.
           </p>
           <button className="w-full py-2 px-4 rounded-lg border border-gray-600 text-sm font-medium text-white hover:bg-white/5 transition-colors relative z-10">
             Upgrade now
@@ -157,22 +157,51 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a10] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-400 font-medium">Loading CodeGuard AI...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         
-        <Route path="/" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/features" element={<Layout><Features /></Layout>} />
-        <Route path="/projects" element={<Layout><Projects /></Layout>} />
-        <Route path="/assignments" element={<Layout><Assignments /></Layout>} />
-        <Route path="/submissions" element={<Layout><SubmissionsList /></Layout>} />
-        <Route path="/compare" element={<Layout><Compare /></Layout>} />
-        <Route path="/reports" element={<Layout><Reports /></Layout>} />
-        <Route path="/users" element={<Layout><UsersPage /></Layout>} />
-        <Route path="/profile" element={<Layout><Profile /></Layout>} />
-        <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+        <Route path="/" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
+        <Route path="/features" element={<ProtectedRoute><Layout><Features /></Layout></ProtectedRoute>} />
+        <Route path="/projects" element={<ProtectedRoute><Layout><Projects /></Layout></ProtectedRoute>} />
+        <Route path="/assignments" element={<ProtectedRoute><Layout><Assignments /></Layout></ProtectedRoute>} />
+        <Route path="/submissions" element={<ProtectedRoute><Layout><SubmissionsList /></Layout></ProtectedRoute>} />
+        <Route path="/compare" element={<ProtectedRoute><Layout><Compare /></Layout></ProtectedRoute>} />
+        <Route path="/reports" element={<ProtectedRoute><Layout><Reports /></Layout></ProtectedRoute>} />
+        <Route path="/users" element={<ProtectedRoute><Layout><UsersPage /></Layout></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Layout><Profile /></Layout></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Layout><SettingsPage /></Layout></ProtectedRoute>} />
       </Routes>
     </Router>
   );

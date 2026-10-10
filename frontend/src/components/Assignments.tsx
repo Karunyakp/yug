@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Search, Plus, Calendar, Eye, Edit2, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const mockAssignments = [
   { id: 1, title: 'Sorting Algorithms', tags: ['py', 'java'], description: 'Implement quicksort and mergesort with step-b...', dueDate: '28 Nov 2024', submissions: 45, total: 60, status: 'Active' },
   { id: 2, title: 'OOP Lab 4 - Polymorphism', tags: ['java', '.cpp'], description: 'Design a shape hierarchy with abstract classes a...', dueDate: '02 Dec 2024', submissions: 32, total: 60, status: 'Active' },
   { id: 3, title: 'DBMS Project: ER to Relational', tags: ['.sql'], description: 'Convert given ER diagram into relational schem...', dueDate: '15 Nov 2024', submissions: 60, total: 60, status: 'Archived' },
   { id: 4, title: 'AI Search - A* Implementation', tags: ['.py'], description: 'Implement A* search for 8-puzzle with admissibi...', dueDate: '10 Dec 2024', submissions: 5, total: 60, status: 'Draft' },
-  { id: 5, title: 'Web Dev - Myntra Clone UI', tags: ['.js', '.py'], description: 'Recreate Myntra product listing page with filters...', dueDate: '05 Dec 2024', submissions: 22, total: 60, status: 'Active' },
+  { id: 5, title: 'Web Dev - E-commerce Clone UI', tags: ['.js', '.py'], description: 'Recreate e-commerce product listing page with filters...', dueDate: '05 Dec 2024', submissions: 22, total: 60, status: 'Active' },
 ];
 
 const getTagColor = (tag: string) => {
@@ -36,6 +37,7 @@ export default function Assignments() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tabs = ['All', 'Active', 'Draft', 'Archived'];
+  const filteredAssignments = mockAssignments.filter(a => activeTab === 'All' || a.status === activeTab);
 
   return (
     <div className="w-full max-w-[1200px] mx-auto text-white">
@@ -99,7 +101,7 @@ export default function Assignments() {
               </tr>
             </thead>
             <tbody>
-              {mockAssignments.map((assignment) => (
+              {filteredAssignments.map((assignment) => (
                 <tr key={assignment.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                   <td className="py-4 px-6">
                     <div className="font-medium text-white mb-2">{assignment.title}</div>
@@ -144,11 +146,11 @@ export default function Assignments() {
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-4 text-sm font-medium">
-                      <button className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                      <Link to="/submissions" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
                         <Eye size={14} />
                         View
-                      </button>
-                      <button className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                      </Link>
+                      <button onClick={() => setIsModalOpen(true)} className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
                         <Edit2 size={14} />
                         Edit
                       </button>
