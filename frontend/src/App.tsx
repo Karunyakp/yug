@@ -127,15 +127,26 @@ const Header = () => {
           <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#111118]"></span>
         </button>
 
-        <Link to="/profile" className="flex items-center gap-3 border-l border-gray-800 pl-6 hover:opacity-90 transition-opacity">
-          <div className="text-right">
-            <p className="text-sm font-medium text-white leading-none mb-1">Prof. Verma</p>
-            <p className="text-xs text-gray-500 leading-none">Administrator</p>
-          </div>
-          <div className="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold text-sm border-2 border-[#111118] shadow-sm">
-            PV
-          </div>
-        </Link>
+        <div className="flex items-center gap-4 border-l border-gray-800 pl-6">
+          <Link to="/profile" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <div className="text-right">
+              <p className="text-sm font-medium text-white leading-none mb-1">Prof. Verma</p>
+              <p className="text-xs text-gray-500 leading-none">Administrator</p>
+            </div>
+            <div className="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold text-sm border-2 border-[#111118] shadow-sm">
+              PV
+            </div>
+          </Link>
+          <button 
+            onClick={() => {
+              localStorage.removeItem('isAuthenticated');
+              window.location.href = '/login';
+            }}
+            className="text-xs font-medium text-gray-400 hover:text-white px-3 py-1.5 rounded border border-gray-700 hover:bg-gray-800 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </header>
   );
