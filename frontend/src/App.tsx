@@ -14,7 +14,7 @@ import SettingsPage from './components/Settings';
 import Profile from './components/Profile';
 import Features from './components/Features';
 import Landing from './components/Landing';
-import Upgrade from './components/Upgrade';
+
 import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
 
