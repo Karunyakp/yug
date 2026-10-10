@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Plus, Calendar, Eye, Edit2, X, FileText, CheckCircle, Clock } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Plus, Calendar, Eye, Edit2, X } from 'lucide-react';
 
 const mockAssignments = [
   { id: 1, title: 'Sorting Algorithms', tags: ['py', 'java'], description: 'Implement quicksort and mergesort with step-b...', dueDate: '28 Nov 2024', submissions: 45, total: 60, status: 'Active' },

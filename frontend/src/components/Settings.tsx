@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bell, ShieldCheck, SlidersHorizontal, PlugZap, Sparkles } from 'lucide-react';
 
 const settings = [

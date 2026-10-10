@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Play, AlertCircle, CheckCircle, ChevronLeft, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { Play, AlertCircle, ChevronLeft, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const API_BASE = 'http://localhost:8000/api';

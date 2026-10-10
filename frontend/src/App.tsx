@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Shield, LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command, UserCircle2 } from 'lucide-react';
+import { Shield, LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command, UserCircle2, Gem } from 'lucide-react';
 
 import Dashboard from './components/Dashboard';
 import Compare from './components/Compare';
@@ -12,7 +12,7 @@ import Projects from './components/Projects';
 import UsersPage from './components/Users';
 import SettingsPage from './components/Settings';
 import Profile from './components/Profile';
-import ComingSoon from './components/ComingSoon';
+import Features from './components/Features';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -40,6 +40,7 @@ const Sidebar = () => {
           <p className="text-xs font-semibold text-gray-500 tracking-widest mb-4 px-2">MENU</p>
           <nav className="space-y-1">
             <NavItem to="/" icon={<LayoutDashboard size={20} />} label="Dashboard" active={isActive('/')} />
+            <NavItem to="/features" icon={<Gem size={20} />} label="USP" active={isActive('/features')} />
             <NavItem to="/projects" icon={<FolderKanban size={20} />} label="Projects" active={isActive('/projects')} badge={3} />
             <NavItem to="/assignments" icon={<FileText size={20} />} label="Assignments" active={isActive('/assignments')} badge={12} />
             <NavItem to="/submissions" icon={<FileText size={20} />} label="Submissions" active={isActive('/submissions')} badge={248} />
@@ -126,7 +127,7 @@ const Header = () => {
           <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#111118]"></span>
         </button>
 
-        <div className="flex items-center gap-3 border-l border-gray-800 pl-6">
+        <Link to="/profile" className="flex items-center gap-3 border-l border-gray-800 pl-6 hover:opacity-90 transition-opacity">
           <div className="text-right">
             <p className="text-sm font-medium text-white leading-none mb-1">Prof. Verma</p>
             <p className="text-xs text-gray-500 leading-none">Administrator</p>
@@ -134,7 +135,7 @@ const Header = () => {
           <div className="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold text-sm border-2 border-[#111118] shadow-sm">
             PV
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   );
@@ -163,6 +164,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/" element={<Layout><Dashboard /></Layout>} />
+        <Route path="/features" element={<Layout><Features /></Layout>} />
         <Route path="/projects" element={<Layout><Projects /></Layout>} />
         <Route path="/assignments" element={<Layout><Assignments /></Layout>} />
         <Route path="/submissions" element={<Layout><SubmissionsList /></Layout>} />

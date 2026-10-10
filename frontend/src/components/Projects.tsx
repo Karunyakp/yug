@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowUpRight, FolderKanban, Clock3, CheckCircle2 } from 'lucide-react';
 
 const projects = [

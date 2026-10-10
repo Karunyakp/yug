@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, BadgeCheck, MapPin, Mail, Phone, Sparkles } from 'lucide-react';
 

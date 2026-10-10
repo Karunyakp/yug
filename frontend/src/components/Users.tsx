@@ -1,4 +1,3 @@
-import React from 'react';
 import { Users as UsersIcon, Mail, CheckCircle2, Clock3 } from 'lucide-react';
 
 const team = [

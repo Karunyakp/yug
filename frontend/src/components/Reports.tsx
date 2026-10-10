@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, TrendingUp, AlertTriangle, Users, Download, Calendar, ArrowRight, FileCheck2, FileSpreadsheet, Layers } from 'lucide-react';
+import { FileText, TrendingUp, AlertTriangle, Users, Calendar, ArrowRight, Layers } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function Reports() {
@@ -29,8 +29,6 @@ export default function Reports() {
     { id: 4, student1: 'Arjun Singh', student2: 'Isha Patel', assignment: 'Dynamic Programming', similarity: 71 },
     { id: 5, student1: 'Aarav Sharma', student2: 'Arjun Singh', assignment: 'Data Structures', similarity: 68 },
   ];
-
-  const getSimColor = (sim: number) => sim >= 80 ? 'text-pink-500 bg-pink-500/10' : 'text-orange-500 bg-orange-500/10';
 
   return (
     <div className="text-white space-y-6 pb-12">
