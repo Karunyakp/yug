@@ -14,9 +14,7 @@ export default function Landing() {
       {/* Navigation */}
       <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
-          <div className="bg-gradient-to-br from-pink-500 to-purple-600 p-2.5 rounded-xl shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-            <Shield className="w-6 h-6 text-white" />
-          </div>
+          <img src="/logo.jpg" alt="CodeGuard" className="w-10 h-10 rounded-xl shadow-[0_0_20px_rgba(236,72,153,0.3)]" />
           <span className="text-xl font-bold tracking-tight">CodeGuard AI</span>
         </div>
         <div className="flex items-center gap-6">

@@ -29,9 +29,7 @@ const Sidebar = () => {
       {/* Top logo */}
       <div className="p-6">
         <div className="flex items-center gap-3">
-          <div className="bg-pink-600 p-2 rounded-lg">
-            <Shield className="w-6 h-6 text-white" />
-          </div>
+          <img src="/logo.jpg" alt="CodeGuard" className="w-10 h-10 rounded-xl" />
           <div>
             <h1 className="text-white font-bold text-xl leading-none">CodeGuard AI</h1>
             <span className="text-[10px] text-gray-500 font-semibold tracking-wider">PRO EDITION</span>
