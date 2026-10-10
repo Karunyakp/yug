@@ -28,7 +28,7 @@ export default function Login() {
         {/* Top Header */}
         <div className="flex items-center justify-between relative z-10 mt-8">
           <div className="flex items-center gap-2 text-white">
-            <Shield className="w-7 h-7 text-pink-500" />
+            <img src="/logo.jpg" alt="CodeGuard" className="w-8 h-8 rounded-lg" />
             <span className="text-lg font-bold tracking-tight">CodeGuard AI</span>
           </div>
           <div className="border border-white/20 text-white/70 text-xs px-3 py-1 rounded-full font-medium tracking-wide">

@@ -13,9 +13,7 @@ export default function SignUp() {
       
       <div className="w-full max-w-md bg-[#1a1a24] p-10 rounded-3xl border border-white/10 shadow-2xl">
         <div className="flex justify-center mb-8">
-          <div className="bg-gradient-to-br from-pink-500 to-purple-600 p-3 rounded-xl">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
+          <img src="/logo.jpg" alt="CodeGuard" className="w-12 h-12 rounded-xl" />
         </div>
         
         <h2 className="text-3xl font-bold text-center mb-2">Create Account</h2>
