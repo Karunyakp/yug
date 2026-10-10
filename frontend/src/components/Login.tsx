@@ -29,7 +29,7 @@ export default function Login() {
             <span className="text-xl font-bold tracking-tight">CodeGuard AI</span>
           </div>
           <div className="border border-white/20 text-white/70 text-xs px-3 py-1 rounded-full font-medium tracking-wide">
-            MYNTRA EDITION - 2024
+            PRO EDITION - 2024
           </div>
         </div>
 
@@ -49,7 +49,7 @@ export default function Login() {
           </h1>
 
           <p className="text-gray-400 italic mt-6 max-w-md text-lg leading-relaxed">
-            Editorial-grade plagiarism detection. Myntra's obsessive attention to detail, now for academic integrity. Human-crafted, professor-loved.
+            Editorial-grade plagiarism detection. Obsessive attention to detail, now for academic integrity. Human-crafted, professor-loved.
           </p>
 
           <div className="flex flex-col gap-5 mt-10">
@@ -63,7 +63,7 @@ export default function Login() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0 mt-0.5" />
               <div>
-                <div className="text-white font-semibold">Myntra-like UX</div>
+                <div className="text-white font-semibold">Premium UX</div>
                 <div className="text-gray-400 text-sm mt-0.5">Consumer app polish, not enterprise boring</div>
               </div>
             </div>
@@ -80,7 +80,7 @@ export default function Login() {
         {/* Bottom Ticker */}
         <div className="relative z-10 pt-12 mt-auto">
           <div className="flex items-center gap-4 text-gray-500 text-sm border-t border-white/10 pt-6">
-            <span>Used in IITs, BITS, NITs. Feels like using Myntra for code</span>
+            <span>Used in IITs, BITS, NITs. Feels like using a premium app for code</span>
             <div className="flex gap-1.5 ml-auto">
               {['A', 'R', 'I', 'K'].map((letter, i) => (
                 <div key={i} className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs text-white/70">
@@ -101,7 +101,7 @@ export default function Login() {
         <div className="max-w-md w-full mx-auto">
           <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Welcome back, Professor</h2>
           <p className="text-gray-500 mt-3 text-lg leading-relaxed">
-            Sign in to your CodeGuard workspace. The same delight you feel on Myntra, for grading.
+            Sign in to your CodeGuard workspace. The same delight you feel on premium apps, for grading.
           </p>
 
           <form onSubmit={handleSignIn} className="mt-10 space-y-6">

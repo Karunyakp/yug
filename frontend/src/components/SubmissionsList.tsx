@@ -7,7 +7,7 @@ const submissionsData = [
   { id: 2, student: 'Ishita Patel', initials: 'IP', color: 'bg-purple-500', assignment: 'OOP Lab 4', file: 'shape.java', date: '23 Nov, 4:20 PM', similarity: 12, status: 'Clean' },
   { id: 3, student: 'Kabir Singh', initials: 'KS', color: 'bg-blue-500', assignment: 'DBMS Project', file: 'schema.sql', date: '23 Nov, 11:02 AM', similarity: 64, status: 'Moderate' },
   { id: 4, student: 'Ananya Rao', initials: 'AR', color: 'bg-pink-500', assignment: 'A* Implementation', file: 'astar.py', date: '22 Nov, 6:30 PM', similarity: 8, status: 'Clean' },
-  { id: 5, student: 'Vivaan Joshi', initials: 'VJ', color: 'bg-purple-500', assignment: 'Myntra Clone', file: 'App.js', date: '22 Nov, 2:15 PM', similarity: 88, status: 'High' },
+  { id: 5, student: 'Vivaan Joshi', initials: 'VJ', color: 'bg-purple-500', assignment: 'E-commerce Clone', file: 'App.js', date: '22 Nov, 2:15 PM', similarity: 88, status: 'High' },
   { id: 6, student: 'Diya Kapoor', initials: 'DK', color: 'bg-gray-500', assignment: 'Sorting Visualizer', file: 'merge.py', date: '22 Nov, 10:00 AM', similarity: 34, status: 'Moderate' },
   { id: 7, student: 'Arjun Nair', initials: 'AN', color: 'bg-blue-500', assignment: 'OOP Lab 4', file: 'polymorphism.cpp', date: '21 Nov, 9:40 AM', similarity: 5, status: 'Clean' },
 ];

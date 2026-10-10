@@ -210,7 +210,7 @@ export default function Reports() {
       {activeTab !== 'Overview' && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Layers size={48} className="text-white/20 mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">Myntra Edition - More Reports Coming Soon</h2>
+          <h2 className="text-xl font-semibold text-white mb-2">Pro Edition - More Reports Coming Soon</h2>
           <p className="text-gray-400 max-w-md">Detailed breakdown, CSV downloads, and full assignment reports are being designed with consumer-grade aesthetics.</p>
         </div>
       )}

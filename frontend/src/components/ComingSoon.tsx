@@ -11,7 +11,7 @@ export default function ComingSoon() {
       </div>
 
       <h1 className="text-white text-xl font-semibold text-center max-w-md mb-3 leading-snug">
-        Crafting this page like Myntra crafts a product drop
+        Crafting this page with extreme attention to detail
       </h1>
 
       <p className="text-gray-400 text-sm text-center max-w-lg mb-8 leading-relaxed">
