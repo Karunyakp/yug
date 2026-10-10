@@ -1,4 +1,5 @@
 import { ArrowRight, BadgeCheck, BrainCircuit, Gauge, Layers3, ShieldCheck, Sparkles, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const featureCards = [
   {
@@ -54,12 +55,12 @@ export default function Features() {
               CodeGuard AI helps institutions catch suspicious coding patterns, surface review-ready evidence, and keep learning outcomes fair — all in one elegant workflow.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <button className="bg-pink-600 hover:bg-pink-500 text-white rounded-full px-5 py-2.5 font-medium transition-colors">
+              <Link to="/dashboard" className="bg-pink-600 hover:bg-pink-500 text-white rounded-full px-5 py-2.5 font-medium transition-colors text-center">
                 Demo workflow
-              </button>
-              <button className="border border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full px-5 py-2.5 font-medium transition-colors">
+              </Link>
+              <Link to="/reports" className="border border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full px-5 py-2.5 font-medium transition-colors text-center">
                 See analytics
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -139,10 +140,10 @@ export default function Features() {
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-emerald-200 text-sm">Institution-grade UX</span>
         </div>
 
-        <button className="mt-8 inline-flex items-center gap-2 bg-white text-black rounded-full px-5 py-2.5 font-medium hover:bg-gray-200 transition-colors">
+        <Link to="/dashboard" className="mt-8 inline-flex items-center justify-center gap-2 bg-white text-black rounded-full px-5 py-2.5 font-medium hover:bg-gray-200 transition-colors">
           Pitch this product
           <ArrowRight className="w-4 h-4" />
-        </button>
+        </Link>
       </div>
     </div>
   );

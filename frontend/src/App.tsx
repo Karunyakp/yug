@@ -13,6 +13,10 @@ import UsersPage from './components/Users';
 import SettingsPage from './components/Settings';
 import Profile from './components/Profile';
 import Features from './components/Features';
+import Landing from './components/Landing';
+import Upgrade from './components/Upgrade';
+import SignUp from './components/SignUp';
+import ForgotPassword from './components/ForgotPassword';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -39,7 +43,7 @@ const Sidebar = () => {
         <div>
           <p className="text-xs font-semibold text-gray-500 tracking-widest mb-4 px-2">MENU</p>
           <nav className="space-y-1">
-            <NavItem to="/" icon={<LayoutDashboard size={20} />} label="Dashboard" active={isActive('/')} />
+            <NavItem to="/dashboard" icon={<LayoutDashboard size={20} />} label="Dashboard" active={isActive('/dashboard')} />
             <NavItem to="/features" icon={<Gem size={20} />} label="USP" active={isActive('/features')} />
             <NavItem to="/projects" icon={<FolderKanban size={20} />} label="Projects" active={isActive('/projects')} badge={3} />
             <NavItem to="/assignments" icon={<FileText size={20} />} label="Assignments" active={isActive('/assignments')} badge={12} />
@@ -71,9 +75,9 @@ const Sidebar = () => {
           <p className="text-xs text-gray-400 mb-4 relative z-10 leading-relaxed">
             Unlimited AST comparisons, bulk export, enterprise-grade reports.
           </p>
-          <button className="w-full py-2 px-4 rounded-lg border border-gray-600 text-sm font-medium text-white hover:bg-white/5 transition-colors relative z-10">
+          <Link to="/upgrade" className="block text-center w-full py-2 px-4 rounded-lg border border-gray-600 text-sm font-medium text-white hover:bg-white/5 transition-colors relative z-10">
             Upgrade now
-          </button>
+          </Link>
         </div>
       </div>
     </aside>
@@ -122,7 +126,7 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-6">
-        <button className="relative text-gray-400 hover:text-white transition-colors">
+        <button onClick={() => window.alert('You have 3 new notifications!')} className="relative text-gray-400 hover:text-white transition-colors">
           <Bell className="w-5 h-5" />
           <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#111118]"></span>
         </button>
@@ -201,9 +205,12 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         
-        <Route path="/" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/features" element={<ProtectedRoute><Layout><Features /></Layout></ProtectedRoute>} />
         <Route path="/projects" element={<ProtectedRoute><Layout><Projects /></Layout></ProtectedRoute>} />
         <Route path="/assignments" element={<ProtectedRoute><Layout><Assignments /></Layout></ProtectedRoute>} />

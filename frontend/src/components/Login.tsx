@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Shield, CheckCircle2, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Shield, CheckCircle2, Lock, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,22 +11,25 @@ export default function Login() {
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem('isAuthenticated', 'true');
-    navigate('/');
+    navigate('/dashboard');
   };
 
   return (
     <div className="min-h-screen w-full flex bg-[#0f0f14] font-sans">
       {/* LEFT SIDE */}
-      <div className="w-[55%] bg-gradient-to-br from-[#0f0f14] to-[#1a1025] p-12 flex flex-col justify-between relative overflow-hidden">
+      <div className="w-[50%] bg-gradient-to-br from-[#0f0f14] to-[#1a1025] p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden">
+        <Link to="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-20 text-sm">
+          <ArrowLeft className="w-4 h-4" /> Back to Home
+        </Link>
         {/* Background glow effects */}
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-orange-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         {/* Top Header */}
-        <div className="flex items-center justify-between relative z-10">
+        <div className="flex items-center justify-between relative z-10 mt-8">
           <div className="flex items-center gap-2 text-white">
-            <Shield className="w-8 h-8 text-pink-500" />
-            <span className="text-xl font-bold tracking-tight">CodeGuard AI</span>
+            <Shield className="w-7 h-7 text-pink-500" />
+            <span className="text-lg font-bold tracking-tight">CodeGuard AI</span>
           </div>
           <div className="border border-white/20 text-white/70 text-xs px-3 py-1 rounded-full font-medium tracking-wide">
             PRO EDITION - 2024
@@ -40,7 +43,7 @@ export default function Login() {
             Trusted by 1,200+ professors across India
           </div>
 
-          <h1 className="text-[5rem] sm:text-[6rem] font-bold leading-[1.05] tracking-tight">
+          <h1 className="text-[4rem] sm:text-[4.5rem] font-bold leading-[1.05] tracking-tight">
             <div className="text-white">Protect</div>
             <div className="text-white">Original</div>
             <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-orange-400 bg-clip-text text-transparent pb-2">
@@ -48,8 +51,8 @@ export default function Login() {
             </div>
           </h1>
 
-          <p className="text-gray-400 italic mt-6 max-w-md text-lg leading-relaxed">
-            Editorial-grade plagiarism detection. Obsessive attention to detail, now for academic integrity. Human-crafted, professor-loved.
+          <p className="text-gray-400 italic mt-6 max-w-sm text-base leading-relaxed">
+            Editorial-grade plagiarism detection. Obsessive attention to detail, now for academic integrity.
           </p>
 
           <div className="flex flex-col gap-5 mt-10">
@@ -93,14 +96,14 @@ export default function Login() {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="w-[45%] bg-white rounded-l-3xl p-16 flex flex-col justify-center relative shadow-[-20px_0_40px_rgba(0,0,0,0.3)]">
-        <div className="absolute top-12 right-12">
+      <div className="w-[50%] bg-white rounded-l-3xl p-8 lg:p-12 flex flex-col justify-center relative shadow-[-20px_0_40px_rgba(0,0,0,0.3)]">
+        <div className="absolute top-8 right-8">
           <Lock className="w-5 h-5 text-gray-300" />
         </div>
 
-        <div className="max-w-md w-full mx-auto">
-          <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Welcome back, Professor</h2>
-          <p className="text-gray-500 mt-3 text-lg leading-relaxed">
+        <div className="max-w-sm w-full mx-auto">
+          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Welcome back</h2>
+          <p className="text-gray-500 mt-2 text-base leading-relaxed">
             Sign in to your CodeGuard workspace. The same delight you feel on premium apps, for grading.
           </p>
 
@@ -114,7 +117,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@university.edu"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:bg-white transition-all"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:bg-white transition-all text-sm"
                 required
               />
             </div>
@@ -124,9 +127,9 @@ export default function Login() {
                 <label className="block text-xs uppercase tracking-widest text-gray-500 font-semibold">
                   Password
                 </label>
-                <button type="button" className="text-sm font-medium text-pink-500 hover:text-pink-600 transition-colors">
+                <Link to="/forgot-password" className="text-sm font-medium text-pink-500 hover:text-pink-600 transition-colors">
                   Forgot?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <input
@@ -134,7 +137,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:bg-white transition-all pr-12"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:bg-white transition-all pr-12 text-sm"
                   required
                 />
                 <button
@@ -160,7 +163,7 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full bg-black hover:bg-gray-900 text-white rounded-full py-4 font-medium text-lg flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
+              className="w-full bg-black hover:bg-gray-900 text-white rounded-full py-3.5 font-medium text-base flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
             >
               Sign In
               <ArrowRight className="w-5 h-5" />
@@ -176,8 +179,8 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-4">
-            <button type="button" className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-3 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            <button onClick={() => alert('Google login coming soon!')} type="button" className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -186,7 +189,7 @@ export default function Login() {
               </svg>
               Google
             </button>
-            <button type="button" className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-3 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
+            <button onClick={() => alert('Github login coming soon!')} type="button" className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
               </svg>
@@ -196,9 +199,9 @@ export default function Login() {
 
           <p className="mt-10 text-center text-gray-600">
             New here?{' '}
-            <a href="#" className="font-semibold text-gray-900 hover:underline">
+            <Link to="/signup" className="font-semibold text-gray-900 hover:underline">
               Create professor account
-            </a>
+            </Link>
           </p>
         </div>
       </div>

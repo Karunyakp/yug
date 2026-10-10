@@ -38,7 +38,7 @@ export default function Projects() {
           <h1 className="text-white text-2xl font-bold">Projects</h1>
           <p className="text-gray-400 mt-1">Track every assignment cohort, review progress, and sync deadlines.</p>
         </div>
-        <button className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-full font-medium transition-colors">
+        <button onClick={() => window.alert('Create new project modal will appear here.')} className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-full font-medium transition-colors">
           New Project
         </button>
       </div>
@@ -91,7 +91,7 @@ export default function Projects() {
               </div>
             </div>
 
-            <button className="mt-6 w-full flex items-center justify-center gap-2 text-white hover:text-pink-300 border border-white/10 rounded-xl py-2.5 text-sm transition-colors">
+            <button onClick={() => window.alert('Opening project workspace for ' + project.name)} className="mt-6 w-full flex items-center justify-center gap-2 text-white hover:text-pink-300 border border-white/10 rounded-xl py-2.5 text-sm transition-colors">
               Open project
               <ArrowUpRight className="w-4 h-4" />
             </button>

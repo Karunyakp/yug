@@ -15,7 +15,7 @@ export default function Users() {
           <h1 className="text-white text-2xl font-bold">Users</h1>
           <p className="text-gray-400 mt-1">Monitor your teaching staff, mentors, and internal reviewers.</p>
         </div>
-        <button className="bg-white text-black rounded-full px-4 py-2 font-medium hover:bg-gray-100 transition-colors">
+        <button onClick={() => window.alert('Invite user modal will appear here.')} className="bg-white text-black rounded-full px-4 py-2 font-medium hover:bg-gray-100 transition-colors">
           Invite User
         </button>
       </div>

@@ -55,10 +55,10 @@ const Dashboard: React.FC = () => {
           <h1 className="text-white text-2xl font-bold">Dashboard</h1>
           <p className="text-gray-400 mt-1">Welcome back, Prof. Verma. Here is what is happening in your classes today.</p>
         </div>
-        <button className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-full font-medium hover:bg-gray-100 transition-colors">
+        <Link to="/assignments" className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-full font-medium hover:bg-gray-100 transition-colors">
           <Plus size={18} />
           New Assignment
-        </button>
+        </Link>
       </div>
 
       <div className="bg-gradient-to-r from-pink-600/20 via-violet-600/10 to-transparent rounded-2xl border border-pink-500/20 p-5">
@@ -219,9 +219,9 @@ const Dashboard: React.FC = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-rose-400 hover:text-rose-300 text-sm font-medium transition-colors">
+                    <Link to="/compare" className="text-rose-400 hover:text-rose-300 text-sm font-medium transition-colors">
                       Review
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

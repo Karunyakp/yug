@@ -39,7 +39,7 @@ export default function Settings() {
               <h2 className="text-white font-semibold">{item.title}</h2>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
-            <button className="mt-5 text-pink-400 hover:text-pink-300 text-sm font-medium transition-colors">
+            <button onClick={() => window.alert('Configuration options for ' + item.title + ' will appear here.')} className="mt-5 text-pink-400 hover:text-pink-300 text-sm font-medium transition-colors">
               Configure
             </button>
           </div>
