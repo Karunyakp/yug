@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Shield, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronRight, ArrowRight } from 'lucide-react';
 
 export default function Landing() {
   return (

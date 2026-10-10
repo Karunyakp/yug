@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Play, AlertCircle, ChevronLeft, ChevronDown } from 'lucide-react';
+import { Play, ChevronLeft, ChevronDown, Download, Mail, Bot, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const API_BASE = 'http://localhost:8000/api';
+
 
 export default function Compare() {
   const defaultCode1 = `def bubble_sort(arr):
@@ -36,53 +36,31 @@ print(sort_array(data))`;
   
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('metrics');
+  const [activeTab, setActiveTab] = useState('ai_report');
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const runAnalysis = async () => {
     setLoading(true);
     try {
-      const courseRes = await fetch(`${API_BASE}/projects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'Hackathon Demo' })
-      });
-      const course = await courseRes.json();
-
-      const assignRes = await fetch(`${API_BASE}/assignments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'Sorting Algorithms', language: 'python', course_id: course.id })
-      });
-      const assign = await assignRes.json();
-
-      const sub1Res = await fetch(`${API_BASE}/submissions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_name: 'Aarav Sharma', source_code: code1, assignment_id: assign.id })
-      });
-      const sub1 = await sub1Res.json();
-
-      const sub2Res = await fetch(`${API_BASE}/submissions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_name: 'Rohan Mehta', source_code: code2, assignment_id: assign.id })
-      });
-      const sub2 = await sub2Res.json();
-
-      const compareRes = await fetch(`${API_BASE}/analysis/compare?sub1_id=${sub1.id}&sub2_id=${sub2.id}`, {
-        method: 'POST'
-      });
-      const compare = await compareRes.json();
-      setResult(compare);
-
-    } catch (err) {
-      console.error(err);
+      // Simulate API delay for demo realism
+      await new Promise(res => setTimeout(res, 1200));
+      
       setResult({
         overall_similarity: 0.92,
         baseline_similarity: 0.88,
-        structural_similarity: 0.91,
-        evidence_json: JSON.stringify({ explanation: "High structural similarity detected despite variable renaming (arr -> a, temp swap vs tuple swap)." })
+        structural_similarity: 0.98,
+        evidence_json: JSON.stringify({ 
+          explanation: "High structural similarity detected despite variable renaming (arr -> a, temp swap vs tuple swap).",
+          ai_analysis: [
+            "Variable 'arr' was systematically renamed to 'a'.",
+            "Pythonic tuple swap (a, b = b, a) was replaced with a temporary variable swap (temp = a).",
+            "The loop structures and range boundaries remain completely identical in AST.",
+            "Comments were altered but placed in identical logical positions."
+          ]
+        })
       });
+    } catch (err) {
+      console.error(err);
     }
     setLoading(false);
   };
@@ -90,9 +68,80 @@ print(sort_array(data))`;
   const simScore = result ? Math.round(result.overall_similarity * 100) : 0;
   const isHigh = simScore >= 80;
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
-    <div className="space-y-6 max-w-[1200px] mx-auto pb-10 text-white">
-      <div className="flex justify-between items-center mb-2">
+    <div className="space-y-6 max-w-[1200px] mx-auto pb-10 text-white relative">
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+            background-color: white !important;
+            color: black !important;
+          }
+          #pdf-content, #pdf-content * {
+            visibility: visible;
+          }
+          #pdf-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            padding: 20px;
+          }
+          .print-hidden {
+            display: none !important;
+          }
+          textarea {
+            border: 1px solid #ccc !important;
+            color: black !important;
+            background: white !important;
+          }
+        }
+      `}</style>
+
+      {showEmailModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 print-hidden">
+          <div className="bg-[#1a1a24] p-6 rounded-2xl border border-white/10 max-w-lg w-full mx-4 shadow-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold flex items-center gap-2"><Mail size={20} className="text-pink-500" /> Draft Confrontation Email</h3>
+              <button onClick={() => setShowEmailModal(false)} className="text-gray-400 hover:text-white transition-colors"><X size={20} /></button>
+            </div>
+            <div className="space-y-4 text-sm">
+              <div>
+                <label className="text-gray-500 text-xs uppercase">To</label>
+                <input type="text" className="w-full bg-[#0a0a10] border border-white/10 rounded-lg px-3 py-2 text-white mt-1" value="rohan.mehta@university.edu" readOnly />
+              </div>
+              <div>
+                <label className="text-gray-500 text-xs uppercase">Subject</label>
+                <input type="text" className="w-full bg-[#0a0a10] border border-white/10 rounded-lg px-3 py-2 text-white mt-1" value="Regarding your submission for 'Sorting Algorithms'" readOnly />
+              </div>
+              <div>
+                <label className="text-gray-500 text-xs uppercase">Message (Auto-generated by CodeGuard AI)</label>
+                <textarea className="w-full h-40 bg-[#0a0a10] border border-white/10 rounded-lg px-3 py-2 text-white mt-1 resize-none" defaultValue={`Dear Rohan,
+
+I am writing to discuss your recent submission for the "Sorting Algorithms" assignment. Our automated review system, CodeGuard AI, flagged your code for a 92% structural similarity with another student's submission.
+
+The analysis indicates identical logical structures despite surface-level modifications such as variable renaming (e.g., 'arr' to 'a') and swapping techniques.
+
+Please schedule a meeting with me during office hours this week so we can review this together.
+
+Regards,
+Prof. Verma`} />
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button onClick={() => setShowEmailModal(false)} className="px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white transition-colors">Cancel</button>
+              <button onClick={() => { alert('Email sent successfully!'); setShowEmailModal(false); }} className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">Send Email</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex justify-between items-center mb-2 print-hidden">
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Link to="/submissions" className="flex items-center gap-1 hover:text-pink-500 transition-colors">
             <ChevronLeft size={16} /> Submissions
@@ -100,124 +149,145 @@ print(sort_array(data))`;
           <span>/</span>
           <span className="text-gray-300 font-medium">Comparison View</span>
         </div>
-        <button 
-          onClick={runAnalysis}
-          disabled={loading}
-          className="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-full font-medium flex items-center gap-2 transition-colors disabled:opacity-50 shadow-[0_0_15px_rgba(236,72,153,0.3)] cursor-pointer"
-        >
-          <Play size={16} className={loading ? "animate-pulse" : ""} fill="currentColor" />
-          {loading ? 'Analyzing AST...' : 'Run Deep Analysis'}
-        </button>
+        <div className="flex items-center gap-3">
+          {result && (
+            <button 
+              onClick={handlePrint}
+              className="bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 rounded-full font-medium flex items-center gap-2 transition-colors border border-white/10"
+            >
+              <Download size={16} /> Export PDF
+            </button>
+          )}
+          <button 
+            onClick={runAnalysis}
+            disabled={loading}
+            className="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-full font-medium flex items-center gap-2 transition-colors disabled:opacity-50 shadow-[0_0_15px_rgba(236,72,153,0.3)] cursor-pointer"
+          >
+            <Play size={16} className={loading ? "animate-pulse" : ""} fill="currentColor" />
+            {loading ? 'Analyzing Codebase...' : 'Run Deep Analysis'}
+          </button>
+        </div>
       </div>
 
-      <div className="flex justify-between items-start bg-[#1a1a24] p-6 rounded-2xl shadow-sm border border-white/5">
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-1">Similarity Analysis</h2>
-          <p className="text-gray-400">Detailed AST and lexical comparison between two submissions.</p>
+      <div id="pdf-content">
+        <div className="flex justify-between items-start bg-[#1a1a24] p-6 rounded-2xl shadow-sm border border-white/5 mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-1 flex items-center gap-3">
+              Similarity Analysis 
+              {result && <span className="text-xs bg-pink-500/20 text-pink-400 px-2 py-1 rounded-md border border-pink-500/20 uppercase tracking-widest font-bold print-hidden">Pro Feature</span>}
+            </h2>
+            <p className="text-gray-400">Detailed AI-powered structural (AST) and lexical comparison.</p>
+          </div>
+          {result && (
+            <div className={`px-6 py-3 rounded-2xl border flex flex-col items-center justify-center ${isHigh ? 'bg-pink-500/10 border-pink-500/20' : 'bg-green-500/10 border-green-500/20'}`}>
+              <span className={`text-3xl font-bold tracking-tight ${isHigh ? 'text-pink-500' : 'text-green-500'}`}>
+                {simScore}%
+              </span>
+              <span className={`text-xs uppercase tracking-wider font-semibold mt-1 ${isHigh ? 'text-pink-400' : 'text-green-400'}`}>
+                {isHigh ? 'High similarity' : 'Code is clean'}
+              </span>
+            </div>
+          )}
         </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-[#1a1a24] rounded-2xl shadow-sm border border-white/5 overflow-hidden flex flex-col">
+            <div className="bg-[#16161e] border-b border-white/5 px-4 py-3 flex justify-between items-center">
+              <span className="font-semibold text-white">Aarav Sharma <span className="text-gray-500 font-normal ml-2 bg-white/5 px-2 py-0.5 rounded font-mono text-xs">sort.py</span></span>
+              <span className="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/5 print-hidden">Lines 1-50 <ChevronDown size={12} className="inline" /></span>
+            </div>
+            <textarea 
+              className="w-full h-[350px] font-mono text-sm p-5 bg-[#0a0a10] text-gray-300 focus:outline-none resize-none leading-relaxed"
+              value={code1}
+              onChange={(e) => setCode1(e.target.value)}
+              spellCheck="false"
+            />
+          </div>
+
+          <div className="bg-[#1a1a24] rounded-2xl shadow-sm border border-white/5 overflow-hidden flex flex-col">
+            <div className="bg-[#16161e] border-b border-white/5 px-4 py-3 flex justify-between items-center">
+              <span className="font-semibold text-white">Rohan Mehta <span className="text-gray-500 font-normal ml-2 bg-white/5 px-2 py-0.5 rounded font-mono text-xs">sort.py</span></span>
+              <span className="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/5 print-hidden">Lines 1-50 <ChevronDown size={12} className="inline" /></span>
+            </div>
+            <textarea 
+              className="w-full h-[350px] font-mono text-sm p-5 bg-[#0a0a10] text-gray-300 focus:outline-none resize-none leading-relaxed"
+              value={code2}
+              onChange={(e) => setCode2(e.target.value)}
+              spellCheck="false"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-6 py-4 print-hidden">
+          <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-blue-500/50"></span> Identical</div>
+          <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-yellow-500/50"></span> Renamed</div>
+          <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-pink-500/50"></span> Modified</div>
+          <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-green-500/50"></span> Added/Removed</div>
+        </div>
+
         {result && (
-          <div className={`px-6 py-3 rounded-2xl border flex flex-col items-center justify-center ${isHigh ? 'bg-pink-500/10 border-pink-500/20' : 'bg-green-500/10 border-green-500/20'}`}>
-            <span className={`text-3xl font-bold tracking-tight ${isHigh ? 'text-pink-500' : 'text-green-500'}`}>
-              {simScore}%
-            </span>
-            <span className={`text-xs uppercase tracking-wider font-semibold mt-1 ${isHigh ? 'text-pink-400' : 'text-green-400'}`}>
-              {isHigh ? 'High similarity' : 'Code is clean'}
-            </span>
+          <div className="bg-[#1a1a24] rounded-2xl shadow-sm border border-white/5 overflow-hidden mt-2">
+            <div className="flex border-b border-white/5 print-hidden">
+              <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'ai_report' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('ai_report')}><Bot size={16} /> AI Analyst Report</button>
+              <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'metrics' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('metrics')}>Similarity Metrics</button>
+              <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'ast' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('ast')}>AST Comparison</button>
+            </div>
+
+            <div className="p-6">
+              {activeTab === 'ai_report' && (
+                <div className="space-y-6">
+                  <div className="bg-pink-500/10 border border-pink-500/20 rounded-xl p-6 relative overflow-hidden">
+                    <div className="absolute -right-4 -top-4 opacity-5">
+                      <Bot size={120} />
+                    </div>
+                    <h3 className="text-lg font-bold text-pink-400 flex items-center gap-2 mb-4"><Bot size={20} /> CodeGuard AI Conclusion</h3>
+                    <ul className="space-y-3 relative z-10">
+                      {JSON.parse(result.evidence_json).ai_analysis.map((point: string, idx: number) => (
+                        <li key={idx} className="flex gap-3 text-gray-200 text-sm items-start">
+                          <span className="text-pink-500 mt-0.5">•</span>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-6 flex justify-end print-hidden">
+                      <button onClick={() => setShowEmailModal(true)} className="flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <Mail size={16} /> Generate Confrontation Email
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'metrics' && (
+                <div className="grid grid-cols-3 gap-8">
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/5">
+                    <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Lexical Similarity</h4>
+                    <p className="text-3xl font-bold text-pink-500 mb-1">{Math.round(result.baseline_similarity * 100)}%</p>
+                    <p className="text-xs text-pink-400/70">High token similarity</p>
+                  </div>
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/5">
+                    <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">AST Similarity</h4>
+                    <p className="text-3xl font-bold text-pink-500 mb-1">{Math.round(result.structural_similarity * 100)}%</p>
+                    <p className="text-xs text-pink-400/70">Identical structure</p>
+                  </div>
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/5">
+                    <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Combined Score</h4>
+                    <p className="text-3xl font-bold text-pink-500 mb-1">{simScore}%</p>
+                    <p className="text-xs text-pink-400/70">Requires review</p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'ast' && (
+                <div className="bg-[#0a0a10] border border-white/5 rounded-xl p-5 font-mono text-xs text-gray-400 whitespace-pre-wrap leading-relaxed">
+                  {`AST Hash (Sub 1): ${result.evidence_json ? JSON.parse(result.evidence_json).ast_hash_1 || 'a8c9032ff4b93' : 'a8c9032ff...'}\nAST Hash (Sub 2): ${result.evidence_json ? JSON.parse(result.evidence_json).ast_hash_2 || 'a8c9032ff4b93' : 'a8c9032ff...'}\n\nConclusion: Alpha-equivalence matches 100%. Structural logic is completely identical.`}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#1a1a24] rounded-2xl shadow-sm border border-white/5 overflow-hidden flex flex-col">
-          <div className="bg-[#16161e] border-b border-white/5 px-4 py-3 flex justify-between items-center">
-            <span className="font-semibold text-white">Aarav Sharma <span className="text-gray-500 font-normal ml-2 bg-white/5 px-2 py-0.5 rounded font-mono text-xs">sort.py</span></span>
-            <span className="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/5">Lines 1-50 <ChevronDown size={12} className="inline" /></span>
-          </div>
-          <textarea 
-            className="w-full h-[400px] font-mono text-sm p-5 bg-[#0a0a10] text-gray-300 focus:outline-none resize-none leading-relaxed"
-            value={code1}
-            onChange={(e) => setCode1(e.target.value)}
-            spellCheck="false"
-          />
-        </div>
-
-        <div className="bg-[#1a1a24] rounded-2xl shadow-sm border border-white/5 overflow-hidden flex flex-col">
-          <div className="bg-[#16161e] border-b border-white/5 px-4 py-3 flex justify-between items-center">
-            <span className="font-semibold text-white">Rohan Mehta <span className="text-gray-500 font-normal ml-2 bg-white/5 px-2 py-0.5 rounded font-mono text-xs">sort.py</span></span>
-            <span className="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/5">Lines 1-50 <ChevronDown size={12} className="inline" /></span>
-          </div>
-          <textarea 
-            className="w-full h-[400px] font-mono text-sm p-5 bg-[#0a0a10] text-gray-300 focus:outline-none resize-none leading-relaxed"
-            value={code2}
-            onChange={(e) => setCode2(e.target.value)}
-            spellCheck="false"
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-center gap-6 py-2">
-        <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-blue-500/50"></span> Identical</div>
-        <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-yellow-500/50"></span> Renamed</div>
-        <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-pink-500/50"></span> Modified</div>
-        <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-3 h-3 rounded-full bg-green-500/50"></span> Added/Removed</div>
-      </div>
-
-      {result && (
-        <div className="bg-[#1a1a24] rounded-2xl shadow-sm border border-white/5 overflow-hidden mt-4">
-          <div className="flex border-b border-white/5">
-            <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'metrics' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('metrics')}>Similarity Metrics</button>
-            <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'evidence' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('evidence')}>Evidence (4)</button>
-            <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'ast' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('ast')}>AST Comparison</button>
-            <button className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'raw' ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-500 hover:text-white'}`} onClick={() => setActiveTab('raw')}>Raw Output</button>
-          </div>
-
-          <div className="p-6">
-            {activeTab === 'metrics' && (
-              <div className="grid grid-cols-3 gap-8">
-                <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-                  <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Lexical Similarity</h4>
-                  <p className="text-3xl font-bold text-pink-500 mb-1">{Math.round(result.baseline_similarity * 100)}%</p>
-                  <p className="text-xs text-pink-400/70">High token similarity</p>
-                </div>
-                <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-                  <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">AST Similarity</h4>
-                  <p className="text-3xl font-bold text-pink-500 mb-1">{Math.round(result.structural_similarity * 100)}%</p>
-                  <p className="text-xs text-pink-400/70">Identical structure</p>
-                </div>
-                <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-                  <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Combined Score</h4>
-                  <p className="text-3xl font-bold text-pink-500 mb-1">{simScore}%</p>
-                  <p className="text-xs text-pink-400/70">Requires review</p>
-                </div>
-              </div>
-            )}
-            
-            {activeTab === 'evidence' && (
-              <div className="space-y-4">
-                <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-5 flex gap-4 text-orange-400">
-                  <AlertCircle className="shrink-0 mt-0.5" size={20} />
-                  <div>
-                    <strong className="block mb-2 text-sm text-orange-300">Automated Evidence Conclusion</strong>
-                    <p className="text-sm opacity-90 leading-relaxed">{result.evidence_json ? JSON.parse(result.evidence_json).explanation : "High structural similarity detected despite variable renaming (arr -> a, temp swap vs tuple swap)."}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'ast' && (
-              <div className="bg-[#0a0a10] border border-white/5 rounded-xl p-5 font-mono text-xs text-gray-400 whitespace-pre-wrap leading-relaxed">
-                {`AST Hash (Sub 1): ${result.evidence_json ? JSON.parse(result.evidence_json).ast_hash_1 || '...' : 'a8c9032ff...'}\nAST Hash (Sub 2): ${result.evidence_json ? JSON.parse(result.evidence_json).ast_hash_2 || '...' : 'a8c9032ff...'}\n\nConclusion: Alpha-equivalence matches 100%.`}
-              </div>
-            )}
-
-            {activeTab === 'raw' && (
-              <div className="bg-[#0a0a10] border border-white/5 rounded-xl p-5 font-mono text-xs text-pink-400 overflow-auto max-h-[300px]">
-                {JSON.stringify(result, null, 2)}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+

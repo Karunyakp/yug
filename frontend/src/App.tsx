@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { Shield, LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command, UserCircle2, Gem } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command, UserCircle2, Gem } from 'lucide-react';
 
 import Dashboard from './components/Dashboard';
 import Compare from './components/Compare';

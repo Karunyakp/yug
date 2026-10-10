@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Shield, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function SignUp() {
   return (
