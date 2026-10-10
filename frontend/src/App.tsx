@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Shield, LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command } from 'lucide-react';
+import { Shield, LayoutDashboard, FolderKanban, FileText, SplitSquareHorizontal, FileBarChart, Users, Settings, Sparkles, Search, Bell, Command, UserCircle2 } from 'lucide-react';
 
 import Dashboard from './components/Dashboard';
 import Compare from './components/Compare';
@@ -8,6 +8,10 @@ import Assignments from './components/Assignments';
 import Login from './components/Login';
 import Reports from './components/Reports';
 import SubmissionsList from './components/SubmissionsList';
+import Projects from './components/Projects';
+import UsersPage from './components/Users';
+import SettingsPage from './components/Settings';
+import Profile from './components/Profile';
 import ComingSoon from './components/ComingSoon';
 
 const Sidebar = () => {
@@ -48,6 +52,7 @@ const Sidebar = () => {
           <p className="text-xs font-semibold text-gray-500 tracking-widest mb-4 px-2">WORKSPACE</p>
           <nav className="space-y-1">
             <NavItem to="/users" icon={<Users size={20} />} label="Users" active={isActive('/users')} />
+            <NavItem to="/profile" icon={<UserCircle2 size={20} />} label="Profile" active={isActive('/profile')} />
             <NavItem to="/settings" icon={<Settings size={20} />} label="Settings" active={isActive('/settings')} />
           </nav>
         </div>
@@ -158,13 +163,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/projects" element={<Layout><ComingSoon /></Layout>} />
+        <Route path="/projects" element={<Layout><Projects /></Layout>} />
         <Route path="/assignments" element={<Layout><Assignments /></Layout>} />
         <Route path="/submissions" element={<Layout><SubmissionsList /></Layout>} />
         <Route path="/compare" element={<Layout><Compare /></Layout>} />
         <Route path="/reports" element={<Layout><Reports /></Layout>} />
-        <Route path="/users" element={<Layout><ComingSoon /></Layout>} />
-        <Route path="/settings" element={<Layout><ComingSoon /></Layout>} />
+        <Route path="/users" element={<Layout><UsersPage /></Layout>} />
+        <Route path="/profile" element={<Layout><Profile /></Layout>} />
+        <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
       </Routes>
     </Router>
   );
