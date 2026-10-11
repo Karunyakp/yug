@@ -74,12 +74,12 @@ export default function Landing() {
               Start Free Trial
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <button className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-sans text-[15px] font-medium text-[#141413] ring-1 ring-[#E8E3DB] transition hover:bg-[#F5F5F5] hover:shadow-sm">
+            <Link to="/compare" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-sans text-[15px] font-medium text-[#141413] ring-1 ring-[#E8E3DB] transition hover:bg-[#F5F5F5] hover:shadow-sm">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#141413]">
                 <Play className="h-3 w-3 ml-0.5 fill-white text-white" />
               </span>
-              Watch 60s Demo
-            </button>
+              Watch Live Demo
+            </Link>
           </div>
         </div>
 
@@ -158,7 +158,7 @@ export default function Landing() {
                     <p className="text-xs text-[#6B6B78] mt-0.5">Same control flow, renamed identifiers, stripped comments. Not string match.</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="px-4 py-1.5 bg-[#141413] text-white text-xs font-semibold rounded-full hover:bg-black">View defensible report</button>
+                    <Link to="/compare" className="px-4 py-1.5 bg-[#141413] text-white text-xs font-semibold rounded-full hover:bg-black">View defensible report</Link>
                     <button className="px-4 py-1.5 bg-white text-[#141413] border border-[#E8E3DB] text-xs font-semibold rounded-full hover:bg-gray-50">Dismiss</button>
                   </div>
                 </div>
