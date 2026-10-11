@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Play, ArrowRight, Upload, ScanSearch, FileCheck2, Sparkles, Download, Mail, UsersRound, Code2 } from 'lucide-react';
+import { ArrowRight, Upload, ScanSearch, FileCheck2, Sparkles, Download, Mail, UsersRound, Code2 } from 'lucide-react';
 
 export default function Landing() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,9 +40,9 @@ export default function Landing() {
             </div>
             <nav className="hidden items-center gap-7 md:flex">
               <a href="#how" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">How it works</a>
-              <a href="#features" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">Features</a>
-              <a href="#departments" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">For Departments</a>
-              <a href="#pricing" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">Pricing</a>
+              <Link to="/features" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">All Features</Link>
+              <a href="#how" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">How it works</a>
+              <a href="#approach" className="font-sans text-[13.5px] font-medium text-[#6B6B78] transition hover:text-[#141413]">Our approach</a>
             </nav>
           </div>
           <div className="hidden items-center gap-4 md:flex">
@@ -66,7 +66,7 @@ export default function Landing() {
           </h1>
           
           <p className="max-w-2xl font-sans text-lg text-[#6B6B78] mb-10 leading-relaxed">
-            Editorial-grade plagiarism detection built specifically for computer science departments. Advanced AST analysis meets consumer-app polish.
+            A browser-based code review workspace for comparing submissions, organizing review, and exploring optional AI assistance. Review indicators are designed to support—not replace—educator judgment.
           </p>
           
           <div className="flex flex-col items-center gap-4 sm:flex-row">
@@ -74,12 +74,9 @@ export default function Landing() {
               Start Free Trial
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <a href="#features" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-sans text-[15px] font-medium text-[#141413] ring-1 ring-[#E8E3DB] transition hover:bg-[#F5F5F5] hover:shadow-sm">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#141413]">
-                <Play className="h-3 w-3 ml-0.5 fill-white text-white" />
-              </span>
-              Explore Features
-            </a>
+            <Link to="/features" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-sans text-[15px] font-medium text-[#141413] ring-1 ring-[#E8E3DB] transition hover:bg-[#F5F5F5] hover:shadow-sm">
+              Explore all features <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
 
@@ -216,46 +213,51 @@ export default function Landing() {
               <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Review evidence in context. Similarity scores and AI outputs should never decide a case on their own.</p>
             </article>
           </div>
+          <div className="mt-10 text-center">
+            <Link to="/features" className="inline-flex items-center gap-2 rounded-full border border-[#D9DED8] bg-white px-5 py-3 text-sm font-semibold text-[#174C3C] transition hover:border-[#174C3C]">
+              See the complete feature guide <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Feature section */}
-      <section id="departments" className="py-24 bg-[#FCFBF8]">
+      <section id="approach" className="py-24 bg-[#FCFBF8]">
         <div className="mx-auto max-w-[1240px] px-5">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="font-serif text-4xl md:text-5xl leading-tight mb-4">
-              AI made copying easy.<br/>
-              <span className="text-[#7C5CFC] italic">We made catching it humane.</span>
+              Review code with context.<br/>
+              <span className="text-[#7C5CFC] italic">Keep people in the decision.</span>
             </h2>
-            <p className="text-[#6B6B78] text-lg">Legacy tools were built for essays, not abstract syntax trees. They punish good pedagogy with noise and false alarms.</p>
+            <p className="text-[#6B6B78] text-lg">CodeGuard AI is a frontend demonstration of an educator-focused review workflow. Similarity signals can be incomplete or wrong, so every result needs careful human review.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white p-8 rounded-3xl border border-[#E8E3DB] shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-xs font-bold tracking-widest text-[#9A958E]">01</span>
-                <span className="bg-[#FCF6F0] text-[#8A7260] px-3 py-1 rounded-full text-xs font-semibold">Moss: 12% similarity</span>
+                <span className="bg-[#FCF6F0] text-[#8A7260] px-3 py-1 rounded-full text-xs font-semibold">Compare</span>
               </div>
-              <h3 className="font-serif text-2xl mb-3">String matching fails</h3>
-              <p className="text-[#6B6B78] leading-relaxed">Renaming variables, reordering loops, translating Python to Java — old tools see different text. Same logic slips through.</p>
+              <h3 className="font-serif text-2xl mb-3">Inspect code side by side</h3>
+              <p className="text-[#6B6B78] leading-relaxed">Use the comparison workspace to review code samples, similarity metrics, and the context behind the findings.</p>
             </div>
             
             <div className="bg-white p-8 rounded-3xl border border-[#E8E3DB] shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-xs font-bold tracking-widest text-[#9A958E]">02</span>
-                <span className="bg-[#FCF6F0] text-[#8A7260] px-3 py-1 rounded-full text-xs font-semibold">Hours lost to appeals</span>
+                <span className="bg-[#FCF6F0] text-[#8A7260] px-3 py-1 rounded-full text-xs font-semibold">Optional AI</span>
               </div>
-              <h3 className="font-serif text-2xl mb-3">False positives hurt trust</h3>
-              <p className="text-[#6B6B78] leading-relaxed">Boilerplate, starter code, and common patterns flagged as cheating. Students lose faith, faculty lose time.</p>
+              <h3 className="font-serif text-2xl mb-3">Use AI as an assistant</h3>
+              <p className="text-[#6B6B78] leading-relaxed">When configured, Gemini can add observations. If it is unavailable, the app labels local fallback findings clearly.</p>
             </div>
 
             <div className="bg-white p-8 rounded-3xl border border-[#E8E3DB] shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-xs font-bold tracking-widest text-[#9A958E]">03</span>
-                <span className="bg-[#FCF6F0] text-[#8A7260] px-3 py-1 rounded-full text-xs font-semibold">Not defensible in review</span>
+                <span className="bg-[#FCF6F0] text-[#8A7260] px-3 py-1 rounded-full text-xs font-semibold">Human review</span>
               </div>
-              <h3 className="font-serif text-2xl mb-3">Reports are unreadable</h3>
-              <p className="text-[#6B6B78] leading-relaxed">Walls of highlighted text with no defensible logic. No professor wants to start that conversation.</p>
+              <h3 className="font-serif text-2xl mb-3">Keep decisions accountable</h3>
+              <p className="text-[#6B6B78] leading-relaxed">Treat scores and AI output as limited indicators—not proof—and make decisions through your own academic process.</p>
             </div>
           </div>
         </div>
@@ -278,8 +280,8 @@ export default function Landing() {
                 <Upload className="w-5 h-5 text-[#141413]" />
               </div>
               <h4 className="text-xs font-bold text-[#7C5CFC] mb-2">01</h4>
-              <h3 className="font-serif text-2xl mb-3">Upload assignments</h3>
-              <p className="text-[#6B6B78] leading-relaxed">Drag a zip, connect GitHub Classroom, or sync Canvas. We dedupe starter code automatically.</p>
+              <h3 className="font-serif text-2xl mb-3">Open a review workspace</h3>
+              <p className="text-[#6B6B78] leading-relaxed">Explore the sample review screens or enter code in the comparison workspace to try the analysis flow.</p>
             </div>
 
             <div>
@@ -287,8 +289,8 @@ export default function Landing() {
                 <ScanSearch className="w-5 h-5 text-[#141413]" />
               </div>
               <h4 className="text-xs font-bold text-[#7C5CFC] mb-2">02</h4>
-              <h3 className="font-serif text-2xl mb-3">AST fingerprinting</h3>
-              <p className="text-[#6B6B78] leading-relaxed">We normalize identifiers, strip comments, and build language-agnostic logic graphs. No string matching.</p>
+              <h3 className="font-serif text-2xl mb-3">Compare and inspect</h3>
+              <p className="text-[#6B6B78] leading-relaxed">Review locally calculated similarity indicators, with optional Gemini observations when the AI service is configured.</p>
             </div>
 
             <div>
@@ -296,8 +298,8 @@ export default function Landing() {
                 <FileCheck2 className="w-5 h-5 text-[#141413]" />
               </div>
               <h4 className="text-xs font-bold text-[#7C5CFC] mb-2">03</h4>
-              <h3 className="font-serif text-2xl mb-3">Get defensible report</h3>
-              <p className="text-[#6B6B78] leading-relaxed">Human-readable, side-by-side diffs with pedagogical language. Export to PDF for academic review.</p>
+              <h3 className="font-serif text-2xl mb-3">Review and export</h3>
+              <p className="text-[#6B6B78] leading-relaxed">Interpret findings yourself, then export available report data as CSV or print a report to PDF.</p>
             </div>
           </div>
         </div>

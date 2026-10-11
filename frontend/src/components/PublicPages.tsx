@@ -15,6 +15,10 @@ const pageMetadata: Record<string, { title: string; description: string }> = {
     title: 'Create an account | CodeGuard AI',
     description: 'Create a browser-local demo account and explore the CodeGuard AI review workspace.',
   },
+  '/features': {
+    title: 'Features | CodeGuard AI',
+    description: 'Explore CodeGuard AI code comparison, review workflows, report exports, AI assistance, and frontend demo limitations.',
+  },
   '/privacy': {
     title: 'Privacy Policy | CodeGuard AI',
     description: 'Learn how the CodeGuard AI frontend demo stores information locally and uses connected services.',

@@ -106,7 +106,7 @@ Prof. Verma`
 export default function EmailCenter() {
   const [selectedTemplate, setSelectedTemplate] = useState('custom');
   const [toName, setToName] = useState('');
-  const [toEmail, setToEmail] = useState(import.meta.env.VITE_EMAILJS_DEFAULT_RECIPIENT || '');
+  const [toEmail, setToEmail] = useState(import.meta.env.EMAILJS_DEFAULT_RECIPIENT || '');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [caseRef, setCaseRef] = useState('');
@@ -257,7 +257,7 @@ export default function EmailCenter() {
         <div className="p-4 rounded-xl bg-[#FFF1D6] border border-[#F6E0B5] flex items-start gap-3 text-xs text-[#7C5315]">
           <Info className="w-4 h-4 shrink-0 mt-0.5" />
           <div className="leading-relaxed">
-            <strong>EmailJS Provider Ready:</strong> Add your credentials (<code>VITE_EMAILJS_SERVICE_ID</code>, <code>VITE_EMAILJS_TEMPLATE_ID</code>, <code>VITE_EMAILJS_PUBLIC_KEY</code>) to your environment variables to enable live delivery to student inboxes. Form validation and live previews are fully active.
+            <strong>EmailJS Provider Ready:</strong> Add your credentials (<code>EMAILJS_SERVICE_ID</code>, <code>EMAILJS_TEMPLATE_ID</code>, <code>EMAILJS_PUBLIC_KEY</code>) to your environment variables to enable live delivery to student inboxes. Form validation and live previews are fully active.
           </div>
         </div>
       )}

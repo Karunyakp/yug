@@ -276,7 +276,7 @@ function App() {
         <Route path="/users" element={<ProtectedRoute><Layout><UsersPage /></Layout></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Layout><Profile /></Layout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Layout><SettingsPage /></Layout></ProtectedRoute>} />
-        <Route path="/features" element={<ProtectedRoute><Layout><Features /></Layout></ProtectedRoute>} />
+        <Route path="/features" element={<Features />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <AssistantChat />

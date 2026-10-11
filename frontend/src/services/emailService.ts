@@ -1,8 +1,8 @@
 import emailjs from '@emailjs/browser';
 
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+const SERVICE_ID = import.meta.env.EMAILJS_SERVICE_ID || '';
+const TEMPLATE_ID = import.meta.env.EMAILJS_TEMPLATE_ID || '';
+const PUBLIC_KEY = import.meta.env.EMAILJS_PUBLIC_KEY || '';
 const RECIPIENT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export interface SendEmailPayload {
@@ -30,7 +30,7 @@ export async function sendStudentEmail(payload: SendEmailPayload): Promise<{ suc
   if (!isEmailJSConfigured()) {
     return {
       success: false,
-      message: 'EmailJS is not yet configured in environment variables (VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY). Please add them to your .env or Vercel settings.'
+      message: 'EmailJS is not yet configured in environment variables (EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY). Please add them to your .env or Vercel settings.'
     };
   }
 
