@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Activity, ArrowRight, Code2, FileText, Mail, Plus, ShieldCheck } from 'lucide-react';
 import { readAuditEvents, type AuditEvent } from '../services/localAuditLog';
 import { getCurrentLocalAccount } from '../services/localAuth';
+import { workspaceAssignments, workspaceCourses, workspaceReports, workspaceSubmissions } from '../services/workspaceRecords';
 
 const quickLinks = [
   {
@@ -27,6 +28,12 @@ const quickLinks = [
 
 export default function Dashboard() {
   const account = getCurrentLocalAccount();
+  const overview = [
+    { label: 'Courses', value: workspaceCourses.length, href: '/projects', detail: 'Across your workspace' },
+    { label: 'Active assignments', value: workspaceAssignments.filter(item => item.status !== 'Closed').length, href: '/assignments', detail: 'Open for review' },
+    { label: 'Submissions', value: workspaceSubmissions.length, href: '/submissions', detail: 'Recent learner work' },
+    { label: 'Reports', value: workspaceReports.length, href: '/reports', detail: 'Comparison summaries' },
+  ];
   const [{ events, error }] = useState(() => {
     try {
       return { events: readAuditEvents().slice(0, 5), error: '' };
@@ -63,6 +70,16 @@ export default function Dashboard() {
           <span className="inline-flex items-center gap-2"><Activity size={15} className="text-[#174C3C]" /> Local analysis</span>
           <span>AI assistance is optional</span>
         </div>
+      </section>
+
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {overview.map(item => (
+          <Link key={item.label} to={item.href} className="rounded-2xl border border-[#E3E7E0] bg-white p-4 transition hover:border-[#B8D4C0] sm:p-5">
+            <p className="text-sm font-medium text-[#707A72]">{item.label}</p>
+            <p className="mt-2 text-2xl font-semibold tracking-tight">{item.value}</p>
+            <p className="mt-1 text-xs text-[#8A938B]">{item.detail}</p>
+          </Link>
+        ))}
       </section>
 
       <section>
