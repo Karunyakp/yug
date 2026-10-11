@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { signInLocally, WORKSPACE_LOGIN_CREDENTIALS } from '../services/localAuth';
+import { PolicyLink } from './PublicPages';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -203,8 +204,8 @@ export default function Login() {
             </p>
 
             <nav aria-label="Legal" className="mt-6 flex justify-center gap-5 text-xs text-[#8A938B]">
-              <Link to="/privacy" className="transition hover:text-[#174C3C]">Privacy Policy</Link>
-              <Link to="/terms" className="transition hover:text-[#174C3C]">Terms and Conditions</Link>
+              <PolicyLink to="/privacy" className="transition hover:text-[#174C3C]">Privacy Policy</PolicyLink>
+              <PolicyLink to="/terms" className="transition hover:text-[#174C3C]">Terms and Conditions</PolicyLink>
             </nav>
 
             <div className="mt-8 flex items-center justify-center gap-2 border-t border-[#EDF0EB] pt-5 text-xs text-[#8A938B]">

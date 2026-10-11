@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Upload, ScanSearch, FileCheck2, Sparkles, Download, Mail, UsersRound, Code2 } from 'lucide-react';
+import { PolicyLink } from './PublicPages';
 
 export default function Landing() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -226,8 +227,8 @@ export default function Landing() {
       <footer className="border-t border-[#E8E3DB] bg-[#F7F6F0] px-5 py-10 text-center">
          <p className="font-sans text-sm text-[#6B6B78]">© 2026 CodeGuard AI. A human-led academic review workspace.</p>
          <nav aria-label="Legal" className="mt-4 flex justify-center gap-5 font-sans text-xs text-[#6B6B78]">
-           <Link to="/privacy" className="transition hover:text-[#174C3C]">Privacy Policy</Link>
-           <Link to="/terms" className="transition hover:text-[#174C3C]">Terms and Conditions</Link>
+           <PolicyLink to="/privacy" className="transition hover:text-[#174C3C]">Privacy Policy</PolicyLink>
+           <PolicyLink to="/terms" className="transition hover:text-[#174C3C]">Terms and Conditions</PolicyLink>
          </nav>
       </footer>
     </div>

@@ -22,6 +22,7 @@ import {
   UsersRound,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { PolicyLink } from './PublicPages';
 
 const reviewFeatures = [
   {
@@ -214,8 +215,8 @@ export default function Features() {
             <ArrowLeft size={16} /> Back to home
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <Link to="/privacy" className="font-medium text-[#707A72] hover:text-[#174C3C]">Privacy</Link>
-            <Link to="/terms" className="font-medium text-[#707A72] hover:text-[#174C3C]">Terms</Link>
+            <PolicyLink to="/privacy" className="font-medium text-[#707A72] hover:text-[#174C3C]">Privacy</PolicyLink>
+            <PolicyLink to="/terms" className="font-medium text-[#707A72] hover:text-[#174C3C]">Terms</PolicyLink>
             <Link to="/login" className="font-semibold text-[#174C3C] hover:text-[#10382D]">Sign in</Link>
           </div>
         </header>
@@ -340,12 +341,12 @@ export default function Features() {
               </p>
             </div>
             <div className="flex flex-col gap-3 rounded-2xl bg-[#F7F6F0] p-5">
-              <Link to="/privacy" className="flex items-center justify-between rounded-xl border border-[#E3E7E0] bg-white px-4 py-3 text-sm font-semibold text-[#174C3C] hover:border-[#174C3C]">
+              <PolicyLink to="/privacy" className="flex items-center justify-between rounded-xl border border-[#E3E7E0] bg-white px-4 py-3 text-sm font-semibold text-[#174C3C] hover:border-[#174C3C]">
                 How data is handled <ArrowRight size={16} />
-              </Link>
-              <Link to="/terms" className="flex items-center justify-between rounded-xl border border-[#E3E7E0] bg-white px-4 py-3 text-sm font-semibold text-[#174C3C] hover:border-[#174C3C]">
+              </PolicyLink>
+              <PolicyLink to="/terms" className="flex items-center justify-between rounded-xl border border-[#E3E7E0] bg-white px-4 py-3 text-sm font-semibold text-[#174C3C] hover:border-[#174C3C]">
                 Responsible-use terms <ArrowRight size={16} />
-              </Link>
+              </PolicyLink>
               <Link to="/reports" className="flex items-center justify-between rounded-xl border border-[#E3E7E0] bg-white px-4 py-3 text-sm font-semibold text-[#174C3C] hover:border-[#174C3C]">
                 Export options <Download size={16} />
               </Link>
@@ -357,8 +358,8 @@ export default function Features() {
           <p>© 2026 CodeGuard AI · Academic code review</p>
           <nav aria-label="Legal and product pages" className="flex gap-4">
             <Link to="/" className="hover:text-[#174C3C]">Home</Link>
-            <Link to="/privacy" className="hover:text-[#174C3C]">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-[#174C3C]">Terms and Conditions</Link>
+            <PolicyLink to="/privacy" className="hover:text-[#174C3C]">Privacy Policy</PolicyLink>
+            <PolicyLink to="/terms" className="hover:text-[#174C3C]">Terms and Conditions</PolicyLink>
           </nav>
         </footer>
       </div>

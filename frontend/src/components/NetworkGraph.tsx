@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowUpRight, Network, Users } from 'lucide-react';
+import { ArrowUpRight, BarChart3, Network, Users } from 'lucide-react';
 import { workspaceCourses, workspaceOverlapLinks, workspaceSubmissions } from '../services/workspaceRecords';
 
 const NODE_POSITIONS: Record<string, { x: number; y: number }> = {
@@ -39,6 +39,32 @@ export default function NetworkGraph() {
   const selectedConnections = selectedSubmission
     ? links.filter(link => link.source === selectedSubmission.id || link.target === selectedSubmission.id)
     : [];
+  const assignmentInsights = useMemo(() => [...new Set(submissions.map(submission => submission.assignment))]
+    .map(assignment => {
+      const assignmentSubmissions = submissions.filter(submission => submission.assignment === assignment);
+      const assignmentIds = new Set(assignmentSubmissions.map(submission => submission.id));
+      const assignmentLinks = links.filter(link => assignmentIds.has(link.source) && assignmentIds.has(link.target));
+      const averageOverlap = assignmentLinks.length
+        ? Math.round(assignmentLinks.reduce((total, link) => total + link.overlap, 0) / assignmentLinks.length)
+        : 0;
+      return {
+        assignment,
+        course: assignmentSubmissions[0]?.course ?? '',
+        submissions: assignmentSubmissions.length,
+        links: assignmentLinks.length,
+        averageOverlap,
+      };
+    }), [submissions, links]);
+  const reviewStatuses = useMemo(() => [
+    { label: 'Needs review', color: '#C47731' },
+    { label: 'Submitted', color: '#73927B' },
+    { label: 'Reviewed', color: '#174C3C' },
+  ].map(status => ({
+    ...status,
+    count: submissions.filter(submission => submission.status === status.label).length,
+  })), [submissions]);
+  const maxAssignmentSubmissions = Math.max(1, ...assignmentInsights.map(item => item.submissions));
+  const statusTotal = Math.max(1, reviewStatuses.reduce((total, item) => total + item.count, 0));
 
   const handleCourseChange = (course: string) => {
     setCourseFilter(course);
@@ -78,6 +104,68 @@ export default function NetworkGraph() {
             <p className="mt-1 text-xl font-semibold">{value}</p>
           </div>
         ))}
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-2">
+        <article className="rounded-2xl border border-[#E3E7E0] bg-white p-5">
+          <div className="flex items-center gap-2">
+            <BarChart3 size={18} className="text-[#174C3C]" />
+            <div>
+              <h2 className="font-semibold">Submissions by assignment</h2>
+              <p className="mt-1 text-xs text-[#707A72]">Current records and connected pairs in this course filter.</p>
+            </div>
+          </div>
+          <div className="mt-5 space-y-4">
+            {assignmentInsights.map(item => (
+              <div key={item.assignment}>
+                <div className="flex items-start justify-between gap-3 text-xs">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-[#354139]">{item.assignment}</p>
+                    <p className="mt-0.5 text-[#89938B]">{item.course} · {item.links} connected pairs</p>
+                  </div>
+                  <span className="shrink-0 font-semibold tabular-nums text-[#354139]">{item.submissions}</span>
+                </div>
+                <div
+                  className="mt-2 h-2 overflow-hidden rounded-full bg-[#EEF1ED]"
+                  role="img"
+                  aria-label={`${item.submissions} submissions for ${item.assignment}`}
+                >
+                  <div className="h-full rounded-full bg-[#4F8067]" style={{ width: `${(item.submissions / maxAssignmentSubmissions) * 100}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="rounded-2xl border border-[#E3E7E0] bg-white p-5">
+          <div className="flex items-center gap-2">
+            <Users size={18} className="text-[#174C3C]" />
+            <div>
+              <h2 className="font-semibold">Review status</h2>
+              <p className="mt-1 text-xs text-[#707A72]">{submissions.length} submissions in the selected view.</p>
+            </div>
+          </div>
+          <div
+            className="mt-6 flex h-4 overflow-hidden rounded-full bg-[#EEF1ED]"
+            role="img"
+            aria-label={reviewStatuses.map(item => `${item.count} ${item.label}`).join(', ')}
+          >
+            {reviewStatuses.map(item => item.count > 0 && (
+              <div key={item.label} style={{ width: `${(item.count / statusTotal) * 100}%`, backgroundColor: item.color }} />
+            ))}
+          </div>
+          <ul className="mt-5 space-y-3">
+            {reviewStatuses.map(item => (
+              <li key={item.label} className="flex items-center justify-between text-sm">
+                <span className="inline-flex items-center gap-2 text-[#59645C]">
+                  <i className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+                  {item.label}
+                </span>
+                <span className="font-semibold tabular-nums">{item.count}<span className="ml-2 text-xs font-normal text-[#89938B]">{Math.round((item.count / statusTotal) * 100)}%</span></span>
+              </li>
+            ))}
+          </ul>
+        </article>
       </section>
 
       <section className="overflow-hidden rounded-2xl border border-[#E3E7E0] bg-white">

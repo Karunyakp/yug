@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Eye, EyeOff, FileCheck2, ShieldCheck } from 'lucide-react';
 import { createLocalAccount } from '../services/localAuth';
+import { PolicyLink } from './PublicPages';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -180,8 +181,8 @@ export default function SignUp() {
               Already have an account? <Link to="/login" className="font-semibold text-[#174C3C] hover:text-[#10382D]">Sign in</Link>
             </p>
             <div className="mt-6 flex justify-center gap-4 border-t border-[#EDF0EB] pt-4 text-xs text-[#8A938B]">
-              <Link to="/privacy" className="hover:text-[#174C3C]">Privacy</Link>
-              <Link to="/terms" className="hover:text-[#174C3C]">Terms</Link>
+              <PolicyLink to="/privacy" className="hover:text-[#174C3C]">Privacy</PolicyLink>
+              <PolicyLink to="/terms" className="hover:text-[#174C3C]">Terms</PolicyLink>
             </div>
           </div>
         </section>

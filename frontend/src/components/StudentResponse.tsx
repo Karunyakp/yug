@@ -3,6 +3,7 @@ import { ArrowLeft, CheckCircle2, MessageSquareText, ShieldCheck } from 'lucide-
 import { Link } from 'react-router-dom';
 import type { LineEvidence } from '../services/analysisEngine';
 import { recordAuditEvent } from '../services/localAuditLog';
+import { PolicyLink } from './PublicPages';
 
 const REVIEW_SHARE_KEY = 'codeguard:student-review-share';
 const RESPONSES_KEY = 'codeguard:student-review-responses';
@@ -240,8 +241,8 @@ export default function StudentResponse() {
         </section>
 
         <nav aria-label="Legal" className="mt-5 flex justify-center gap-5 text-xs text-[#707A72]">
-          <Link to="/privacy" className="hover:text-[#174C3C]">Privacy Policy</Link>
-          <Link to="/terms" className="hover:text-[#174C3C]">Terms and Conditions</Link>
+          <PolicyLink to="/privacy" className="hover:text-[#174C3C]">Privacy Policy</PolicyLink>
+          <PolicyLink to="/terms" className="hover:text-[#174C3C]">Terms and Conditions</PolicyLink>
         </nav>
       </div>
     </main>

@@ -2,6 +2,33 @@ import { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
 
+type PolicyPath = '/privacy' | '/terms';
+
+function isInternalReturnPath(value: unknown): value is string {
+  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//');
+}
+
+export function PolicyLink({
+  to,
+  className,
+  children,
+}: {
+  to: PolicyPath;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const location = useLocation();
+  const state = location.state as { returnTo?: unknown } | null;
+  const isPolicyPage = location.pathname === '/privacy' || location.pathname === '/terms';
+  const returnTo = isInternalReturnPath(state?.returnTo)
+    ? state.returnTo
+    : isPolicyPage
+      ? '/'
+      : `${location.pathname}${location.search}${location.hash}`;
+
+  return <Link to={to} state={{ returnTo }} className={className}>{children}</Link>;
+}
+
 const pageMetadata: Record<string, { title: string; description: string }> = {
   '/': {
     title: 'CodeGuard AI | Fair, evidence-led code review',
@@ -62,16 +89,20 @@ export function PageMetadata() {
 function PublicPageFrame({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const state = location.state as { returnTo?: unknown } | null;
+  const isPolicyPage = location.pathname === '/privacy' || location.pathname === '/terms';
+  const returnTo = isInternalReturnPath(state?.returnTo)
+    ? state.returnTo
+    : isPolicyPage
+      ? '/'
+      : `${location.pathname}${location.search}${location.hash}`;
 
   return (
     <main className="min-h-screen bg-[#F7F6F0] px-5 py-8 text-[#202923] sm:px-8 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <button
           type="button"
-          onClick={() => {
-            if (location.key === 'default') navigate('/');
-            else navigate(-1);
-          }}
+          onClick={() => navigate(returnTo)}
           className="inline-flex items-center gap-2 text-sm font-medium text-[#707A72] transition hover:text-[#174C3C]"
         >
           <ArrowLeft size={16} /> Back
@@ -79,8 +110,8 @@ function PublicPageFrame({ children }: { children: React.ReactNode }) {
         <article className="mt-7 rounded-3xl border border-[#E3E7E0] bg-white p-6 shadow-[0_18px_60px_-36px_rgba(32,41,35,0.22)] sm:p-10 lg:p-14">
           {children}
           <div className="mt-10 flex flex-wrap gap-4 border-t border-[#E3E7E0] pt-6 text-sm">
-            <Link to="/privacy" className="font-medium text-[#174C3C] hover:underline">Privacy Policy</Link>
-            <Link to="/terms" className="font-medium text-[#174C3C] hover:underline">Terms and Conditions</Link>
+            <PolicyLink to="/privacy" className="font-medium text-[#174C3C] hover:underline">Privacy Policy</PolicyLink>
+            <PolicyLink to="/terms" className="font-medium text-[#174C3C] hover:underline">Terms and Conditions</PolicyLink>
             <Link to="/signup" className="font-medium text-[#174C3C] hover:underline">Create an account</Link>
           </div>
         </article>
@@ -189,7 +220,7 @@ export function NotFound() {
         </Link>
         <div className="mt-6 flex justify-center gap-4 text-sm text-[#707A72]">
           <Link to="/login" className="hover:text-[#174C3C]">Sign in</Link>
-          <Link to="/privacy" className="hover:text-[#174C3C]">Privacy</Link>
+          <PolicyLink to="/privacy" className="hover:text-[#174C3C]">Privacy</PolicyLink>
         </div>
       </div>
     </main>

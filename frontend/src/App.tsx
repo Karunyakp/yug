@@ -33,7 +33,7 @@ import NetworkGraph from './components/NetworkGraph';
 import EmailCenter from './components/EmailCenter';
 import CommandPalette from './components/CommandPalette';
 import AssistantChat from './components/AssistantChat';
-import { NotFound, PageMetadata, PrivacyPolicy, TermsAndConditions } from './components/PublicPages';
+import { NotFound, PageMetadata, PolicyLink, PrivacyPolicy, TermsAndConditions } from './components/PublicPages';
 import StudentResponse from './components/StudentResponse';
 
 import SignUp from './components/SignUp';
@@ -104,8 +104,8 @@ const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onClo
             <p className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider mb-2 px-3">SYSTEM</p>
             <nav className="space-y-1">
               <NavItem to="/settings" icon={<Settings size={17} />} label="Settings & Rules" active={isActive('/settings')} />
-              <NavItem to="/privacy" icon={<Shield size={17} />} label="Privacy Policy" active={isActive('/privacy')} />
-              <NavItem to="/terms" icon={<FileText size={17} />} label="Terms & Conditions" active={isActive('/terms')} />
+              <PolicyNavItem icon={<Shield size={17} />} label="Privacy Policy" active={isActive('/privacy')} to="/privacy" />
+              <PolicyNavItem to="/terms" icon={<FileText size={17} />} label="Terms & Conditions" active={isActive('/terms')} />
             </nav>
           </div>
         </div>
@@ -149,6 +149,17 @@ const NavItem = ({ to, icon, label, active, badge }: { to: string; icon: React.R
     </Link>
   );
 };
+
+const PolicyNavItem = ({ to, icon, label, active }: { to: '/privacy' | '/terms'; icon: React.ReactNode; label: string; active?: boolean }) => (
+  <PolicyLink
+    to={to}
+    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+      active ? 'bg-[#E4F1E9] text-[#174C3C] font-bold shadow-2xs' : 'text-[#707A72] hover:text-[#202923] hover:bg-[#F7F6F0]'
+    }`}
+  >
+    <span className="flex items-center gap-3">{icon}<span>{label}</span></span>
+  </PolicyLink>
+);
 
 const Header = ({ onOpenCommandPalette, onOpenMobile }: { onOpenCommandPalette: () => void; onOpenMobile: () => void }) => {
   return (
