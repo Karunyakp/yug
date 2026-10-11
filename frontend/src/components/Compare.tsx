@@ -5,7 +5,6 @@ import {
   Download,
   Mail,
   Bot,
-  X,
   FileCode,
   ShieldCheck,
   Filter,
@@ -16,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { runLocalMultiLayerComparison, type CodeAnalysisResult } from '../services/analysisEngine';
-import { analyzeCodeWithGemini, generateConfrontationEmailWithGemini } from '../services/gemini';
+import { analyzeCodeWithGemini } from '../services/gemini';
 
 export default function Compare() {
   const defaultCode1 = `def bubble_sort(arr):
@@ -60,42 +59,23 @@ def solve(items):
   const [geminiInsights, setGeminiInsights] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'evidence' | 'metrics' | 'viva' | 'obfuscation'>('evidence');
-  const [showEmailModal, setShowEmailModal] = useState(false);
-  const [emailDraft, setEmailDraft] = useState('');
-  const [emailLoading, setEmailLoading] = useState(false);
 
   // Reviewer Notes state
-  const [reviewerNotes, setReviewerNotes] = useState('Reviewed by Prof. Verma. High probability of identifier renaming. Recommended for viva.');
-  const [decision, setDecision] = useState<'pending' | 'flagged' | 'dismissed' | 'viva_scheduled'>('flagged');
+  const [reviewerNotes, setReviewerNotes] = useState('High structural congruence noted in sorting logic despite variable mutations. Recommended for oral viva inquiry.');
+  const [decision, setDecision] = useState<'needs_review' | 'viva_scheduled' | 'dismissed' | 'reviewed'>('needs_review');
 
   const runAnalysis = async () => {
     setLoading(true);
     try {
-      // 1. Run deterministically via local AST/Lexical engine
       const localResult = runLocalMultiLayerComparison(code1, code2, starterCode);
       setResult(localResult);
 
-      // 2. Request Gemini 3.8 Flash for qualitative viva questions and natural language reasoning
       const aiData = await analyzeCodeWithGemini(code1, code2, starterCode);
       setGeminiInsights(aiData);
     } catch (err) {
       console.error(err);
     }
     setLoading(false);
-  };
-
-  const handleOpenEmailModal = async () => {
-    setShowEmailModal(true);
-    setEmailLoading(true);
-    try {
-      const findings = geminiInsights ? geminiInsights.ai_analysis : (result ? result.obfuscation_signals.map(o => o.description) : []);
-      const score = result ? Math.round(result.overall_similarity * 100) : 92;
-      const draft = await generateConfrontationEmailWithGemini("Rohan Mehta", "Sorting Algorithms", score, findings);
-      setEmailDraft(draft);
-    } catch (err) {
-      console.error(err);
-    }
-    setEmailLoading(false);
   };
 
   const simScore = result ? Math.round(result.overall_similarity * 100) : 0;
@@ -106,7 +86,7 @@ def solve(items):
   };
 
   return (
-    <div className="space-y-6 max-w-[1240px] mx-auto pb-16 text-[#F3F4F6] relative">
+    <div className="space-y-6 max-w-[1240px] mx-auto pb-16 text-[#202923] relative">
       <style>{`
         @media print {
           body * {
@@ -131,139 +111,90 @@ def solve(items):
         }
       `}</style>
 
-      {/* Email Modal */}
-      {showEmailModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm print-hidden px-4">
-          <div className="bg-[#121626] p-6 md:p-8 rounded-3xl border border-[#232A44] max-w-xl w-full shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold flex items-center gap-2.5 text-white">
-                <Mail size={18} className="text-[#E02875]" /> Academic Integrity Viva Invitation
-              </h3>
-              <button onClick={() => setShowEmailModal(false)} className="text-[#8E99B7] hover:text-white transition-colors">
-                <X size={18} />
-              </button>
-            </div>
-            <div className="space-y-4 text-xs">
-              <div>
-                <label className="text-[#8E99B7] uppercase tracking-wider font-semibold">Recipient (Student)</label>
-                <input type="text" className="w-full bg-[#0B0D14] border border-[#1F263E] rounded-xl px-3 py-2 text-white mt-1 outline-none" value="rohan.mehta@university.edu" readOnly />
-              </div>
-              <div>
-                <label className="text-[#8E99B7] uppercase tracking-wider font-semibold">Subject</label>
-                <input type="text" className="w-full bg-[#0B0D14] border border-[#1F263E] rounded-xl px-3 py-2 text-white mt-1 outline-none" value="Academic Review: Discussion regarding CS-204 Submission" readOnly />
-              </div>
-              <div>
-                <label className="text-[#8E99B7] uppercase tracking-wider font-semibold flex items-center justify-between">
-                  <span>Pedagogical Email Draft</span>
-                  {emailLoading && <span className="text-[#E02875] animate-pulse">Drafting with Gemini 3.8 Flash...</span>}
-                </label>
-                <textarea 
-                  className="w-full h-48 bg-[#0B0D14] border border-[#1F263E] rounded-xl p-3.5 text-white mt-1 resize-none font-sans text-xs leading-relaxed outline-none focus:border-[#E02875]" 
-                  value={emailLoading ? "Generating structured, respectful academic inquiry with Gemini AI..." : emailDraft} 
-                  onChange={(e) => setEmailDraft(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={() => setShowEmailModal(false)} className="px-4 py-2 rounded-xl text-xs font-semibold text-[#8E99B7] hover:text-white transition-colors">
-                Cancel
-              </button>
-              <button
-                disabled={emailLoading}
-                onClick={() => { alert('Email dispatched through institutional SMTP.'); setShowEmailModal(false); }}
-                className="bg-[#E02875] hover:bg-[#C2185B] text-white px-5 py-2.5 rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md shadow-[#E02875]/20"
-              >
-                Send Meeting Request
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Top Nav Bar */}
+      {/* Top Breadcrumb & Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print-hidden">
-        <div className="flex items-center gap-2 text-xs text-[#8E99B7]">
-          <Link to="/submissions" className="flex items-center gap-1 hover:text-white transition-colors">
-            <ChevronLeft size={14} /> Submissions Queue
+        <div className="flex items-center gap-2 text-xs text-[#707A72]">
+          <Link to="/submissions" className="flex items-center gap-1 hover:text-[#202923] transition-colors">
+            <ChevronLeft size={14} /> Submissions
           </Link>
           <span>/</span>
-          <span className="text-white font-medium">AST & Cross-Language Diff Studio</span>
+          <span className="text-[#202923] font-semibold">Code Analysis & Diff Studio</span>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowStarterConfig(!showStarterConfig)}
-            className="bg-[#15192B] hover:bg-[#1F263E] text-xs text-[#DCE1EE] px-4 py-2.5 rounded-xl border border-[#1F263E] flex items-center gap-2 transition-all"
+            className="bg-white hover:bg-[#F7F6F0] text-xs text-[#202923] px-3.5 py-2 rounded-xl border border-[#E3E7E0] flex items-center gap-2 transition-all shadow-2xs"
           >
-            <Filter size={14} className="text-[#00D2D3]" />
+            <Filter size={13} className="text-[#174C3C]" />
             {showStarterConfig ? 'Hide Starter Code' : 'Exclude Starter Code'}
           </button>
           {result && (
             <button 
               onClick={handlePrint}
-              className="bg-[#15192B] hover:bg-[#1F263E] text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all border border-[#1F263E]"
+              className="bg-white hover:bg-[#F7F6F0] text-[#202923] px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all border border-[#E3E7E0] shadow-2xs"
             >
-              <Download size={14} /> Export Evidentiary PDF
+              <Download size={13} /> Printable Report
             </button>
           )}
           <button 
             onClick={runAnalysis}
             disabled={loading}
-            className="bg-[#E02875] hover:bg-[#C2185B] text-white px-6 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-[#E02875]/25 cursor-pointer"
+            className="bg-[#174C3C] hover:bg-[#10382D] text-white px-5 py-2 rounded-xl font-semibold text-xs flex items-center gap-2 transition-all disabled:opacity-50 shadow-xs cursor-pointer"
           >
-            <Play size={14} className={loading ? "animate-pulse" : ""} fill="currentColor" />
-            {loading ? 'Evaluating AST Graphs...' : 'Run Multi-Layer Analysis'}
+            <Play size={13} className={loading ? "animate-pulse" : ""} fill="currentColor" />
+            {loading ? 'Evaluating AST Models...' : 'Run Comparative Analysis'}
           </button>
         </div>
       </div>
 
       {/* Starter Code Exclusion Config */}
       {showStarterConfig && (
-        <div className="bg-[#101422] border border-[#1F263E] rounded-2xl p-5 space-y-3 animate-in fade-in duration-200 print-hidden">
+        <div className="bg-white border border-[#E3E7E0] rounded-2xl p-5 space-y-3 shadow-xs print-hidden animate-in fade-in duration-150">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
-              <ShieldCheck size={16} className="text-[#00D2D3]" /> Instructor Starter Code Exclusion
+            <div className="flex items-center gap-2 text-xs font-bold text-[#202923] uppercase tracking-wider">
+              <ShieldCheck size={16} className="text-[#174C3C]" /> Instructor Starter Code Exclusion
             </div>
-            <span className="text-[11px] text-[#8E99B7]">Tokens matching this block will be discounted from final score</span>
+            <span className="text-[11px] text-[#707A72]">Submissions matching this code block will be deducted from similarity score</span>
           </div>
           <textarea
-            className="w-full h-24 bg-[#0B0D14] border border-[#1F263E] rounded-xl p-3 font-mono text-xs text-[#DCE1EE] outline-none focus:border-[#00D2D3]"
+            className="w-full h-24 bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl p-3 font-mono text-xs text-[#202923] outline-none focus:border-[#174C3C]"
             value={starterCode}
             onChange={e => setStarterCode(e.target.value)}
           />
         </div>
       )}
 
-      {/* Printable Report Wrapper */}
+      {/* Main Printable Content */}
       <div id="pdf-content" className="space-y-6">
-        {/* Score & Case Summary */}
-        <div className="bg-[#101422] border border-[#1F263E] p-6 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        {/* Case Header Card */}
+        <div className="bg-white border border-[#E3E7E0] p-6 rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold tracking-tight text-white">Comparative Evidence Dossier</h2>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-[#1F263E] border border-[#2A3352] text-[#8E99B7] font-mono">
-                CS-204 • Fall 2026
+              <h2 className="text-xl font-bold tracking-tight text-[#202923]">Pairwise Code Analysis Dossier</h2>
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#E4F1E9] text-[#174C3C] font-semibold border border-[#C3E4CF]">
+                CS-204
               </span>
             </div>
-            <p className="text-xs text-[#8E99B7] mt-1.5 leading-relaxed max-w-xl">
-              Multi-signal structural, AST lexical, and cross-language evaluation calibrated for academic computer science departments.
+            <p className="text-xs text-[#707A72] mt-1 leading-relaxed max-w-xl">
+              Deterministic AST structure analysis, variable normalization, and AI-assisted qualitative findings.
             </p>
           </div>
 
           {result && (
-            <div className="flex items-center gap-6 bg-[#15192B] p-4 rounded-2xl border border-[#1F263E]">
+            <div className="flex items-center gap-6 bg-[#F7F6F0] p-3.5 rounded-xl border border-[#E3E7E0]">
               <div className="text-center">
-                <span className="text-xs text-[#8E99B7] uppercase tracking-wider block font-semibold">Raw Score</span>
-                <span className="text-lg font-bold font-mono text-[#DCE1EE]">{Math.round(result.lexical_similarity * 100)}%</span>
+                <span className="text-[10px] text-[#707A72] uppercase tracking-wider block font-bold">Lexical</span>
+                <span className="text-base font-bold text-[#202923]">{Math.round(result.lexical_similarity * 100)}%</span>
               </div>
-              <div className="h-8 w-px bg-[#1F263E]"></div>
+              <div className="h-6 w-px bg-[#E3E7E0]"></div>
               <div className="text-center">
-                <span className="text-xs text-[#8E99B7] uppercase tracking-wider block font-semibold">Boilerplate Excl.</span>
-                <span className="text-lg font-bold font-mono text-[#00D2D3]">{Math.round(result.boilerplate_filtered_similarity * 100)}%</span>
+                <span className="text-[10px] text-[#707A72] uppercase tracking-wider block font-bold">Boilerplate Excl.</span>
+                <span className="text-base font-bold text-[#174C3C]">{Math.round(result.boilerplate_filtered_similarity * 100)}%</span>
               </div>
-              <div className="h-8 w-px bg-[#1F263E]"></div>
+              <div className="h-6 w-px bg-[#E3E7E0]"></div>
               <div className="text-center">
-                <span className="text-xs uppercase tracking-wider block font-bold text-[#E02875]">Overall Similarity</span>
-                <span className={`text-2xl font-extrabold font-mono ${isHigh ? 'text-[#E02875]' : 'text-[#10B981]'}`}>
+                <span className="text-[10px] uppercase tracking-wider block font-bold text-[#B96F52]">Overall Match</span>
+                <span className={`text-xl font-extrabold ${isHigh ? 'text-[#D9534F]' : 'text-[#174C3C]'}`}>
                   {simScore}%
                 </span>
               </div>
@@ -271,21 +202,21 @@ def solve(items):
           )}
         </div>
 
-        {/* Side-by-Side Code Workspace */}
+        {/* Side-by-Side Code Editors */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Submission 1 */}
-          <div className="bg-[#101422] rounded-3xl border border-[#1F263E] overflow-hidden flex flex-col shadow-xl">
-            <div className="bg-[#15192B] border-b border-[#1F263E] px-5 py-3.5 flex justify-between items-center">
+          <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden flex flex-col shadow-xs">
+            <div className="bg-[#F7F6F0] border-b border-[#E3E7E0] px-4 py-3 flex justify-between items-center">
               <div>
-                <span className="font-semibold text-sm text-white">Aarav Sharma</span>
-                <span className="ml-2 font-mono text-xs text-[#8E99B7] bg-[#0B0D14] px-2 py-0.5 rounded border border-[#1F263E]">
+                <span className="font-semibold text-xs text-[#202923]">Aarav Sharma</span>
+                <span className="ml-2 font-mono text-[11px] text-[#707A72] bg-white px-2 py-0.5 rounded border border-[#E3E7E0]">
                   bubble_sort.py
                 </span>
               </div>
-              <span className="text-xs text-[#8E99B7]">Submission #841</span>
+              <span className="text-[11px] text-[#707A72]">Submission #841</span>
             </div>
             <textarea 
-              className="w-full h-[360px] font-mono text-xs p-5 bg-[#0B0D14] text-[#DCE1EE] focus:outline-none resize-none leading-relaxed"
+              className="w-full h-[340px] font-mono text-xs p-4 bg-white text-[#202923] focus:outline-none resize-none leading-relaxed"
               value={code1}
               onChange={(e) => setCode1(e.target.value)}
               spellCheck="false"
@@ -293,18 +224,18 @@ def solve(items):
           </div>
 
           {/* Submission 2 */}
-          <div className="bg-[#101422] rounded-3xl border border-[#1F263E] overflow-hidden flex flex-col shadow-xl">
-            <div className="bg-[#15192B] border-b border-[#1F263E] px-5 py-3.5 flex justify-between items-center">
+          <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden flex flex-col shadow-xs">
+            <div className="bg-[#F7F6F0] border-b border-[#E3E7E0] px-4 py-3 flex justify-between items-center">
               <div>
-                <span className="font-semibold text-sm text-white">Rohan Mehta</span>
-                <span className="ml-2 font-mono text-xs text-[#8E99B7] bg-[#0B0D14] px-2 py-0.5 rounded border border-[#1F263E]">
+                <span className="font-semibold text-xs text-[#202923]">Rohan Mehta</span>
+                <span className="ml-2 font-mono text-[11px] text-[#707A72] bg-white px-2 py-0.5 rounded border border-[#E3E7E0]">
                   sort_array.py
                 </span>
               </div>
-              <span className="text-xs text-[#8E99B7]">Submission #842</span>
+              <span className="text-[11px] text-[#707A72]">Submission #842</span>
             </div>
             <textarea 
-              className="w-full h-[360px] font-mono text-xs p-5 bg-[#0B0D14] text-[#DCE1EE] focus:outline-none resize-none leading-relaxed"
+              className="w-full h-[340px] font-mono text-xs p-4 bg-white text-[#202923] focus:outline-none resize-none leading-relaxed"
               value={code2}
               onChange={(e) => setCode2(e.target.value)}
               spellCheck="false"
@@ -314,109 +245,109 @@ def solve(items):
 
         {/* Evidence Navigation Tabs */}
         {result && (
-          <div className="bg-[#101422] border border-[#1F263E] rounded-3xl overflow-hidden shadow-2xl">
-            <div className="flex border-b border-[#1F263E] bg-[#15192B]/50 print-hidden">
+          <div className="bg-white border border-[#E3E7E0] rounded-2xl overflow-hidden shadow-xs">
+            <div className="flex border-b border-[#E3E7E0] bg-[#F7F6F0]/60 print-hidden">
               <button 
-                className={`px-6 py-4 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'evidence' ? 'border-[#E02875] text-[#E02875]' : 'border-transparent text-[#8E99B7] hover:text-white'}`} 
+                className={`px-6 py-3.5 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'evidence' ? 'border-[#174C3C] text-[#174C3C] bg-white' : 'border-transparent text-[#707A72] hover:text-[#202923]'}`} 
                 onClick={() => setActiveTab('evidence')}
               >
-                <Bot size={15} /> Evidence & AI Summary
+                <Bot size={14} /> Evidence & Qualitative Analysis
               </button>
               <button 
-                className={`px-6 py-4 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'metrics' ? 'border-[#E02875] text-[#E02875]' : 'border-transparent text-[#8E99B7] hover:text-white'}`} 
+                className={`px-6 py-3.5 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'metrics' ? 'border-[#174C3C] text-[#174C3C] bg-white' : 'border-transparent text-[#707A72] hover:text-[#202923]'}`} 
                 onClick={() => setActiveTab('metrics')}
               >
-                <FileCode size={15} /> Component Metrics
+                <FileCode size={14} /> Component Metrics
               </button>
               <button 
-                className={`px-6 py-4 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'obfuscation' ? 'border-[#E02875] text-[#E02875]' : 'border-transparent text-[#8E99B7] hover:text-white'}`} 
+                className={`px-6 py-3.5 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'obfuscation' ? 'border-[#174C3C] text-[#174C3C] bg-white' : 'border-transparent text-[#707A72] hover:text-[#202923]'}`} 
                 onClick={() => setActiveTab('obfuscation')}
               >
-                <Flame size={15} /> Obfuscation Shield
+                <Flame size={14} /> Obfuscation Shield
               </button>
               <button 
-                className={`px-6 py-4 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'viva' ? 'border-[#E02875] text-[#E02875]' : 'border-transparent text-[#8E99B7] hover:text-white'}`} 
+                className={`px-6 py-3.5 text-xs font-semibold border-b-2 transition-all flex items-center gap-2 ${activeTab === 'viva' ? 'border-[#174C3C] text-[#174C3C] bg-white' : 'border-transparent text-[#707A72] hover:text-[#202923]'}`} 
                 onClick={() => setActiveTab('viva')}
               >
-                <MessageSquare size={15} /> Viva Rubric & Questions
+                <MessageSquare size={14} /> Viva Inquiry Rubric
               </button>
             </div>
 
-            <div className="p-6 md:p-8">
-              {/* Tab 1: Evidence & AI Analysis */}
+            <div className="p-6">
+              {/* Evidence Tab */}
               {activeTab === 'evidence' && (
-                <div className="space-y-6">
-                  <div className="bg-[#15192B] border border-[#1F263E] rounded-2xl p-6 relative">
-                    <h3 className="text-sm font-bold text-[#E02875] flex items-center gap-2 mb-3">
-                      <Sparkles size={16} /> CodeGuard Evaluator Conclusion
+                <div className="space-y-4">
+                  <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0]">
+                    <h3 className="text-xs font-bold text-[#174C3C] uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <Sparkles size={14} /> Evaluation Finding Summary
                     </h3>
-                    <p className="text-xs text-[#DCE1EE] leading-relaxed mb-4 font-medium">
+                    <p className="text-xs text-[#202923] leading-relaxed mb-4">
                       {result.explanation}
                     </p>
 
-                    <div className="space-y-2.5">
-                      {(geminiInsights ? geminiInsights.ai_analysis : result.obfuscation_signals.map(o => o.description)).map((point: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-2.5 text-xs text-[#DCE1EE]">
-                          <span className="text-[#E02875] font-bold">•</span>
-                          <span>{point}</span>
+                    <div className="space-y-2">
+                      {(geminiInsights ? geminiInsights.ai_analysis : result.obfuscation_signals.map(o => o.description)).map((pt: string, idx: number) => (
+                        <div key={idx} className="flex items-start gap-2 text-xs text-[#707A72]">
+                          <span className="text-[#174C3C] font-bold">•</span>
+                          <span>{pt}</span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-[#1F263E] flex items-center justify-between print-hidden">
-                      <div className="text-[11px] text-[#8E99B7]">
-                        Signal verification backed by Google Gemini 3.8 Flash Interactions API.
-                      </div>
-                      <button 
-                        onClick={handleOpenEmailModal}
-                        className="px-4 py-2 rounded-xl bg-[#E02875] hover:bg-[#C2185B] text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-md shadow-[#E02875]/20"
+                    <div className="mt-4 pt-4 border-t border-[#E3E7E0] flex items-center justify-between print-hidden">
+                      <span className="text-[11px] text-[#707A72]">
+                        Verified with AST intermediate representation and Google Gemini 3.8 Flash.
+                      </span>
+                      <Link
+                        to="/email-center"
+                        className="px-4 py-2 rounded-xl bg-[#174C3C] hover:bg-[#10382D] text-white text-xs font-semibold flex items-center gap-1.5 transition-all"
                       >
-                        <Mail size={14} /> Draft Viva Meeting Email
-                      </button>
+                        <Mail size={13} /> Compose Viva Invitation
+                      </Link>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Tab 2: Component Metrics */}
+              {/* Component Metrics Tab */}
               {activeTab === 'metrics' && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
-                    <span className="text-[11px] text-[#8E99B7] uppercase font-bold tracking-wider">Lexical 3-Gram</span>
-                    <p className="text-2xl font-mono font-bold text-white mt-2">{Math.round(result.lexical_similarity * 100)}%</p>
-                    <p className="text-[11px] text-[#8E99B7] mt-1">Direct token overlap</p>
+                  <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0]">
+                    <span className="text-[10px] text-[#707A72] uppercase font-bold tracking-wider">Lexical 3-Gram</span>
+                    <p className="text-xl font-bold text-[#202923] mt-1">{Math.round(result.lexical_similarity * 100)}%</p>
+                    <p className="text-[11px] text-[#707A72] mt-1">Direct token correspondence</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
-                    <span className="text-[11px] text-[#8E99B7] uppercase font-bold tracking-wider">AST Structural</span>
-                    <p className="text-2xl font-mono font-bold text-[#E02875] mt-2">{Math.round(result.structural_similarity * 100)}%</p>
-                    <p className="text-[11px] text-[#8E99B7] mt-1">Control-flow isomorphism</p>
+                  <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0]">
+                    <span className="text-[10px] text-[#707A72] uppercase font-bold tracking-wider">AST Structural</span>
+                    <p className="text-xl font-bold text-[#174C3C] mt-1">{Math.round(result.structural_similarity * 100)}%</p>
+                    <p className="text-[11px] text-[#707A72] mt-1">Control-flow isomorphism</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
-                    <span className="text-[11px] text-[#8E99B7] uppercase font-bold tracking-wider">Boilerplate Excl.</span>
-                    <p className="text-2xl font-mono font-bold text-[#00D2D3] mt-2">{Math.round(result.boilerplate_filtered_similarity * 100)}%</p>
-                    <p className="text-[11px] text-[#8E99B7] mt-1">Normalized after template dedupe</p>
+                  <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0]">
+                    <span className="text-[10px] text-[#707A72] uppercase font-bold tracking-wider">Boilerplate Excl.</span>
+                    <p className="text-xl font-bold text-[#174C3C] mt-1">{Math.round(result.boilerplate_filtered_similarity * 100)}%</p>
+                    <p className="text-[11px] text-[#707A72] mt-1">Template discount applied</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
-                    <span className="text-[11px] text-[#8E99B7] uppercase font-bold tracking-wider">Cross-Language</span>
-                    <p className="text-2xl font-mono font-bold text-[#8A63D2] mt-2">{result.cross_language_similarity ? `${Math.round(result.cross_language_similarity * 100)}%` : 'N/A'}</p>
-                    <p className="text-[11px] text-[#8E99B7] mt-1">{result.is_cross_language ? 'Cross-syntax match' : 'Single-language'}</p>
+                  <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0]">
+                    <span className="text-[10px] text-[#707A72] uppercase font-bold tracking-wider">Cross-Language</span>
+                    <p className="text-xl font-bold text-[#707A72] mt-1">{result.cross_language_similarity ? `${Math.round(result.cross_language_similarity * 100)}%` : 'N/A'}</p>
+                    <p className="text-[11px] text-[#707A72] mt-1">{result.is_cross_language ? 'Cross-syntax match' : 'Single runtime'}</p>
                   </div>
                 </div>
               )}
 
-              {/* Tab 3: Obfuscation Detection Shield */}
+              {/* Obfuscation Tab */}
               {activeTab === 'obfuscation' && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {result.obfuscation_signals.map((sig, idx) => (
-                    <div key={idx} className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E] flex items-start justify-between gap-4">
+                    <div key={idx} className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0] flex items-start justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2">
-                          <Flame size={16} className="text-[#E02875]" />
-                          <h4 className="text-xs font-bold text-white">{sig.type}</h4>
+                          <Flame size={15} className="text-[#B96F52]" />
+                          <h4 className="text-xs font-bold text-[#202923]">{sig.type}</h4>
                         </div>
-                        <p className="text-xs text-[#8E99B7] mt-1">{sig.description}</p>
+                        <p className="text-xs text-[#707A72] mt-1">{sig.description}</p>
                       </div>
-                      <span className="text-xs font-mono font-bold text-[#E02875] bg-[#E02875]/10 px-2.5 py-1 rounded-lg border border-[#E02875]/20">
+                      <span className="text-xs font-bold text-[#10382D] bg-[#E4F1E9] px-2.5 py-1 rounded-lg border border-[#C3E4CF]">
                         {Math.round(sig.confidence * 100)}% Confidence
                       </span>
                     </div>
@@ -424,23 +355,23 @@ def solve(items):
                 </div>
               )}
 
-              {/* Tab 4: Viva Rubric */}
+              {/* Viva Tab */}
               {activeTab === 'viva' && (
-                <div className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#00D2D3] uppercase tracking-wider mb-2">
-                      <HelpCircle size={15} /> Recommended Viva Questions
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0]">
+                    <div className="flex items-center gap-2 text-xs font-bold text-[#174C3C] uppercase tracking-wider mb-2">
+                      <HelpCircle size={14} /> Oral Inquiry Questions
                     </div>
-                    <p className="text-xs text-[#8E99B7] mb-4">
-                      Academic integrity guidelines state students should be given an opportunity to articulate their mental model before disciplinary determinations are rendered.
+                    <p className="text-xs text-[#707A72] mb-4">
+                      Instructors are encouraged to pose these specific conceptual questions during student viva to verify code authorship.
                     </p>
-                    <div className="space-y-2.5">
+                    <div className="space-y-2">
                       {(geminiInsights?.ai_patterns?.viva_questions || [
                         "Can you explain why the inner loop bounds run to n-i-1 rather than n-1?",
                         "What is the space complexity of this sorting routine and why?",
                         "How would this function behave with duplicate array elements?"
                       ]).map((q: string, idx: number) => (
-                        <div key={idx} className="p-3 rounded-xl bg-[#0B0D14] border border-[#1F263E] text-xs text-[#DCE1EE]">
+                        <div key={idx} className="p-3 rounded-lg bg-white border border-[#E3E7E0] text-xs text-[#202923]">
                           {idx + 1}. {q}
                         </div>
                       ))}
@@ -452,27 +383,27 @@ def solve(items):
           </div>
         )}
 
-        {/* Human Faculty Decision & Reviewer Notes */}
-        <div className="bg-[#101422] border border-[#1F263E] rounded-3xl p-6 md:p-8 space-y-4 shadow-xl">
+        {/* Reviewer Decision Controls */}
+        <div className="bg-white border border-[#E3E7E0] rounded-2xl p-6 space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Faculty Review Decision</h3>
-            <span className="text-xs text-[#8E99B7]">Recorded by Prof. Verma (ID: #FAC-019)</span>
+            <h3 className="text-xs font-bold text-[#202923] uppercase tracking-wider">Faculty Determination Record</h3>
+            <span className="text-[11px] text-[#707A72]">Logged by Prof. Verma (#FAC-019)</span>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2.5">
             {[
-              { id: 'flagged', label: 'Flag for Department Review' },
+              { id: 'needs_review', label: 'Needs Review' },
               { id: 'viva_scheduled', label: 'Viva Oral Exam Scheduled' },
               { id: 'dismissed', label: 'Dismiss as Common Pattern' },
-              { id: 'pending', label: 'Mark Under Investigation' }
+              { id: 'reviewed', label: 'Reviewed & Cleared' }
             ].map(d => (
               <button
                 key={d.id}
                 onClick={() => setDecision(d.id as any)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                   decision === d.id
-                    ? 'bg-[#E02875] text-white shadow-md shadow-[#E02875]/25'
-                    : 'bg-[#15192B] text-[#8E99B7] hover:text-white border border-[#1F263E]'
+                    ? 'bg-[#174C3C] text-white shadow-2xs'
+                    : 'bg-[#F7F6F0] text-[#707A72] hover:text-[#202923] border border-[#E3E7E0]'
                 }`}
               >
                 {d.label}
@@ -481,9 +412,11 @@ def solve(items):
           </div>
 
           <div>
-            <label className="text-xs text-[#8E99B7] font-semibold uppercase tracking-wider">Reviewer Notes (Persisted to Case Record)</label>
+            <label className="text-[11px] text-[#707A72] font-semibold uppercase tracking-wider block mb-1">
+              Internal Review Notes
+            </label>
             <textarea
-              className="w-full h-20 bg-[#0B0D14] border border-[#1F263E] rounded-xl p-3 text-xs text-white mt-1 outline-none focus:border-[#E02875]"
+              className="w-full h-20 bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl p-3 text-xs text-[#202923] outline-none focus:border-[#174C3C]"
               value={reviewerNotes}
               onChange={e => setReviewerNotes(e.target.value)}
             />

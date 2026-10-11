@@ -13,21 +13,21 @@ const mockAssignments = [
 const getTagColor = (tag: string) => {
   const t = tag.toLowerCase().replace('.', '');
   switch (t) {
-    case 'py': return 'bg-teal-500/20 text-teal-400 border border-teal-500/30';
-    case 'java': return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
-    case 'cpp': return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
-    case 'sql': return 'bg-green-500/20 text-green-400 border border-green-500/30';
-    case 'js': return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
-    default: return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
+    case 'py': return 'bg-teal-500/15 text-teal-700 border border-teal-500/20';
+    case 'java': return 'bg-orange-500/15 text-orange-700 border border-orange-500/20';
+    case 'cpp': return 'bg-blue-500/15 text-blue-700 border border-blue-500/20';
+    case 'sql': return 'bg-green-500/15 text-green-700 border border-green-500/20';
+    case 'js': return 'bg-yellow-500/15 text-yellow-700 border border-yellow-500/20';
+    default: return 'bg-gray-500/15 text-gray-600 border border-gray-500/20';
   }
 };
 
 const getStatusStyle = (status: string) => {
   switch (status.toLowerCase()) {
-    case 'active': return 'bg-green-500/20 text-green-400 border border-green-500/30';
-    case 'draft': return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
-    case 'archived': return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
-    default: return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
+    case 'active': return 'bg-[#E4F1E9] text-[#174C3C] border border-[#C3E4CF]';
+    case 'draft': return 'bg-[#F7F6F0] text-[#707A72] border border-[#E3E7E0]';
+    case 'archived': return 'bg-[#F7F6F0] text-[#A3AA9D] border border-[#E3E7E0]';
+    default: return 'bg-[#F7F6F0] text-[#707A72] border border-[#E3E7E0]';
   }
 };
 
@@ -58,16 +58,16 @@ export default function Assignments() {
   });
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto text-white">
+    <div className="w-full max-w-[1200px] mx-auto text-[#202923]">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-semibold mb-1">Assignments</h1>
-          <p className="text-gray-400 text-sm">Create, manage and monitor all coursework in one editorial view.</p>
+          <p className="text-[#707A72] text-sm">Create, manage and monitor all coursework in one editorial view.</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-pink-500 hover:bg-pink-600 text-white px-5 py-2.5 rounded-full font-medium flex items-center gap-2 transition-colors shrink-0"
+          className="bg-[#174C3C] hover:bg-[#10382D] text-white px-5 py-2.5 rounded-full font-medium flex items-center gap-2 transition-colors shrink-0"
         >
           <Plus size={18} />
           Create Assignment
@@ -77,25 +77,25 @@ export default function Assignments() {
       {/* FILTER ROW */}
       <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
         <div className="relative w-full md:w-80">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A3AA9D]" size={18} />
           <input
             type="text"
             placeholder="Search assignments..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#1a1a24] text-white pl-11 pr-4 py-2.5 rounded-full border border-white/5 focus:outline-none focus:border-pink-500/50 transition-colors"
+            className="w-full bg-white text-[#202923] pl-11 pr-4 py-2.5 rounded-full border border-[#E3E7E0] focus:outline-none focus:border-[#174C3C]/50 transition-colors"
           />
         </div>
         
-        <div className="flex items-center gap-2 bg-[#1a1a24] p-1.5 rounded-full border border-white/5 overflow-x-auto w-full md:w-auto">
+        <div className="flex items-center gap-2 bg-white p-1.5 rounded-full border border-[#E3E7E0] overflow-x-auto w-full md:w-auto">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
                 activeTab === tab
-                  ? 'bg-pink-500 text-white'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-[#174C3C] text-white'
+                  : 'text-[#707A72] hover:text-[#202923]'
               }`}
             >
               {tab}
@@ -105,24 +105,24 @@ export default function Assignments() {
       </div>
 
       {/* ASSIGNMENTS TABLE */}
-      <div className="bg-[#1a1a24] rounded-2xl border border-white/5 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/5 bg-white/[0.02]">
-                <th className="py-4 px-6 text-xs uppercase text-gray-500 font-semibold tracking-wider">Title</th>
-                <th className="py-4 px-6 text-xs uppercase text-gray-500 font-semibold tracking-wider hidden md:table-cell">Description</th>
-                <th className="py-4 px-6 text-xs uppercase text-gray-500 font-semibold tracking-wider">Due Date</th>
-                <th className="py-4 px-6 text-xs uppercase text-gray-500 font-semibold tracking-wider">Submissions</th>
-                <th className="py-4 px-6 text-xs uppercase text-gray-500 font-semibold tracking-wider">Status</th>
-                <th className="py-4 px-6 text-xs uppercase text-gray-500 font-semibold tracking-wider">Action</th>
+              <tr className="border-b border-[#E3E7E0] bg-[#F7F6F0]">
+                <th className="py-4 px-6 text-xs uppercase text-[#707A72] font-semibold tracking-wider">Title</th>
+                <th className="py-4 px-6 text-xs uppercase text-[#707A72] font-semibold tracking-wider hidden md:table-cell">Description</th>
+                <th className="py-4 px-6 text-xs uppercase text-[#707A72] font-semibold tracking-wider">Due Date</th>
+                <th className="py-4 px-6 text-xs uppercase text-[#707A72] font-semibold tracking-wider">Submissions</th>
+                <th className="py-4 px-6 text-xs uppercase text-[#707A72] font-semibold tracking-wider">Status</th>
+                <th className="py-4 px-6 text-xs uppercase text-[#707A72] font-semibold tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody>
               {filteredAssignments.map((assignment) => (
-                <tr key={assignment.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                <tr key={assignment.id} className="border-b border-[#E3E7E0] hover:bg-[#F7F6F0]/60 transition-colors">
                   <td className="py-4 px-6">
-                    <div className="font-medium text-white mb-2">{assignment.title}</div>
+                    <div className="font-medium text-[#202923] mb-2">{assignment.title}</div>
                     <div className="flex flex-wrap gap-1.5">
                       {assignment.tags.map((tag) => (
                         <span key={tag} className={`text-[10px] rounded px-1.5 py-0.5 font-medium ${getTagColor(tag)}`}>
@@ -131,24 +131,24 @@ export default function Assignments() {
                       ))}
                     </div>
                   </td>
-                  <td className="py-4 px-6 text-sm text-gray-400 hidden md:table-cell max-w-[200px] truncate">
+                  <td className="py-4 px-6 text-sm text-[#707A72] hidden md:table-cell max-w-[200px] truncate">
                     {assignment.description}
                   </td>
-                  <td className="py-4 px-6 text-sm text-gray-300 whitespace-nowrap">
+                  <td className="py-4 px-6 text-sm text-[#202923] whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <Calendar size={14} className="text-gray-500" />
+                      <Calendar size={14} className="text-[#A3AA9D]" />
                       {assignment.dueDate}
                     </div>
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex flex-col gap-1.5 w-32">
-                      <div className="flex justify-between items-center text-xs text-gray-400">
+                      <div className="flex justify-between items-center text-xs text-[#707A72]">
                         <span>{assignment.submissions}/{assignment.total}</span>
                         <span>{Math.round((assignment.submissions / assignment.total) * 100)}%</span>
                       </div>
-                      <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-[#E3E7E0] rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-white rounded-full transition-all duration-500"
+                          className="h-full bg-[#174C3C] rounded-full transition-all duration-500"
                           style={{ width: `${(assignment.submissions / assignment.total) * 100}%` }}
                         />
                       </div>
@@ -156,19 +156,19 @@ export default function Assignments() {
                   </td>
                   <td className="py-4 px-6">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap ${getStatusStyle(assignment.status)}`}>
-                      {assignment.status === 'Active' && <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>}
-                      {assignment.status === 'Draft' && <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>}
-                      {assignment.status === 'Archived' && <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>}
+                      {assignment.status === 'Active' && <span className="w-1.5 h-1.5 rounded-full bg-[#174C3C]"></span>}
+                      {assignment.status === 'Draft' && <span className="w-1.5 h-1.5 rounded-full bg-[#A3AA9D]"></span>}
+                      {assignment.status === 'Archived' && <span className="w-1.5 h-1.5 rounded-full bg-[#A3AA9D]"></span>}
                       {assignment.status}
                     </span>
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-4 text-sm font-medium">
-                      <Link to="/submissions" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                      <Link to="/submissions" className="text-[#707A72] hover:text-[#202923] transition-colors flex items-center gap-1.5">
                         <Eye size={14} />
                         View
                       </Link>
-                      <button onClick={() => setIsModalOpen(true)} className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                      <button onClick={() => setIsModalOpen(true)} className="text-[#707A72] hover:text-[#202923] transition-colors flex items-center gap-1.5">
                         <Edit2 size={14} />
                         Edit
                       </button>
@@ -183,13 +183,13 @@ export default function Assignments() {
 
       {/* CREATE MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#1a1a24] border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-6 border-b border-white/5 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-white">Create Assignment</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#202923]/40 backdrop-blur-sm">
+          <div className="bg-white border border-[#E3E7E0] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-[#E3E7E0] flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[#202923]">Create Assignment</h2>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-2"
+                className="text-[#707A72] hover:text-[#202923] transition-colors bg-[#F7F6F0] hover:bg-[#E3E7E0] rounded-full p-2"
               >
                 <X size={20} />
               </button>
@@ -197,50 +197,50 @@ export default function Assignments() {
             
             <div className="p-6 overflow-y-auto space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Title</label>
+                <label className="block text-sm font-medium text-[#202923] mb-1.5">Title</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Sorting Algorithms" 
-                  className="w-full bg-[#13131a] border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 transition-colors"
+                  className="w-full bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl px-4 py-2.5 text-[#202923] placeholder-[#A3AA9D] focus:outline-none focus:border-[#174C3C]/50 transition-colors"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Description</label>
+                <label className="block text-sm font-medium text-[#202923] mb-1.5">Description</label>
                 <textarea 
                   rows={3}
                   placeholder="Provide instructions and context..." 
-                  className="w-full bg-[#13131a] border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 transition-colors resize-none"
+                  className="w-full bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl px-4 py-2.5 text-[#202923] placeholder-[#A3AA9D] focus:outline-none focus:border-[#174C3C]/50 transition-colors resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Due Date</label>
+                  <label className="block text-sm font-medium text-[#202923] mb-1.5">Due Date</label>
                   <input 
                     type="date" 
-                    className="w-full bg-[#13131a] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-pink-500/50 transition-colors [color-scheme:dark]"
+                    className="w-full bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl px-4 py-2.5 text-[#202923] focus:outline-none focus:border-[#174C3C]/50 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Languages</label>
+                  <label className="block text-sm font-medium text-[#202923] mb-1.5">Languages</label>
                   <input 
                     type="text" 
                     placeholder="e.g. .py, .java" 
-                    className="w-full bg-[#13131a] border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 transition-colors"
+                    className="w-full bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl px-4 py-2.5 text-[#202923] placeholder-[#A3AA9D] focus:outline-none focus:border-[#174C3C]/50 transition-colors"
                   />
                 </div>
               </div>
             </div>
             
-            <div className="p-6 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3 mt-auto">
+            <div className="p-6 border-t border-[#E3E7E0] bg-[#F7F6F0] flex justify-end gap-3 mt-auto">
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                className="px-5 py-2.5 rounded-xl font-medium text-[#707A72] hover:text-[#202923] hover:bg-white transition-colors"
               >
                 Cancel
               </button>
-              <button className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2.5 rounded-xl font-medium transition-colors">
+              <button className="bg-[#174C3C] hover:bg-[#10382D] text-white px-6 py-2.5 rounded-xl font-medium transition-colors">
                 Save Assignment
               </button>
             </div>

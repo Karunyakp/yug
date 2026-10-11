@@ -137,16 +137,16 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
   );
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 bg-black/70 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 bg-[#202923]/40 backdrop-blur-sm px-4">
       <div 
-        className="w-full max-w-xl bg-[#121626] border border-[#232A44] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-xl bg-white border border-[#E3E7E0] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center px-4 py-3.5 border-b border-[#232A44] bg-[#161B2E]">
-          <Search className="w-5 h-5 text-[#8E99B7] mr-3 shrink-0" />
+        <div className="flex items-center px-4 py-3.5 border-b border-[#E3E7E0] bg-[#F7F6F0]">
+          <Search className="w-5 h-5 text-[#707A72] mr-3 shrink-0" />
           <input
             type="text"
-            className="w-full bg-transparent text-[#F3F4F6] text-sm placeholder-[#69759B] outline-none"
+            className="w-full bg-transparent text-[#202923] text-sm placeholder-[#A3AA9D] outline-none"
             placeholder="Search commands, navigate pages, run actions... (Esc to close)"
             value={query}
             onChange={e => { setQuery(e.target.value); setSelectedIndex(0); }}
@@ -154,7 +154,7 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
           />
           <button 
             onClick={onClose}
-            className="text-[#8E99B7] hover:text-[#F3F4F6] p-1 rounded-md transition-colors"
+            className="text-[#707A72] hover:text-[#202923] p-1 rounded-md transition-colors"
           >
             <X size={16} />
           </button>
@@ -162,7 +162,7 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
 
         <div className="max-h-80 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
-            <div className="p-8 text-center text-sm text-[#8E99B7]">
+            <div className="p-8 text-center text-sm text-[#707A72]">
               No matching actions or pages found.
             </div>
           ) : (
@@ -176,21 +176,21 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-sm transition-all ${
                     isSelected
-                      ? 'bg-[#E02875]/15 text-[#F3F4F6] border border-[#E02875]/30'
-                      : 'text-[#8E99B7] hover:text-[#F3F4F6] hover:bg-[#1A2138] border border-transparent'
+                      ? 'bg-[#E4F1E9] text-[#174C3C] border border-[#174C3C]/20'
+                      : 'text-[#707A72] hover:text-[#202923] hover:bg-[#F7F6F0] border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-[#E02875] text-white' : 'bg-[#1D253E] text-[#8E99B7]'}`}>
+                    <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-[#174C3C] text-white' : 'bg-[#F7F6F0] text-[#707A72]'}`}>
                       <Icon size={16} />
                     </div>
                     <div>
-                      <p className={`font-medium ${isSelected ? 'text-white' : 'text-[#DCE1EE]'}`}>{item.title}</p>
-                      <p className="text-[11px] text-[#69759B] uppercase font-mono">{item.category}</p>
+                      <p className={`font-medium ${isSelected ? 'text-[#174C3C]' : 'text-[#202923]'}`}>{item.title}</p>
+                      <p className="text-[11px] text-[#A3AA9D] uppercase font-mono">{item.category}</p>
                     </div>
                   </div>
                   {item.shortcut && (
-                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#1A2138] border border-[#2A3352] text-[#8E99B7]">
+                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#F7F6F0] border border-[#E3E7E0] text-[#707A72]">
                       {item.shortcut}
                     </span>
                   )}
@@ -200,9 +200,9 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
           )}
         </div>
 
-        <div className="px-4 py-2.5 bg-[#0D101C] border-t border-[#1F263E] flex items-center justify-between text-[11px] text-[#69759B]">
-          <span>Tip: Press <kbd className="px-1 py-0.5 rounded bg-[#1A2138] border border-[#2A3352] text-[#DCE1EE]">Ctrl + K</kbd> anytime to open</span>
-          <span><kbd className="px-1 py-0.5 rounded bg-[#1A2138] border border-[#2A3352] text-[#DCE1EE]">↵</kbd> to select</span>
+        <div className="px-4 py-2.5 bg-[#F7F6F0] border-t border-[#E3E7E0] flex items-center justify-between text-[11px] text-[#707A72]">
+          <span>Tip: Press <kbd className="px-1 py-0.5 rounded bg-white border border-[#E3E7E0] text-[#202923]">Ctrl + K</kbd> anytime to open</span>
+          <span><kbd className="px-1 py-0.5 rounded bg-white border border-[#E3E7E0] text-[#202923]">↵</kbd> to select</span>
         </div>
       </div>
     </div>
