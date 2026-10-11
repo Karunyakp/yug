@@ -9,7 +9,7 @@ const team = [
 
 export default function Users() {
   return (
-    <div className="space-y-6 pb-12">
+    <div className="legacy-dark-page space-y-6 pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-white text-2xl font-bold">Users</h1>

@@ -32,7 +32,7 @@ const projects = [
 
 export default function Projects() {
   return (
-    <div className="space-y-6 pb-12">
+    <div className="legacy-dark-page space-y-6 pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-white text-2xl font-bold">Projects</h1>

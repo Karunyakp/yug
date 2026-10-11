@@ -39,3 +39,78 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #B5BCB1;
 }
+
+.legacy-dark-page {
+  color: #202923;
+}
+
+.legacy-dark-page[class~="bg-[#0a0a10]"],
+.legacy-dark-page[class~="bg-[#0f0f14]"] {
+  background-color: #F7F6F0 !important;
+}
+
+.legacy-dark-page [class~="bg-[#1a1a24]"],
+.legacy-dark-page [class~="bg-[#16161e]"],
+.legacy-dark-page [class~="bg-[#101422]"],
+.legacy-dark-page [class~="bg-[#15192B]"],
+.legacy-dark-page [class~="bg-[#111118]"] {
+  background-color: #FFFFFF !important;
+}
+
+.legacy-dark-page [class~="bg-[#0B0D14]"],
+.legacy-dark-page [class~="bg-[#0a0a10]"],
+.legacy-dark-page [class~="bg-[#232332]"] {
+  background-color: #F7F6F0 !important;
+}
+
+.legacy-dark-page [class~="text-white"] {
+  color: #202923 !important;
+}
+
+.legacy-dark-page [class~="text-white"][class*="bg-"] {
+  color: #FFFFFF !important;
+}
+
+.legacy-dark-page [class~="text-[#F3F4F6]"],
+.legacy-dark-page [class~="text-[#DCE1EE]"],
+.legacy-dark-page [class~="text-gray-200"],
+.legacy-dark-page [class~="text-gray-300"] {
+  color: #354139 !important;
+}
+
+.legacy-dark-page [class~="text-[#8E99B7]"],
+.legacy-dark-page [class~="text-gray-400"],
+.legacy-dark-page [class~="text-gray-500"] {
+  color: #707A72 !important;
+}
+
+.legacy-dark-page [class~="border-white/5"],
+.legacy-dark-page [class~="border-white/10"],
+.legacy-dark-page [class~="border-[#1F263E]"],
+.legacy-dark-page [class~="border-gray-800"],
+.legacy-dark-page [class~="border-gray-700"] {
+  border-color: #E3E7E0 !important;
+}
+
+.legacy-dark-page [class~="divide-white/5"] > :not([hidden]) ~ :not([hidden]),
+.legacy-dark-page [class~="divide-[#1F263E]"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E3E7E0 !important;
+}
+
+.legacy-dark-page [class~="text-[#E02875]"],
+.legacy-dark-page [class~="text-pink-400"],
+.legacy-dark-page [class~="text-pink-300"] {
+  color: #174C3C !important;
+}
+
+.legacy-dark-page :is(button, a)[class~="text-white"][class*="bg-pink-"],
+.legacy-dark-page :is(button, a)[class~="text-white"][class*="bg-[#E02875]"] {
+  background-color: #174C3C !important;
+  border-color: #174C3C !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+
+.legacy-dark-page :is(button, a)[class*="text-pink-"] {
+  color: #174C3C !important;
+}

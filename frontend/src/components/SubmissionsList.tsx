@@ -31,7 +31,7 @@ export default function SubmissionsList() {
   };
 
   return (
-    <div className="text-white space-y-6">
+    <div className="legacy-dark-page text-white space-y-6">
       <div className="bg-[#1a1a24] rounded-full p-2 flex items-center border border-white/5 shadow-sm max-w-2xl mx-auto md:mx-0">
         <SearchIcon className="w-5 h-5 text-gray-400 ml-3 mr-2" />
         <input 

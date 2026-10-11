@@ -4,7 +4,7 @@ import { Sparkles, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 export default function Upgrade() {
   return (
-    <div className="min-h-screen bg-[#0a0a10] flex flex-col items-center py-20 font-sans text-white relative">
+    <div className="legacy-dark-page min-h-screen bg-[#0a0a10] flex flex-col items-center py-20 font-sans text-white relative">
       <div className="absolute top-8 left-8">
         <Link to="/dashboard" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard

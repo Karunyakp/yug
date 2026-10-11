@@ -4,7 +4,7 @@ import { KeyRound, ArrowLeft } from 'lucide-react';
 
 export default function ForgotPassword() {
   return (
-    <div className="min-h-screen bg-[#0f0f14] flex flex-col items-center justify-center font-sans text-white relative">
+    <div className="legacy-dark-page min-h-screen bg-[#0f0f14] flex flex-col items-center justify-center font-sans text-white relative">
       <div className="absolute top-8 left-8">
         <Link to="/login" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Login

@@ -11,7 +11,7 @@ const activity = [
 
 export default function Profile() {
   return (
-    <div className="space-y-6 pb-12">
+    <div className="legacy-dark-page space-y-6 pb-12">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-white text-2xl font-bold">Profile</h1>

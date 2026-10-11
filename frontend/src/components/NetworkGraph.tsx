@@ -58,7 +58,7 @@ export default function NetworkGraph() {
   const filteredEdges = mockEdges.filter(e => e.similarity >= minSim);
 
   return (
-    <div className="space-y-6 pb-12 text-[#F3F4F6]">
+    <div className="legacy-dark-page space-y-6 pb-12 text-[#F3F4F6]">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>

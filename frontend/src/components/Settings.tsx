@@ -25,7 +25,7 @@ const settings = [
 
 export default function Settings() {
   return (
-    <div className="space-y-6 pb-12">
+    <div className="legacy-dark-page space-y-6 pb-12">
       <div>
         <h1 className="text-white text-2xl font-bold">Settings</h1>
         <p className="text-gray-400 mt-1">Tune the platform for your institute workflows and review policies.</p>
