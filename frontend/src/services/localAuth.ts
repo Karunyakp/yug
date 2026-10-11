@@ -12,22 +12,32 @@ export interface LocalAccount {
   createdAt: string;
 }
 
+function isLocalAccount(value: unknown): value is LocalAccount {
+  if (typeof value !== 'object' || value === null) return false;
+  const account = value as Record<string, unknown>;
+  return typeof account.name === 'string' &&
+    typeof account.email === 'string' &&
+    typeof account.salt === 'string' && /^[a-f0-9]{32}$/i.test(account.salt) &&
+    typeof account.passwordHash === 'string' && /^[a-f0-9]{64}$/i.test(account.passwordHash) &&
+    typeof account.createdAt === 'string';
+}
+
 function getAccounts(): LocalAccount[] {
   const stored = localStorage.getItem(ACCOUNTS_KEY);
   if (!stored) return [];
 
   const accounts: unknown = JSON.parse(stored);
-  if (!Array.isArray(accounts)) {
+  if (!Array.isArray(accounts) || !accounts.every(isLocalAccount)) {
     throw new Error('Saved local accounts are invalid. Clear this browser’s CodeGuard account data and try again.');
   }
-  return accounts as LocalAccount[];
+  return accounts;
 }
 
 function bytesToHex(bytes: Uint8Array): string {
   return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-async function hashPassword(password: string, salt: Uint8Array): Promise<string> {
+async function hashPassword(password: string, salt: Uint8Array<ArrayBuffer>): Promise<string> {
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
   const bits = await crypto.subtle.deriveBits(
     { name: 'PBKDF2', salt, iterations: 120_000, hash: 'SHA-256' },
@@ -38,6 +48,12 @@ async function hashPassword(password: string, salt: Uint8Array): Promise<string>
 }
 
 export async function createLocalAccount(name: string, email: string, password: string): Promise<void> {
+  if (!name.trim()) throw new Error('Enter your full name.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    throw new Error('Enter a valid email address.');
+  }
+  if (password.length < 8) throw new Error('Password must be at least 8 characters.');
+
   const normalizedEmail = email.trim().toLowerCase();
   const accounts = getAccounts();
   if (accounts.some(account => account.email.toLowerCase() === normalizedEmail)) {

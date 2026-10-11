@@ -16,6 +16,25 @@ import {
   Cell
 } from 'recharts';
 import { Link } from 'react-router-dom';
+import { getLocalAccountsForExport } from '../services/localAuth';
+
+function csvCell(value: string | number): string {
+  const text = String(value);
+  const safeText = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+  return `"${safeText.replace(/"/g, '""')}"`;
+}
+
+function downloadCSV(filename: string, rows: (string | number)[][]): void {
+  const csv = rows.map(row => row.map(csvCell).join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }));
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState<'Overview' | 'Top Matches' | 'Dossier'>('Overview');
@@ -42,22 +61,32 @@ export default function Reports() {
     { id: 3, student1: 'Priya Nair', student2: 'Sneha Iyer', assignment: 'Data Structures', similarity: 76, status: 'Resolved Clean' },
     { id: 4, student1: 'Arjun Singh', student2: 'Isha Patel', assignment: 'Dynamic Programming', similarity: 71, status: 'Under Review' },
   ];
+  const localAccounts = getLocalAccountsForExport();
 
   const handleDownloadPDF = () => {
     window.print();
   };
 
   const handleDownloadCSV = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "Case ID,Student 1,Student 2,Assignment,Similarity %,Status\n"
-      + topSimilarityCases.map(e => `${e.id},"${e.student1}","${e.student2}","${e.assignment}",${e.similarity},"${e.status}"`).join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "codeguard_academic_integrity_report.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadCSV('codeguard_academic_integrity_report.csv', [
+      ['Case ID', 'Student 1', 'Student 2', 'Assignment', 'Similarity %', 'Status'],
+      ...topSimilarityCases.map(item => [
+        item.id,
+        item.student1,
+        item.student2,
+        item.assignment,
+        item.similarity,
+        item.status,
+      ]),
+    ]);
+  };
+
+  const handleExportAccounts = () => {
+    const accounts = getLocalAccountsForExport();
+    downloadCSV('codeguard-local-accounts.csv', [
+      ['Name', 'Email', 'Created at'],
+      ...accounts.map(account => [account.name, account.email, account.createdAt]),
+    ]);
   };
 
   return (
@@ -73,12 +102,20 @@ export default function Reports() {
             Generate formal, auditable academic integrity documentation for departmental review committees.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={handleDownloadCSV}
             className="px-4 py-2.5 rounded-xl bg-[#15192B] border border-[#1F263E] text-xs font-semibold text-[#DCE1EE] hover:text-white flex items-center gap-2 transition-all cursor-pointer"
           >
             <Download size={14} /> Export CSV
+          </button>
+          <button
+            onClick={handleExportAccounts}
+            disabled={localAccounts.length === 0}
+            title={localAccounts.length === 0 ? 'No locally created accounts to export' : 'Export local account names and email addresses'}
+            className="px-4 py-2.5 rounded-xl bg-white border border-[#E3E7E0] text-xs font-semibold text-[#174C3C] hover:bg-[#F7F6F0] flex items-center gap-2 transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Download size={14} /> Export Accounts ({localAccounts.length})
           </button>
           <button
             onClick={handleDownloadPDF}

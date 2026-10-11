@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Play, ArrowRight, Upload, ScanSearch, FileCheck2 } from 'lucide-react';
+import { Play, ArrowRight, Upload, ScanSearch, FileCheck2, Sparkles, Download, Mail, UsersRound, Code2 } from 'lucide-react';
 
 export default function Landing() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -74,12 +74,12 @@ export default function Landing() {
               Start Free Trial
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link to="/compare" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-sans text-[15px] font-medium text-[#141413] ring-1 ring-[#E8E3DB] transition hover:bg-[#F5F5F5] hover:shadow-sm">
+            <a href="#features" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-sans text-[15px] font-medium text-[#141413] ring-1 ring-[#E8E3DB] transition hover:bg-[#F5F5F5] hover:shadow-sm">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#141413]">
                 <Play className="h-3 w-3 ml-0.5 fill-white text-white" />
               </span>
-              Watch Live Demo
-            </Link>
+              Explore Features
+            </a>
           </div>
         </div>
 
@@ -93,11 +93,11 @@ export default function Landing() {
                   <span className="h-3 w-3 rounded-full bg-[#FFBD2E]"></span>
                   <span className="h-3 w-3 rounded-full bg-[#27CA40]"></span>
                 </div>
-                <span className="ml-4 text-xs font-medium text-[#9A958E] tracking-wide">CS 101 — Assignment 3 • Analysis complete • 2.4s</span>
+                <span className="ml-4 text-xs font-medium text-[#9A958E] tracking-wide">Sample analysis • Human review required</span>
               </div>
               <div className="flex gap-2">
-                <span className="rounded-full bg-[#141413] px-3 py-1 text-[11px] font-bold tracking-wide text-white">FERPA SAFE</span>
-                <span className="rounded-full bg-[#EDE8FF] px-3 py-1 text-[11px] font-bold tracking-wide text-[#7C5CFC]">AST MATCH 87%</span>
+                <span className="rounded-full bg-[#F0EBE3] px-3 py-1 text-[11px] font-bold tracking-wide text-[#6B6B78]">DEMO DATA</span>
+                <span className="rounded-full bg-[#EDE8FF] px-3 py-1 text-[11px] font-bold tracking-wide text-[#7C5CFC]">SIMILARITY 87%</span>
               </div>
             </div>
             
@@ -168,17 +168,53 @@ export default function Landing() {
         </div>
       </main>
 
-      {/* Logos */}
-      <section className="border-y border-[#E8E3DB] bg-white py-8">
-        <div className="mx-auto max-w-[1240px] px-5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#9A958E]">Trusted by CS departments at</p>
-          <div className="flex gap-8 flex-wrap justify-center font-serif text-xl text-[#9A958E] opacity-80">
-            <span>MIT</span>
-            <span>Stanford</span>
-            <span>IIT Bombay</span>
-            <span>NUS</span>
-            <span>ETH Zürich</span>
-            <span>U of T</span>
+      {/* No institutional endorsements are claimed; this is a demo product. */}
+      <section className="border-y border-[#E8E3DB] bg-white py-6">
+        <p className="mx-auto max-w-[1240px] px-5 text-center text-sm font-medium text-[#6B6B78]">
+          Built to support transparent, human-led code review in computer science education.
+        </p>
+      </section>
+
+      {/* Product features */}
+      <section id="features" className="bg-white py-24">
+        <div className="mx-auto max-w-[1240px] px-5">
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <span className="mb-6 inline-block rounded-full bg-[#EDE8FF] px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#7C5CFC]">Features</span>
+            <h2 className="font-serif text-4xl leading-tight md:text-5xl">A clearer workflow for code review.</h2>
+            <p className="mt-4 text-lg leading-relaxed text-[#6B6B78]">Practical tools for comparing submissions, organizing review, and communicating with care.</p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#EDE8FF] text-[#6549D8]"><Code2 size={22} /></div>
+              <h3 className="font-serif text-xl">Side-by-side comparisons</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Compare code submissions and review matched sections alongside the original context.</p>
+            </article>
+            <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#E4F1E9] text-[#174C3C]"><Sparkles size={22} /></div>
+              <h3 className="font-serif text-xl">Optional Gemini insights</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Request AI-generated observations to support review. Results are indicators, not proof, and require human judgment.</p>
+            </article>
+            <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#FCF6F0] text-[#9B5C37]"><Download size={22} /></div>
+              <h3 className="font-serif text-xl">Exportable reports</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Download report data as CSV or use your browser’s print dialog to save a PDF.</p>
+            </article>
+            <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#EDE8FF] text-[#6549D8]"><UsersRound size={22} /></div>
+              <h3 className="font-serif text-xl">Organized review workspace</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Keep submissions, assignments, projects, and review activity together in one dashboard.</p>
+            </article>
+            <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#E4F1E9] text-[#174C3C]"><Mail size={22} /></div>
+              <h3 className="font-serif text-xl">Instructor email composer</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Draft and send review communications through the configured EmailJS service.</p>
+            </article>
+            <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#FCF6F0] text-[#9B5C37]"><FileCheck2 size={22} /></div>
+              <h3 className="font-serif text-xl">Human-led decisions</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Review evidence in context. Similarity scores and AI outputs should never decide a case on their own.</p>
+            </article>
           </div>
         </div>
       </section>
@@ -268,8 +304,12 @@ export default function Landing() {
       </section>
       
       {/* Footer */}
-      <footer className="bg-[#141413] text-white py-12 text-center">
-         <p className="text-gray-400 font-sans text-sm">© 2026 CodeGuard AI. The new standard for academic integrity.</p>
+      <footer className="border-t border-[#E8E3DB] bg-[#F7F6F0] px-5 py-10 text-center">
+         <p className="font-sans text-sm text-[#6B6B78]">© 2026 CodeGuard AI. A human-led academic review workspace.</p>
+         <nav aria-label="Legal" className="mt-4 flex justify-center gap-5 font-sans text-xs text-[#6B6B78]">
+           <Link to="/privacy" className="transition hover:text-[#174C3C]">Privacy Policy</Link>
+           <Link to="/terms" className="transition hover:text-[#174C3C]">Terms and Conditions</Link>
+         </nav>
       </footer>
     </div>
   );

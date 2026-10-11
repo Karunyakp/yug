@@ -13,7 +13,6 @@ import {
   Command,
   Share2,
   Mail,
-  Play,
   Shield,
   Menu,
   X
@@ -32,9 +31,10 @@ import Profile from './components/Profile';
 import Features from './components/Features';
 import Landing from './components/Landing';
 import NetworkGraph from './components/NetworkGraph';
-import HackathonDemo from './components/HackathonDemo';
 import EmailCenter from './components/EmailCenter';
 import CommandPalette from './components/CommandPalette';
+import AssistantChat from './components/AssistantChat';
+import { NotFound, PageMetadata, PrivacyPolicy, TermsAndConditions } from './components/PublicPages';
 
 import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
@@ -100,8 +100,9 @@ const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onClo
           <div>
             <p className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider mb-2 px-3">SYSTEM</p>
             <nav className="space-y-1">
-              <NavItem to="/demo" icon={<Play size={17} />} label="Judge Demo Mode" active={isActive('/demo')} />
               <NavItem to="/settings" icon={<Settings size={17} />} label="Settings & Rules" active={isActive('/settings')} />
+              <NavItem to="/privacy" icon={<Shield size={17} />} label="Privacy Policy" active={isActive('/privacy')} />
+              <NavItem to="/terms" icon={<FileText size={17} />} label="Terms & Conditions" active={isActive('/terms')} />
             </nav>
           </div>
         </div>
@@ -187,6 +188,7 @@ const Header = ({ onOpenCommandPalette, onOpenMobile }: { onOpenCommandPalette: 
           <button 
             onClick={() => {
               localStorage.removeItem('isAuthenticated');
+              localStorage.removeItem('currentUserEmail');
               window.location.href = '/login';
             }}
             className="text-xs font-semibold text-[#707A72] hover:text-[#202923] px-3 py-1.5 rounded-lg border border-[#E3E7E0] hover:bg-[#F7F6F0] transition-colors"
@@ -254,12 +256,15 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 function App() {
   return (
     <Router>
+      <PageMetadata />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
+
         <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/submissions" element={<ProtectedRoute><Layout><SubmissionsList /></Layout></ProtectedRoute>} />
         <Route path="/compare" element={<ProtectedRoute><Layout><Compare /></Layout></ProtectedRoute>} />
@@ -271,9 +276,10 @@ function App() {
         <Route path="/users" element={<ProtectedRoute><Layout><UsersPage /></Layout></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Layout><Profile /></Layout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Layout><SettingsPage /></Layout></ProtectedRoute>} />
-        <Route path="/demo" element={<ProtectedRoute><Layout><HackathonDemo /></Layout></ProtectedRoute>} />
         <Route path="/features" element={<ProtectedRoute><Layout><Features /></Layout></ProtectedRoute>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
+      <AssistantChat />
     </Router>
   );
 }

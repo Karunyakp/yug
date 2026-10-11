@@ -12,7 +12,6 @@ import {
   Share2,
   Download,
   Plus,
-  Play,
   X
 } from 'lucide-react';
 
@@ -92,14 +91,6 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
       category: 'Tools',
       icon: FileBarChart,
       action: () => { navigate('/reports'); onClose(); }
-    },
-    {
-      id: 'demo',
-      title: 'Launch Guided Hackathon Demo Mode',
-      category: 'Tools',
-      icon: Play,
-      action: () => { navigate('/demo'); onClose(); },
-      shortcut: 'G J'
     },
     {
       id: 'new_assignment',

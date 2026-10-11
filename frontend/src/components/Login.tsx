@@ -181,6 +181,11 @@ export default function Login() {
               </Link>
             </p>
 
+            <nav aria-label="Legal" className="mt-6 flex justify-center gap-5 text-xs text-[#8A938B]">
+              <Link to="/privacy" className="transition hover:text-[#174C3C]">Privacy Policy</Link>
+              <Link to="/terms" className="transition hover:text-[#174C3C]">Terms and Conditions</Link>
+            </nav>
+
             <div className="mt-8 flex items-center justify-center gap-2 border-t border-[#EDF0EB] pt-5 text-xs text-[#8A938B]">
               <LockKeyhole size={13} />
               Your workspace is protected with secure sign-in.

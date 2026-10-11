@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { runLocalMultiLayerComparison, type CodeAnalysisResult } from '../services/analysisEngine';
-import { analyzeCodeWithGemini } from '../services/gemini';
+import { analyzeCodeWithGemini, type AnalysisOutput } from '../services/gemini';
 
 export default function Compare() {
   const defaultCode1 = `def bubble_sort(arr):
@@ -56,8 +56,9 @@ def solve(items):
   const [showStarterConfig, setShowStarterConfig] = useState(false);
   
   const [result, setResult] = useState<CodeAnalysisResult | null>(null);
-  const [geminiInsights, setGeminiInsights] = useState<any>(null);
+  const [geminiInsights, setGeminiInsights] = useState<AnalysisOutput | null>(null);
   const [loading, setLoading] = useState(false);
+  const [analysisError, setAnalysisError] = useState('');
   const [activeTab, setActiveTab] = useState<'evidence' | 'metrics' | 'viva' | 'obfuscation'>('evidence');
 
   // Reviewer Notes state
@@ -66,16 +67,46 @@ def solve(items):
 
   const runAnalysis = async () => {
     setLoading(true);
+    setAnalysisError('');
     try {
       const localResult = runLocalMultiLayerComparison(code1, code2, starterCode);
       setResult(localResult);
 
-      const aiData = await analyzeCodeWithGemini(code1, code2, starterCode);
-      setGeminiInsights(aiData);
+      try {
+        const aiData = await analyzeCodeWithGemini(code1, code2, starterCode);
+        setGeminiInsights(aiData);
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : 'Gemini analysis failed.';
+        setGeminiInsights({
+          source: 'local-fallback',
+          fallbackReason: reason,
+          overall_similarity: localResult.overall_similarity,
+          baseline_similarity: localResult.lexical_similarity,
+          structural_similarity: localResult.structural_similarity,
+          cross_language_similarity: localResult.cross_language_similarity,
+          explanation: 'Gemini was unavailable. The findings below are generated only from the local comparison heuristics.',
+          ai_analysis: [
+            `Local lexical similarity: ${Math.round(localResult.lexical_similarity * 100)}%.`,
+            `Local structural similarity: ${Math.round(localResult.structural_similarity * 100)}%.`,
+            ...localResult.obfuscation_signals.map(signal => signal.description),
+            'Local heuristics do not assess AI authorship and are not proof of misconduct.',
+          ],
+          ai_patterns: {
+            observed_characteristics: [],
+            limitations: 'Gemini could not be reached. These are local rule-based indicators only; no AI-authorship assessment was performed.',
+            viva_questions: [
+              'Can you explain the control-flow and loop boundaries in your implementation?',
+              'What alternative approaches did you consider for this problem?',
+              'How would you test this implementation with edge-case inputs?',
+            ],
+          },
+        });
+      }
     } catch (err) {
-      console.error(err);
+      setAnalysisError(err instanceof Error ? err.message : 'Unable to run the local comparison.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const simScore = result ? Math.round(result.overall_similarity * 100) : 0;
@@ -142,10 +173,28 @@ def solve(items):
             className="bg-[#174C3C] hover:bg-[#10382D] text-white px-5 py-2 rounded-xl font-semibold text-xs flex items-center gap-2 transition-all disabled:opacity-50 shadow-xs cursor-pointer"
           >
             <Play size={13} className={loading ? "animate-pulse" : ""} fill="currentColor" />
-            {loading ? 'Evaluating AST Models...' : 'Run Comparative Analysis'}
+            {loading ? 'Analyzing submissions...' : 'Run Comparative Analysis'}
           </button>
         </div>
       </div>
+
+      {analysisError && (
+        <div role="alert" className="rounded-xl border border-[#F5C7C3] bg-[#FBE8E6] px-4 py-3 text-sm text-[#A82A2A] print-hidden">
+          {analysisError}
+        </div>
+      )}
+      {geminiInsights && (
+        <div className={`rounded-xl border px-4 py-3 text-xs leading-5 print-hidden ${
+          geminiInsights.source === 'gemini'
+            ? 'border-[#C3E4CF] bg-[#E4F1E9] text-[#174C3C]'
+            : 'border-[#F6E0B5] bg-[#FFF1D6] text-[#7C5315]'
+        }`}>
+          <strong>{geminiInsights.source === 'gemini' ? 'Gemini API analysis completed.' : 'Gemini unavailable — showing local fallback findings.'}</strong>
+          {geminiInsights.source === 'local-fallback' && (
+            <span> Local results are heuristic only and are not AI findings. {geminiInsights.fallbackReason}</span>
+          )}
+        </div>
+      )}
 
       {/* Starter Code Exclusion Config */}
       {showStarterConfig && (
@@ -282,7 +331,7 @@ def solve(items):
                       <Sparkles size={14} /> Evaluation Finding Summary
                     </h3>
                     <p className="text-xs text-[#202923] leading-relaxed mb-4">
-                      {result.explanation}
+                      {geminiInsights?.explanation || result.explanation}
                     </p>
 
                     <div className="space-y-2">
@@ -296,7 +345,9 @@ def solve(items):
 
                     <div className="mt-4 pt-4 border-t border-[#E3E7E0] flex items-center justify-between print-hidden">
                       <span className="text-[11px] text-[#707A72]">
-                        Verified with AST intermediate representation and Google Gemini 3.8 Flash.
+                        {geminiInsights?.source === 'gemini'
+                          ? 'Local comparison plus live Google Gemini API analysis.'
+                          : 'Local heuristic comparison; AI results are not available.'}
                       </span>
                       <Link
                         to="/email-center"

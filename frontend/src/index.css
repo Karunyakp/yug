@@ -67,7 +67,15 @@
   color: #202923 !important;
 }
 
-.legacy-dark-page [class~="text-white"][class*="bg-"] {
+.legacy-dark-page [class~="text-white"][class*="bg-[#174C3C]"],
+.legacy-dark-page [class~="text-white"][class*="bg-pink-"],
+.legacy-dark-page [class~="text-white"][class*="bg-blue-"],
+.legacy-dark-page [class~="text-white"][class*="bg-purple-"],
+.legacy-dark-page [class~="text-white"][class*="bg-violet-"],
+.legacy-dark-page [class~="text-white"][class*="bg-cyan-"],
+.legacy-dark-page [class~="text-white"][class*="bg-emerald-"],
+.legacy-dark-page [class~="text-white"][class*="bg-amber-"],
+.legacy-dark-page [class~="text-white"][class*="bg-gradient-to-"] {
   color: #FFFFFF !important;
 }
 
