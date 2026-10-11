@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGuard AI - Pitch & Demo Script</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --accent-bg: #eff6ff;
+            --accent-border: #bfdbfe;
+            --warning-bg: #fffbebf5;
+            --warning-border: #fde68a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.5;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .no-print {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.25rem;
+        }
+
+        .quote-box {
+            background-color: var(--accent-bg);
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0 6px 6px 0;
+            margin: 1rem 0;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--text-dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem 0.85rem;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .time-col {
+            width: 15%;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--primary-dark);
+        }
+
+        .action-col {
+            width: 35%;
+        }
+
+        .script-col {
+            width: 50%;
+        }
+
+        ul {
+            padding-left: 1.25rem;
+            margin: 0.5rem 0;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+        }
+
+        .checklist-item {
+            list-style: none;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .checklist-item::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+                max-width: 100%;
+                font-size: 11pt;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .card {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-bottom: 0;
+            }
+
+            h2 {
+                margin-top: 1.2rem;
+                page-break-after: avoid;
+            }
+
+            table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            .quote-box {
+                border-left-color: #000;
+                background-color: #f8f8f8;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <button class="btn" onclick="window.print()">Export as PDF / Print</button>
+    </div>
+
+    <div class="card">
+        <header>
+            <span class="badge">HACKATHON DEMO PLAN</span>
+            <h1>CodeGuard AI</h1>
+            <p class="subtitle">Pitch Summary, 2-Minute Script & Pre-Recording Safety Guide</p>
+        </header>
+
+        <section>
+            <h2>🎯 Pitch Summary</h2>
+            
+            <p><strong>Opening Hook:</strong></p>
+            <div class="quote-box">
+                “What if code-similarity tools helped educators ask better questions instead of making accusations? CodeGuard AI is a human-led academic code review workspace. It brings code comparison, visible evidence, review workflows, exports, and optional AI assistance together—while making clear that a similarity score is not proof.”
+            </div>
+
+            <p><strong>Judge-Facing Differentiator:</strong></p>
+            <div class="quote-box" style="background-color: #f0fdf4; border-left-color: #16a34a;">
+                Your differentiator is not <em>“AI catches cheating.”</em> It is <strong>“evidence-first review with transparent limitations and human accountability.”</strong>
+            </div>
+
+            <p><strong>Closing Statement:</strong></p>
+            <div class="quote-box">
+                “CodeGuard AI doesn’t decide whether a student cheated. It helps educators examine the evidence, ask informed questions, and make a fair decision themselves.”
+            </div>
+        </section>
+
+        <section>
+            <h2>⏱️ 2-Minute Video Flow & Script</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="time-col">Time</th>
+                        <th class="action-col">Show (Visual / Screen Action)</th>
+                        <th class="script-col">Say (Audio / Presentation Script)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0:00–0:15</td>
+                        <td class="action-col">Start on the <strong>Home Page</strong></td>
+                        <td class="script-col">“Code review integrity is difficult: similar code can be a useful signal, but it isn’t proof of misconduct. CodeGuard AI is a review workspace designed to help educators inspect evidence and keep decisions human-led.”</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">0:15–0:30</td>
+                        <td class="action-col">Open <strong>All Features</strong> view</td>
+                        <td class="script-col">“The platform brings code comparison, review workflows, reporting, communication, and optional AI assistance into one experience.”</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">0:30–0:45</td>
+                        <td class="action-col">Sign in, then show the <strong>Dashboard</strong></td>
+                        <td class="script-col">“This frontend demo includes a dashboard and connected screens for submissions, assignments, reports, and review staff. Some of the dashboard content is illustrative sample data.”</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">0:45–1:15</td>
+                        <td class="action-col">Open <strong>Code Analysis / Compare</strong>. Run analysis on the prefilled example. Show the comparison and evidence.</td>
+                        <td class="script-col">“Here, an instructor can compare two code samples and inspect the local similarity indicators. When Gemini is configured and available, the app can also provide AI-generated observations. Those observations are advisory—not a verdict.”</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">1:15–1:30</td>
+                        <td class="action-col">Briefly show the <strong>AI error/fallback state</strong> if available, or just explain it</td>
+                        <td class="script-col">“If the AI service isn’t available, the app labels its local heuristic findings clearly instead of pretending they came from AI. That makes the limitation visible to the reviewer.”</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">1:30–1:45</td>
+                        <td class="action-col">Open <strong>Reports</strong> and point to CSV/PDF export options</td>
+                        <td class="script-col">“Review data can be exported from the browser as CSV, and reports can be printed to PDF. Account exports omit password hashes.”</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">1:45–2:00</td>
+                        <td class="action-col">Show the <strong>Assistant button</strong>, then finish on the home page</td>
+                        <td class="script-col">“CodeGuard AI is a frontend-first prototype: accounts are browser-local, and connected AI or email features depend on configuration. Our goal is to make review more transparent—not to automate judgment.”</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>📋 Pre-Recording Checklist & Safety Guidelines</h2>
+            <ul>
+                <li class="checklist-item">Use prefilled demo credentials: <code>verma@gmail.com</code> / <code>verma</code>.</li>
+                <li class="checklist-item">Test the Compare flow once prior to recording. Confirm whether Gemini responds; if it doesn't, show the clearly labeled local fallback rather than implying the AI request succeeded.</li>
+                <li class="checklist-item">Use only sample code already present on the Compare page. <strong>Do not</strong> display real student submissions or personal data.</li>
+                <li class="checklist-item">Avoid presenting the dashboard's sample counts as real institutional activity.</li>
+                <li class="checklist-item">Do <strong>not</strong> claim university adoption, FERPA compliance, guaranteed accuracy, or automated AST capabilities unless you can independently demonstrate and substantiate them.</li>
+                <li class="checklist-item">Hide browser tabs, system notifications, passwords, API keys, and developer tools in the recording.</li>
+                <li class="checklist-item">Keep screen transitions quick; allocate maximum time to showing the comparison evidence and explaining why the final decision remains human-led.</li>
+            </ul>
+        </section>
+    </div>
+
+</body>
+</html>
