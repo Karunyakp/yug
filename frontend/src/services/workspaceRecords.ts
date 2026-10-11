@@ -27,6 +27,28 @@ export const workspaceSubmissions = [
   { id: 'SUB-2046', learner: 'Maya Chen', assignment: 'Graph Traversal Lab', course: 'CS 201', submittedAt: dateHoursAgo(19), status: 'Needs review' },
   { id: 'SUB-2045', learner: 'Noah Williams', assignment: 'Object-Oriented Programming', course: 'CS 110', submittedAt: dateHoursAgo(27), status: 'Reviewed' },
   { id: 'SUB-2044', learner: 'Sofia Patel', assignment: 'Sorting Algorithms & Complexity', course: 'CS 201', submittedAt: dateHoursAgo(42), status: 'Submitted' },
+  { id: 'SUB-2043', learner: 'Lucas Martin', assignment: 'Sorting Algorithms & Complexity', course: 'CS 201', submittedAt: dateHoursAgo(51), status: 'Submitted' },
+  { id: 'SUB-2042', learner: 'Ava Thompson', assignment: 'Graph Traversal Lab', course: 'CS 201', submittedAt: dateHoursAgo(59), status: 'Submitted' },
+  { id: 'SUB-2041', learner: 'Oliver James', assignment: 'Graph Traversal Lab', course: 'CS 201', submittedAt: dateHoursAgo(65), status: 'Reviewed' },
+  { id: 'SUB-2040', learner: 'Isabella Rossi', assignment: 'REST API Design', course: 'CS 305', submittedAt: dateHoursAgo(72), status: 'Submitted' },
+  { id: 'SUB-2039', learner: 'Mateo Garcia', assignment: 'REST API Design', course: 'CS 305', submittedAt: dateHoursAgo(81), status: 'Needs review' },
+  { id: 'SUB-2038', learner: 'Harper Lee', assignment: 'Object-Oriented Programming', course: 'CS 110', submittedAt: dateHoursAgo(90), status: 'Submitted' },
+  { id: 'SUB-2037', learner: 'Amir Hassan', assignment: 'Object-Oriented Programming', course: 'CS 110', submittedAt: dateHoursAgo(96), status: 'Reviewed' },
+];
+
+export const workspaceOverlapLinks = [
+  { source: 'SUB-2048', target: 'SUB-2044', overlap: 68, evidence: 'Shared sorting and partition logic' },
+  { source: 'SUB-2048', target: 'SUB-2043', overlap: 47, evidence: 'Similar helper function structure' },
+  { source: 'SUB-2044', target: 'SUB-2043', overlap: 39, evidence: 'Matching boundary-condition handling' },
+  { source: 'SUB-2046', target: 'SUB-2042', overlap: 56, evidence: 'Shared traversal queue pattern' },
+  { source: 'SUB-2046', target: 'SUB-2041', overlap: 32, evidence: 'Similar visited-node handling' },
+  { source: 'SUB-2042', target: 'SUB-2041', overlap: 27, evidence: 'Matching graph initialization structure' },
+  { source: 'SUB-2047', target: 'SUB-2040', overlap: 34, evidence: 'Similar route and validation structure' },
+  { source: 'SUB-2047', target: 'SUB-2039', overlap: 22, evidence: 'Shared response handling pattern' },
+  { source: 'SUB-2040', target: 'SUB-2039', overlap: 18, evidence: 'Matching request parsing structure' },
+  { source: 'SUB-2045', target: 'SUB-2038', overlap: 41, evidence: 'Similar class and method organization' },
+  { source: 'SUB-2045', target: 'SUB-2037', overlap: 25, evidence: 'Shared constructor pattern' },
+  { source: 'SUB-2038', target: 'SUB-2037', overlap: 19, evidence: 'Matching object initialization structure' },
 ];
 
 export const workspaceReports = [
