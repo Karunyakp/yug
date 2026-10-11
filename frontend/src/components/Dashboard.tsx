@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
       <div className="bg-gradient-to-r from-pink-600/20 via-violet-600/10 to-transparent rounded-2xl border border-pink-500/20 p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-pink-200">Hackathon USP</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-pink-200">Platform Highlight</p>
             <h2 className="mt-2 text-2xl font-bold text-white">AI Code Integrity Studio for ethical academic review</h2>
           </div>
           <Link to="/features" className="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-500 text-white rounded-full px-4 py-2 text-sm font-medium transition-colors">

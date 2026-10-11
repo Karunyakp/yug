@@ -27,7 +27,7 @@ const featureCards = [
 const differentiators = [
   'Multi-layered similarity scoring across syntax, structure, and logic patterns.',
   'Instant review pipeline for faculty instead of manual code inspection overhead.',
-  'Built for educational institutions, labs, and hackathons with a polished admin UX.',
+  'Built for educational institutions, computer science labs, and universities with a polished admin UX.',
   'Actionable analytics that show risk clusters, trends, and at-risk batches in one screen.',
 ];
 
@@ -99,7 +99,7 @@ export default function Features() {
         <div className="bg-[#1a1a24] rounded-2xl border border-white/5 p-6">
           <div className="flex items-center gap-2 mb-4">
             <Zap className="w-5 h-5 text-pink-300" />
-            <h2 className="text-white text-xl font-semibold">Why this wins a hackathon</h2>
+            <h2 className="text-white text-xl font-semibold">Why institutions choose CodeGuard</h2>
           </div>
 
           <div className="space-y-4">
@@ -132,7 +132,7 @@ export default function Features() {
       <div className="bg-[#1a1a24] rounded-2xl border border-white/5 p-6 md:p-8">
         <h2 className="text-white text-2xl font-bold">The product story</h2>
         <p className="mt-3 text-gray-400 max-w-3xl leading-relaxed">
-          We did not build another static plagiarism checker. We built a decision-support system for academic integrity: it combines intelligent code similarity analysis, reviewer-first analytics, and elegant institutional reporting into a single experience that feels premium, credible, and hackathon-ready.
+          We did not build another static plagiarism checker. We built a decision-support system for academic integrity: it combines intelligent code similarity analysis, reviewer-first analytics, and elegant institutional reporting into a single experience that feels premium, credible, and enterprise-ready.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-pink-500/20 bg-pink-500/10 px-3 py-1.5 text-pink-200 text-sm">Faster review</span>
@@ -141,7 +141,7 @@ export default function Features() {
         </div>
 
         <Link to="/dashboard" className="mt-8 inline-flex items-center justify-center gap-2 bg-white text-black rounded-full px-5 py-2.5 font-medium hover:bg-gray-200 transition-colors">
-          Pitch this product
+          Explore Platform
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
