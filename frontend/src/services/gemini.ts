@@ -54,7 +54,7 @@ export async function askCodeGuardAssistant(history: AssistantTurn[]): Promise<s
     .join('\n\n');
   const response = await createClient().interactions.create({
     model: 'gemini-3.8-flash',
-    input: `You are the CodeGuard AI help assistant. Answer questions about using this frontend demo and general code review concepts. Be clear that similarity indicators are not proof of misconduct and that a human instructor must make decisions. Do not claim that you can see the user's account, files, or app data unless they include it in this chat. Do not request passwords, API keys, or sensitive student information. Keep answers concise and practical.\n\nConversation:\n${conversation}`,
+    input: `You are the CodeGuard AI help assistant. Answer questions about using CodeGuard and general code review concepts. Be clear that similarity indicators are not proof of misconduct and that a human instructor must make decisions. Do not claim that you can see the user's account, files, or app data unless they include it in this chat. Do not request passwords, API keys, or sensitive student information. Keep answers concise and practical.\n\nConversation:\n${conversation}`,
   });
   if (!response.output_text?.trim()) {
     throw new Error('Gemini returned an empty assistant response.');
@@ -87,7 +87,7 @@ export async function analyzeCodeWithGemini(
   code2: string,
   starterCode?: string,
 ): Promise<AnalysisOutput> {
-  const prompt = `You are CodeGuard AI, a code-reading assistant for an academic demo.
+  const prompt = `You are CodeGuard AI, a code-reading assistant for academic review.
 Describe only concrete, observable similarities or differences in the submitted snippets. Common algorithms and assignment requirements can independently produce similar code. Do not infer copying, AI authorship, intent, or misconduct. Do not produce similarity or probability scores, risk labels, or claims about AST analysis. Keep the observations neutral and explicitly state that human review and student context are needed.
 
 Submission 1:

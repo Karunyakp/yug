@@ -204,7 +204,7 @@ export default function StudentResponse() {
                   <pre className="max-h-96 overflow-auto bg-white p-4 text-xs leading-5 text-[#354139]"><code>{code}</code></pre>
                 </details>
               ))}
-              <p className="text-xs leading-5 text-[#707A72]">These samples were saved in this browser for this demo view. Anyone with access to this browser profile may be able to inspect them.</p>
+              <p className="text-xs leading-5 text-[#707A72]">These samples were saved in this browser. Anyone with access to this browser profile may be able to inspect them.</p>
             </section>
           )}
 
@@ -235,7 +235,7 @@ export default function StudentResponse() {
           </section>
 
           <div className="mt-8 border-t border-[#E3E7E0] pt-5 text-xs leading-5 text-[#707A72]">
-            <strong className="text-[#354139]">Demo limitation:</strong> this frontend has no backend or secure delivery workflow. A response saved here is not visible to faculty and does not sync to another device. Use your institution’s official process to submit a formal response.
+            <strong className="text-[#354139]">Local response:</strong> a response saved here is not visible to faculty and does not sync to another device. Use your institution’s official process to submit a formal response.
           </div>
         </section>
 

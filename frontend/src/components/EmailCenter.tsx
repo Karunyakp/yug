@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { sendStudentEmail, isEmailJSConfigured } from '../services/emailService';
 import { recordAuditEvent } from '../services/localAuditLog';
+import ToggleSwitch from './ToggleSwitch';
 
 interface Template {
   id: string;
@@ -262,11 +263,11 @@ export default function EmailCenter() {
       </div>
 
       <label className="flex items-start gap-3 rounded-xl border border-[#F6E0B5] bg-[#FFF9EC] p-3 text-xs leading-5 text-[#684713]">
-        <input
-          type="checkbox"
+        <ToggleSwitch
           checked={authorizedToSend}
-          onChange={event => setAuthorizedToSend(event.target.checked)}
-          className="mt-0.5 h-4 w-4 accent-[#174C3C]"
+          onChange={setAuthorizedToSend}
+          label="Authorize sharing recipient details and message with EmailJS"
+          className="mt-0.5"
         />
         <span>I am authorized to share these recipient details and message with EmailJS and its configured email provider, and have followed the applicable notice and consent process.</span>
       </label>
@@ -276,7 +277,7 @@ export default function EmailCenter() {
         <div className="p-4 rounded-xl bg-[#FFF1D6] border border-[#F6E0B5] flex items-start gap-3 text-xs text-[#7C5315]">
           <Info className="w-4 h-4 shrink-0 mt-0.5" />
           <div className="leading-relaxed">
-            <strong>EmailJS Provider Ready:</strong> Add your credentials (<code>EMAILJS_SERVICE_ID</code>, <code>EMAILJS_TEMPLATE_ID</code>, <code>EMAILJS_PUBLIC_KEY</code>) to your environment variables to enable live delivery to student inboxes. Form validation and live previews are fully active.
+            <strong>Email delivery setup required:</strong> Add your credentials (<code>EMAILJS_SERVICE_ID</code>, <code>EMAILJS_TEMPLATE_ID</code>, <code>EMAILJS_PUBLIC_KEY</code>) to your environment variables to enable delivery. Form validation and message previews are available.
           </div>
         </div>
       )}

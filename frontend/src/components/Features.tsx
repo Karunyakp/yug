@@ -230,7 +230,7 @@ export default function Features() {
               <span className="block text-[#174C3C]">with context, not a score.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-[#5E6961]">
-              CodeGuard AI is an academic code-review demo designed to keep evidence, student context, and human judgment in the loop. Explore the working features and the ideas that are not built yet.
+              An academic code-review workspace designed to keep evidence, student context, and human judgment in the loop.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link to="/signup" className="inline-flex items-center gap-2 rounded-xl bg-[#174C3C] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#10382D]">
@@ -264,7 +264,7 @@ export default function Features() {
                 <span className="block text-[#C3E4CF]">Less guesswork.</span>
               </h2>
               <p className="mt-4 text-sm leading-6 text-white/75">
-                Similarity is only a prompt for review, never an automated verdict. The demo foregrounds the limits of its simple local heuristics and keeps decisions with people.
+                Similarity is a prompt for review, never an automated verdict. Results use local text-based heuristics and decisions stay with people.
               </p>
               <Link to="/compare" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#174C3C] transition hover:bg-[#E4F1E9]">
                 See the comparison workspace <ArrowRight size={16} />
@@ -293,55 +293,27 @@ export default function Features() {
         />
         <FeatureGroup
           title="Academic review workflow"
-          description="Explore the app’s connected screens for organizing submissions, assignments, evidence, and staff."
+          description="Navigate the workspace for submissions, assignments, reports, and account management."
           features={workflowFeatures}
         />
         <FeatureGroup
           title="Communication and assistance"
-          description="Optional integrations extend the browser demo. Their requests are sent from the browser to the configured provider."
+          description="Optional integrations send requests from your browser to their configured provider."
           features={connectedFeatures}
         />
-
-        <section className="mt-14 rounded-3xl border border-[#E3E7E0] bg-white p-6 sm:p-9">
-          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#174C3C]">Not implemented · roadmap concepts</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#202923]">A roadmap for fairer review</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#707A72]">
-            These concepts are not implemented and should not be presented as working features. Each needs careful validation, consent, and a safe workflow before it can support academic decisions.
-          </p>
-          <div className="mt-5 grid gap-4 md:grid-cols-3">
-            {[
-              ['Assignment coincidence baseline', 'Not available. Would require validated independent-solution data before estimating how often overlap occurs by chance.'],
-              ['AI-assisted code signal', 'Not available. Reliable authorship classification is not established here; any future signal must be probabilistic, evaluated for bias, and never treated as proof.'],
-              ['Historical or public code corpus', 'Not available. Cross-semester, GitHub, and Q&A matching requires licensed, governed data sources and careful attribution controls.'],
-              ['Learning-mode private self-check', 'Not available. A future student-controlled practice mode could explain common patterns without sharing work with faculty.'],
-              ['Learning-management-system integrations', 'Not available. Classroom, Moodle, and GitHub Classroom connectors need secure institutional authorization and backend integration.'],
-              ['Fairness and impact dashboard', 'Not available. It requires governed, high-quality data and privacy-preserving analysis; this demo cannot measure disparate impact.'],
-              ['Multilingual notices', 'Not available. Hindi, Marathi, Tamil, and other message translations need review for accuracy and institutional suitability.'],
-              ['Student-controlled authorship fingerprint', 'Not available. A style profile could be misleading and privacy-sensitive; it must not be treated as proof or silently built from student work.'],
-              ['WebAssembly / in-browser AST parsing', 'Not available. Current analysis is local JavaScript token and line heuristics, not a parser or WebAssembly engine.'],
-              ['Timed or voice viva', 'Not available. The current generator only drafts questions; it does not record voice, time answers, or automatically assess a student.'],
-              ['Student coding provenance', 'Not available. A proposed editor timeline could provide context, but would not prove authorship and would need student control.'],
-            ].map(([title, description]) => (
-              <article key={title} className="rounded-2xl border border-[#E3E7E0] bg-[#F7F6F0] p-5">
-                <h3 className="text-sm font-semibold text-[#202923]">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#707A72]">{description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
 
         <section className="mt-14">
           <div className="mb-6 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#174C3C]">A quick product tour</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#202923]">From code sample to considered review.</h2>
-            <p className="mt-2 text-sm leading-6 text-[#707A72]">Follow this short path to see the core experience in the demo.</p>
+            <p className="mt-2 text-sm leading-6 text-[#707A72]">A focused workflow from code comparison to review.</p>
           </div>
           <div className="grid gap-4 lg:grid-cols-4">
             {[
-              { step: '01', title: 'Open Compare', body: 'Start with the sample code or enter code you are authorized to review.', href: '/compare', icon: <Code2 size={19} /> },
+              { step: '01', title: 'Open Compare', body: 'Enter code you are authorized to review.', href: '/compare', icon: <Code2 size={19} /> },
               { step: '02', title: 'Run analysis', body: 'View local similarity indicators and optional AI observations when configured.', href: '/compare', icon: <BrainCircuit size={19} /> },
               { step: '03', title: 'Review context', body: 'Treat results as prompts for careful investigation, not as proof or a decision.', href: '/terms', icon: <CircleHelp size={19} /> },
-              { step: '04', title: 'Export a report', body: 'Explore CSV export and print-to-PDF options in the reports workspace.', href: '/reports', icon: <Download size={19} /> },
+              { step: '04', title: 'Export results', body: 'Print comparison results or export account information.', href: '/reports', icon: <Download size={19} /> },
             ].map(item => (
               <Link key={item.step} to={item.href} className="group rounded-2xl border border-[#E3E7E0] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#B8D4C0] hover:shadow-md">
                 <div className="flex items-center justify-between">
@@ -362,7 +334,7 @@ export default function Features() {
           <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#174C3C]">Transparent by design</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight">A demo, not a production security system.</h2>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">Designed for transparent, responsible review.</h2>
               <p className="mt-3 text-sm leading-6 text-[#707A72]">
                 Local accounts are browser-specific. AI requests can include the code or chat text you submit. Similarity signals can be inaccurate and must not be treated as proof or as an automated decision.
               </p>
@@ -382,7 +354,7 @@ export default function Features() {
         </section>
 
         <footer className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-[#DDE3DB] py-6 text-xs text-[#707A72]">
-          <p>© 2026 CodeGuard AI · Frontend demonstration</p>
+          <p>© 2026 CodeGuard AI · Academic code review</p>
           <nav aria-label="Legal and product pages" className="flex gap-4">
             <Link to="/" className="hover:text-[#174C3C]">Home</Link>
             <Link to="/privacy" className="hover:text-[#174C3C]">Privacy Policy</Link>

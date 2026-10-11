@@ -9,7 +9,7 @@ const pageMetadata: Record<string, { title: string; description: string }> = {
   },
   '/login': {
     title: 'Sign in | CodeGuard AI',
-    description: 'Sign in to your CodeGuard AI browser-local demo workspace.',
+    description: 'Sign in to your CodeGuard AI workspace.',
   },
   '/signup': {
     title: 'Create an account | CodeGuard AI',
@@ -17,19 +17,19 @@ const pageMetadata: Record<string, { title: string; description: string }> = {
   },
   '/features': {
     title: 'Features | CodeGuard AI',
-    description: 'Explore CodeGuard AI code comparison, review workflows, report exports, AI assistance, and frontend demo limitations.',
+    description: 'Explore CodeGuard AI code comparison, review workflows, report exports, and optional AI assistance.',
   },
   '/student-response': {
     title: 'Student Evidence and Response | CodeGuard AI',
-    description: 'Review comparison context and save a student response locally in this browser demo.',
+    description: 'Review comparison context and save a student response in this browser.',
   },
   '/privacy': {
     title: 'Privacy Policy | CodeGuard AI',
-    description: 'Learn how the CodeGuard AI frontend demo stores information locally and uses connected services.',
+    description: 'Learn how CodeGuard AI stores information locally and uses connected services.',
   },
   '/terms': {
     title: 'Terms and Conditions | CodeGuard AI',
-    description: 'Read the terms for using the CodeGuard AI frontend demonstration application.',
+    description: 'Read the terms for using CodeGuard AI.',
   },
   '/not-found': {
     title: 'Page not found | CodeGuard AI',
@@ -75,7 +75,7 @@ function PublicPageFrame({ children }: { children: React.ReactNode }) {
           </div>
         </article>
         <p className="mt-6 text-center text-xs leading-5 text-[#8A938B]">
-          CodeGuard AI is a frontend demonstration. Do not use it to store sensitive or confidential information.
+          Account and activity data are stored in this browser. Do not store sensitive or confidential information here.
         </p>
       </div>
     </main>
@@ -106,29 +106,28 @@ export function PrivacyPolicy() {
     <PublicPageFrame>
       <PolicyHeading eyebrow="Your information" title="Privacy Policy" updated="October 2026" />
       <p className="text-sm leading-7 text-[#5E6961]">
-        This policy describes the data flows in the CodeGuard AI frontend demonstration. The app has no application backend or server-side account database. Features and connected providers may change as the demo evolves.
+        This policy describes how CodeGuard AI handles information. Accounts and activity are stored in the browser; there is no server-side account database.
       </p>
       <PolicySection title="Information stored in your browser">
         <p>When you create an account, your name, email address, account creation date, and a password verifier are saved in this browser&apos;s local storage. Passwords are not stored as plain text, but this browser-only sign-in is not production-grade security. Anyone with access to this browser profile or its developer tools may access or alter local data.</p>
         <p>Signing out does not delete a locally saved account. Clearing this site&apos;s browser storage removes it. Local account data does not automatically sync to another browser or device.</p>
-        <p>Some screens display sample or in-memory demonstration data. Do not treat it as a secure record system.</p>
-        <p>Submission-list reviewer assignments and common-pattern context labels, plus a browser-local activity log of comparison runs, review-state changes, bulk actions, and successful email sends, may also be stored in local storage. The log is editable and clearable and is not tamper-proof. Student response evidence and code are stored locally only when a reviewer explicitly prepares that same-browser view.</p>
+        <p>A comparison is processed in the current page and is not saved as a submission or report record. A browser-local activity log may record actions such as comparison runs and email sends. The log is editable and clearable and is not tamper-proof. Student response evidence and code are stored locally only when a reviewer explicitly prepares that same-browser view.</p>
       </PolicySection>
       <PolicySection title="When information is sent to third parties">
         <p><strong>Google Gemini:</strong> Code comparison runs locally by default. Only when you enable the explicit Gemini consent option and request analysis or question generation does the selected code or prompt go directly from your browser to Google&apos;s Gemini service using the configured public API key. Assistant messages are also sent to Gemini when you submit them. Review Google&apos;s applicable terms and privacy information first. Do not submit secrets, personal data, or confidential student work unless you have appropriate authorization and notice/consent.</p>
-        <p><strong>EmailJS:</strong> When you confirm sending from Email Center, recipient details and message content are sent to EmailJS and its configured email provider. Confirm you are authorized to share the details and that the recipient has been appropriately informed. Transport and handling depend on provider configuration; this demo makes no independent security or encryption guarantee.</p>
+        <p><strong>EmailJS:</strong> When you confirm sending from Email Center, recipient details and message content are sent to EmailJS and its configured email provider. Confirm you are authorized to share the details and that the recipient has been appropriately informed. Transport and handling depend on provider configuration; CodeGuard makes no independent security or encryption guarantee.</p>
         <p><strong>Student response view:</strong> If a reviewer prepares the optional same-browser evidence view, both code samples and comparison context are saved in local storage so they can be inspected from that browser profile. A student response is also saved there. These items are not sent to faculty or synced to another device; anyone with access to the browser profile may be able to inspect or change them. Use your institution&apos;s official process for a formal response.</p>
         <p>Those providers process data under their own policies and terms. This application does not control their retention or processing.</p>
       </PolicySection>
       <PolicySection title="Exports and analytics">
-        <p>Exports such as CSV files and print-to-PDF reports are generated in your browser and downloaded at your direction. You are responsible for protecting exported files after download. This demo does not intentionally send export files to an application server.</p>
+        <p>Exports such as CSV files and print-to-PDF reports are generated in your browser and downloaded at your direction. You are responsible for protecting exported files after download. Export files are not sent to an application server.</p>
         <p>This policy makes no claim about hosting-provider logs, browser extensions, or network-level processing outside the app&apos;s control.</p>
       </PolicySection>
       <PolicySection title="Your choices and contact">
-        <p>You can stop using the app and clear its site data through your browser settings. You can avoid third-party processing by not using AI or email features. No privacy contact or account deletion service is configured in this frontend demo.</p>
+        <p>You can stop using the app and clear its site data through your browser settings. You can avoid third-party processing by not using AI or email features. No privacy contact or account deletion service is configured.</p>
       </PolicySection>
       <PolicySection title="Changes">
-        <p>This policy may be updated when the demo changes. The date above indicates the latest stated revision.</p>
+        <p>This policy may be updated as the service changes. The date above indicates the latest stated revision.</p>
       </PolicySection>
     </PublicPageFrame>
   );
@@ -137,15 +136,15 @@ export function PrivacyPolicy() {
 export function TermsAndConditions() {
   return (
     <PublicPageFrame>
-      <PolicyHeading eyebrow="Using the demo" title="Terms and Conditions" updated="October 2026" />
+      <PolicyHeading eyebrow="Using CodeGuard" title="Terms and Conditions" updated="October 2026" />
       <p className="text-sm leading-7 text-[#5E6961]">
-        By accessing CodeGuard AI, you agree to use this frontend demonstration responsibly. If you do not agree, do not use it.
+        By accessing CodeGuard AI, you agree to use the service responsibly. If you do not agree, do not use it.
       </p>
-      <PolicySection title="Demonstration only">
-        <p>This app is provided for evaluation and demonstration. Accounts are stored in browser storage, not verified by a server, and are not suitable for production identity, access control, or confidential record keeping. Do not rely on the demo for backups, availability, or preservation of data.</p>
+      <PolicySection title="Accounts and data">
+        <p>Accounts are stored in browser storage, not verified by a server, and are not suitable for production identity, access control, or confidential record keeping. Do not rely on the service for backups, availability, or preservation of data.</p>
       </PolicySection>
       <PolicySection title="Responsible academic use">
-        <p>Similarity scores and AI-generated explanations are limited, may be incorrect, and are not proof of plagiarism, misconduct, or AI authorship. This demo has no calibrated assignment baseline and cannot estimate the chance that overlap occurred independently. Similarity can reflect shared starter code, common solutions, teaching materials, or false positives. A qualified human reviewer must independently examine relevant evidence, provide a meaningful opportunity to respond, and follow applicable institutional procedures before reaching a conclusion.</p>
+        <p>Similarity scores and AI-generated explanations are limited, may be incorrect, and are not proof of plagiarism, misconduct, or AI authorship. There is no calibrated assignment baseline to estimate the chance that overlap occurred independently. Similarity can reflect shared starter code, common solutions, teaching materials, or false positives. A qualified human reviewer must independently examine relevant evidence, provide a meaningful opportunity to respond, and follow applicable institutional procedures before reaching a conclusion.</p>
         <p>You are responsible for having the rights and authorization to submit any code or personal information to an external AI or email provider. Do not upload material that you are not permitted to share.</p>
       </PolicySection>
       <PolicySection title="Acceptable use">
@@ -155,10 +154,10 @@ export function TermsAndConditions() {
         <p>AI and email features depend on Google Gemini and EmailJS, respectively. Their availability, outputs, and handling of information are governed by their own terms. The app may be unable to provide these features when a service, network, or public frontend API key is unavailable or restricted.</p>
       </PolicySection>
       <PolicySection title="No warranties or professional advice">
-        <p>The demo is provided “as is” and may contain errors, sample content, or interruptions. To the extent allowed by law, no warranties are made about accuracy, availability, security, or fitness for a particular purpose. The app is not legal, educational, or security advice.</p>
+        <p>The service is provided “as is” and may contain errors or interruptions. To the extent allowed by law, no warranties are made about accuracy, availability, security, or fitness for a particular purpose. The app is not legal, educational, or security advice.</p>
       </PolicySection>
       <PolicySection title="Limitation and changes">
-        <p>To the extent permitted by law, the creators are not liable for decisions made solely from the app&apos;s output, loss of locally stored data, or third-party service behavior. These terms may be revised as the demo changes; continued use after an update constitutes acceptance of the revised terms.</p>
+        <p>To the extent permitted by law, the creators are not liable for decisions made solely from the app&apos;s output, loss of locally stored data, or third-party service behavior. These terms may be revised as the service changes; continued use after an update constitutes acceptance of the revised terms.</p>
         <p>This template is informational and should be reviewed by qualified counsel before use as a binding policy or production service.</p>
       </PolicySection>
     </PublicPageFrame>

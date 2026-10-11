@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { identifyCommonAlgorithm, runLocalMultiLayerComparison, type CodeAnalysisResult } from '../services/analysisEngine';
 import { analyzeCodeWithGemini, generateVivaQuestionsWithGemini, type AnalysisOutput } from '../services/gemini';
 import { recordAuditEvent } from '../services/localAuditLog';
+import ToggleSwitch from './ToggleSwitch';
 
 export default function Compare() {
   const [code1, setCode1] = useState('');
@@ -93,7 +94,7 @@ export default function Compare() {
   const simScore = result ? Math.round(result.overall_similarity * 100) : 0;
   const generateVivaQuestions = async () => {
     if (!allowCodeToGemini) {
-      setVivaError('Turn on the Gemini consent checkbox first. Only code1 will be sent to Google for question generation.');
+      setVivaError('Turn on Gemini consent first. Only code1 will be sent to Google for question generation.');
       return;
     }
     setIsGeneratingQuestions(true);
@@ -204,14 +205,14 @@ export default function Compare() {
       )}
       <div className="rounded-xl border border-[#E3E7E0] bg-white px-4 py-3 print-hidden">
         <label className="flex items-start gap-3 text-xs leading-5 text-[#5E6961]">
-          <input
-            type="checkbox"
+          <ToggleSwitch
             checked={allowCodeToGemini}
-            onChange={event => setAllowCodeToGemini(event.target.checked)}
-            className="mt-0.5 h-4 w-4 accent-[#174C3C]"
+            onChange={setAllowCodeToGemini}
+            label="Allow sending code to Google Gemini for optional analysis"
+            className="mt-0.5"
           />
           <span>
-            <strong className="text-[#202923]">Optional Gemini analysis:</strong> by checking this box, you agree to send both code samples and, when enabled, the starter-code text to Google Gemini for analysis. Without consent, comparison runs locally in this browser. Do not submit student code or personal data unless authorized.
+            <strong className="text-[#202923]">Optional Gemini analysis:</strong> turn this on to send both code samples and, when enabled, the starter-code text to Google Gemini. Without consent, comparison runs locally in this browser. Do not submit student code or personal data unless authorized.
           </span>
         </label>
       </div>
@@ -439,7 +440,7 @@ export default function Compare() {
                     </div>
                   ))}
                   <div className="rounded-xl border border-[#E3E7E0] bg-white p-4 text-xs leading-5 text-[#707A72]">
-                    This demo does not calculate code authorship, intent, plagiarism probability, or a statistical coincidence score.
+                    This analysis does not calculate code authorship, intent, plagiarism probability, or a statistical coincidence score.
                   </div>
                 </div>
               )}
@@ -452,7 +453,7 @@ export default function Compare() {
                       <HelpCircle size={14} /> Explain Your Code
                     </div>
                     <p className="text-xs text-[#707A72] mb-3">
-                      Generate 3–5 neutral, code-grounded questions for a student conversation. Understanding answers do not prove authorship; difficulty answering is not proof of misconduct. This demo does not time or automatically score responses.
+                      Generate 3–5 neutral, code-grounded questions for a student conversation. Understanding answers do not prove authorship; difficulty answering is not proof of misconduct. Responses are not timed or automatically scored.
                     </p>
                     <button
                       type="button"
@@ -460,10 +461,10 @@ export default function Compare() {
                       disabled={isGeneratingQuestions}
                       className="rounded-lg bg-[#174C3C] px-4 py-2 text-xs font-semibold text-white hover:bg-[#10382D] disabled:cursor-wait disabled:opacity-60"
                     >
-                      {isGeneratingQuestions ? 'Generating questions…' : 'Generate questions from Sample A'}
+                      {isGeneratingQuestions ? 'Generating questions…' : 'Generate questions from first code sample'}
                     </button>
                     <p className="mt-2 text-[11px] leading-5 text-[#707A72]">
-                      Requires the Gemini consent checkbox above. Only Sample A&apos;s code is sent to Google for question generation.
+                      Requires Gemini consent above. Only the first code sample is sent to Google for question generation.
                     </p>
                     {vivaError && <p role="alert" className="mt-3 rounded-lg border border-[#F5C7C3] bg-[#FBE8E6] p-3 text-xs text-[#A82A2A]">{vivaError}</p>}
                     {vivaQuestions.length > 0 && <div className="mt-4 space-y-2">
@@ -483,7 +484,7 @@ export default function Compare() {
         {/* Reviewer Decision Controls */}
         <div className="bg-white border border-[#E3E7E0] rounded-2xl p-6 space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-[#202923] uppercase tracking-wider">Review Process (Demo State)</h3>
+            <h3 className="text-xs font-bold text-[#202923] uppercase tracking-wider">Review Process</h3>
             <span className="text-[11px] text-[#707A72]">Saved in this screen only</span>
           </div>
 
@@ -527,11 +528,11 @@ export default function Compare() {
             <p className="text-sm font-semibold text-[#202923]">Give the student a chance to respond</p>
             <p className="mt-1 text-xs leading-5 text-[#707A72]">Prepare a same-browser view with both code samples and their overlap measurements. Nothing is synced; the code and response are saved in this browser only.</p>
             <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-[#5E6961]">
-              <input
-                type="checkbox"
+              <ToggleSwitch
                 checked={allowLocalEvidenceShare}
-                onChange={event => { setAllowLocalEvidenceShare(event.target.checked); setShareStudentView(false); }}
-                className="mt-0.5 accent-[#174C3C]"
+                onChange={checked => { setAllowLocalEvidenceShare(checked); setShareStudentView(false); }}
+                label="Authorize saving both code samples in this browser"
+                className="mt-0.5"
               />
               <span>I am authorized to save both code samples in this browser so they can be reviewed from this device.</span>
             </label>

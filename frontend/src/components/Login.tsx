@@ -156,15 +156,6 @@ export default function Login() {
                 </div>
               </div>
 
-              <label className="flex items-center gap-2.5 text-sm text-[#59645C]">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-[#C8D0C8] accent-[#174C3C] focus:ring-[#174C3C]"
-                />
-                Remember me
-              </label>
-
               <button
                 type="submit"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#174C3C] px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#10382D] focus:outline-none focus:ring-4 focus:ring-[#174C3C]/20 active:translate-y-px"

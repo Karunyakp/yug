@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Bot, MessageCircle, Send, X } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { askCodeGuardAssistant, type AssistantTurn } from '../services/gemini';
+import ToggleSwitch from './ToggleSwitch';
 
 export default function AssistantChat() {
   const { pathname } = useLocation();
@@ -66,11 +67,11 @@ export default function AssistantChat() {
 
           <div className="border-t border-[#E3E7E0] bg-white p-3">
             <label className="mb-3 flex items-start gap-2 px-1 text-[10px] leading-4 text-[#707A72]">
-              <input
-                type="checkbox"
+              <ToggleSwitch
                 checked={hasAiConsent}
-                onChange={event => setHasAiConsent(event.target.checked)}
-                className="mt-0.5 accent-[#174C3C]"
+                onChange={setHasAiConsent}
+                label="Allow sending this chat to Google Gemini"
+                className="mt-0.5"
               />
               <span>CodeGuard AI uses Google Gemini to process messages. I agree to send this chat, including prior messages, to Google. Do not share sensitive data.</span>
             </label>

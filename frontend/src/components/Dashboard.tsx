@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, ArrowRight, Code2, FileText, Mail, Plus, ShieldCheck } from 'lucide-react';
 import { readAuditEvents, type AuditEvent } from '../services/localAuditLog';

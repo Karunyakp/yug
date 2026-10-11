@@ -112,7 +112,7 @@ export default function Landing() {
             <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#FCF6F0] text-[#9B5C37]"><Download size={22} /></div>
               <h3 className="font-serif text-xl">Exportable reports</h3>
-              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Download report data as CSV or use your browser’s print dialog to save a PDF.</p>
+              <p className="mt-2 text-sm leading-6 text-[#6B6B78]">Print comparison results or export account information from your workspace.</p>
             </article>
             <article className="rounded-3xl border border-[#E8E3DB] bg-[#FCFBF8] p-7">
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#EDE8FF] text-[#6549D8]"><UsersRound size={22} /></div>
