@@ -3,18 +3,8 @@ import { GoogleGenAI } from '@google/genai';
 const API_KEY = import.meta.env.GEMINI_API_KEY || '';
 
 export interface AnalysisOutput {
-  overall_similarity: number;
-  baseline_similarity: number;
-  structural_similarity: number;
-  cross_language_similarity?: number;
   explanation: string;
   ai_analysis: string[];
-  ai_patterns?: {
-    observed_characteristics: string[];
-    style_consistency_score?: number;
-    limitations: string;
-    viva_questions: string[];
-  };
   source: 'gemini' | 'local-fallback';
   fallbackReason?: string;
 }
@@ -29,6 +19,32 @@ function createClient(): GoogleGenAI {
     throw new Error('Gemini API key is not configured. Set GEMINI_API_KEY in the frontend environment and rebuild.');
   }
   return new GoogleGenAI({ apiKey: API_KEY });
+}
+
+export async function generateVivaQuestionsWithGemini(code: string): Promise<string[]> {
+  if (!code.trim()) {
+    throw new Error('Enter code before generating explanation questions.');
+  }
+
+  const response = await createClient().interactions.create({
+    model: 'gemini-3.8-flash',
+    input: `Generate exactly 4 open-ended questions that help a student explain the code below and demonstrate understanding. Ground every question in a specific visible construct or behavior in the code. Ask neutral questions about choices, edge cases, complexity, or how a small change affects behavior. Do not infer copying, AI authorship, intent, or misconduct. Return only a valid JSON array of four strings.\n\nCode:\n\`\`\`\n${code.slice(0, 16000)}\n\`\`\``,
+  });
+  if (!response.output_text?.trim()) {
+    throw new Error('Gemini returned no questions.');
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(response.output_text.replace(/```json/gi, '').replace(/```/g, '').trim());
+  } catch {
+    throw new Error('Gemini returned questions in an unreadable format. Please try again.');
+  }
+  if (!Array.isArray(parsed) || parsed.length < 3 || parsed.length > 5 ||
+      !parsed.every(question => typeof question === 'string' && question.trim())) {
+    throw new Error('Gemini did not return 3–5 valid explanation questions. Please try again.');
+  }
+  return parsed.map(question => question.trim());
 }
 
 export async function askCodeGuardAssistant(history: AssistantTurn[]): Promise<string> {
@@ -54,29 +70,14 @@ function parseAnalysis(text: string): AnalysisOutput {
   }
 
   const data = parsed as Record<string, unknown>;
-  const requiredNumbers = ['overall_similarity', 'baseline_similarity', 'structural_similarity'];
-  for (const field of requiredNumbers) {
-    if (typeof data[field] !== 'number' || !Number.isFinite(data[field])) {
-      throw new Error(`Gemini response is missing a valid ${field} value.`);
-    }
-  }
   if (typeof data.explanation !== 'string' || !Array.isArray(data.ai_analysis) ||
-      !data.ai_analysis.every(item => typeof item === 'string')) {
+      !data.ai_analysis.every(item => typeof item === 'string' && item.trim())) {
     throw new Error('Gemini returned an incomplete analysis response.');
   }
 
   return {
-    overall_similarity: data.overall_similarity as number,
-    baseline_similarity: data.baseline_similarity as number,
-    structural_similarity: data.structural_similarity as number,
-    cross_language_similarity: typeof data.cross_language_similarity === 'number'
-      ? data.cross_language_similarity
-      : 0,
     explanation: data.explanation,
     ai_analysis: data.ai_analysis,
-    ai_patterns: typeof data.ai_patterns === 'object' && data.ai_patterns !== null
-      ? data.ai_patterns as AnalysisOutput['ai_patterns']
-      : undefined,
     source: 'gemini',
   };
 }
@@ -86,8 +87,8 @@ export async function analyzeCodeWithGemini(
   code2: string,
   starterCode?: string,
 ): Promise<AnalysisOutput> {
-  const prompt = `You are CodeGuard AI, an expert code integrity analyst for academic computer science departments.
-Compare the two code submissions for structural similarity, code duplication, cross-language algorithmic translation, and possible obfuscation such as renamed variables or refactored loops. Treat observations as indicators for human review, never as proof of misconduct or AI authorship.
+  const prompt = `You are CodeGuard AI, a code-reading assistant for an academic demo.
+Describe only concrete, observable similarities or differences in the submitted snippets. Common algorithms and assignment requirements can independently produce similar code. Do not infer copying, AI authorship, intent, or misconduct. Do not produce similarity or probability scores, risk labels, or claims about AST analysis. Keep the observations neutral and explicitly state that human review and student context are needed.
 
 Submission 1:
 \`\`\`
@@ -100,20 +101,10 @@ ${code2}
 \`\`\`
 ${starterCode ? `\nInstructor starter code to exclude:\n\`\`\`\n${starterCode}\n\`\`\`` : ''}
 
-Respond only with one valid raw JSON object matching this shape:
+Return only one valid raw JSON object matching this shape:
 {
-  "overall_similarity": <number from 0 to 1>,
-  "baseline_similarity": <number from 0 to 1>,
-  "structural_similarity": <number from 0 to 1>,
-  "cross_language_similarity": <number from 0 to 1>,
-  "explanation": "<brief contextual finding>",
-  "ai_analysis": ["<specific code observation>"],
-  "ai_patterns": {
-    "observed_characteristics": ["<observable style characteristic, if any>"],
-    "style_consistency_score": <number from 0 to 100>,
-    "limitations": "<state that indicators are not proof of authorship>",
-    "viva_questions": ["<question grounded in the submitted code>"]
-  }
+  "explanation": "<brief, neutral contextual explanation>",
+  "ai_analysis": ["<specific, observable comparison detail>"]
 }`;
 
   const response = await createClient().interactions.create({

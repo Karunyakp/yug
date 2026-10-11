@@ -1,102 +1,76 @@
-import { ArrowUpRight, FolderKanban, Clock3, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, FolderKanban, Clock3, UsersRound } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const projects = [
-  {
-    name: 'Sorting Visualizer',
-    code: 'CS-204',
-    status: 'In Review',
-    progress: 78,
-    members: 5,
-    due: 'Due in 2 days',
-    color: 'bg-pink-500/20 text-pink-300 border border-pink-500/30',
-  },
-  {
-    name: 'Database Design Lab',
-    code: 'DB-118',
-    status: 'Active',
-    progress: 64,
-    members: 4,
-    due: 'Due in 5 days',
-    color: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30',
-  },
-  {
-    name: 'A* Pathfinding',
-    code: 'AI-041',
-    status: 'Needs Update',
-    progress: 42,
-    members: 3,
-    due: 'Due in 1 week',
-    color: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
-  },
+const courses = [
+  { name: 'Sorting Visualizer', code: 'CS-204', status: 'Active', submissions: 45, enrolled: 60, due: 'Due 28 Oct 2026' },
+  { name: 'OOP Lab 4 - Polymorphism', code: 'OOP-104', status: 'Active', submissions: 32, enrolled: 60, due: 'Due 02 Nov 2026' },
+  { name: 'DBMS Project: ER to Relational', code: 'DB-118', status: 'Archived', submissions: 60, enrolled: 60, due: 'Closed 15 Sep 2026' },
+  { name: 'AI Search - A* Implementation', code: 'AI-041', status: 'Draft', submissions: 0, enrolled: 60, due: 'Planned 10 Dec 2026' },
+  { name: 'Web Dev - E-commerce Clone UI', code: 'WEB-210', status: 'Active', submissions: 22, enrolled: 60, due: 'Due 05 Nov 2026' },
+  { name: 'Graph Algorithms', code: 'CS-301', status: 'Active', submissions: 20, enrolled: 60, due: 'Due 06 Nov 2026' },
+  { name: 'Data Structures', code: 'CS-205', status: 'Active', submissions: 24, enrolled: 60, due: 'Due 08 Nov 2026' },
 ];
 
 export default function Projects() {
   return (
-    <div className="legacy-dark-page space-y-6 pb-12">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="legacy-dark-page space-y-6 pb-12 text-[#202923]">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-white text-2xl font-bold">Projects</h1>
-          <p className="text-gray-400 mt-1">Track every assignment cohort, review progress, and sync deadlines.</p>
+          <h1 className="text-2xl font-bold text-[#202923]">Courses</h1>
+          <p className="mt-1 text-sm text-[#707A72]">Illustrative course workspace. Counts and deadlines are demo data.</p>
         </div>
-        <button onClick={() => window.alert('Create new project modal will appear here.')} className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-full font-medium transition-colors">
-          New Project
-        </button>
+        <Link to="/assignments" className="rounded-full bg-[#174C3C] px-4 py-2 font-medium text-white transition-colors hover:bg-[#10382D]">
+          View assignments
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        {projects.map((project) => (
-          <div key={project.name} className="bg-[#1a1a24] rounded-2xl p-5 border border-white/5">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-[#111118] p-2.5 rounded-xl border border-white/5">
-                  <FolderKanban className="w-5 h-5 text-pink-400" />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        {courses.map(course => {
+          const progress = Math.round((course.submissions / course.enrolled) * 100);
+          return (
+            <article key={course.code} className="rounded-2xl border border-[#E3E7E0] bg-white p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl border border-[#C3E4CF] bg-[#E4F1E9] p-2.5 text-[#174C3C]"><FolderKanban size={20} /></div>
+                  <div>
+                    <h2 className="font-semibold text-[#202923]">{course.name}</h2>
+                    <p className="mt-1 text-xs text-[#707A72]">{course.code}</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-white font-semibold">{project.name}</h2>
-                  <p className="text-gray-400 text-xs mt-1">{project.code}</p>
-                </div>
+                <span className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
+                  course.status === 'Active'
+                    ? 'border-[#C3E4CF] bg-[#E4F1E9] text-[#174C3C]'
+                    : 'border-[#E3E7E0] bg-[#F7F6F0] text-[#707A72]'
+                }`}>{course.status}</span>
               </div>
-              <span className={`text-xs px-2.5 py-1 rounded-full ${project.color}`}>
-                {project.status}
-              </span>
-            </div>
 
-            <div className="mt-6">
-              <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-                <span>Progress</span>
-                <span>{project.progress}%</span>
-              </div>
-              <div className="h-2.5 bg-[#111118] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"
-                  style={{ width: `${project.progress}%` }}
-                />
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-              <div className="bg-[#111118] rounded-xl p-3 border border-white/5">
-                <div className="flex items-center gap-2 text-gray-400 mb-1">
-                  <Clock3 className="w-4 h-4" />
-                  <span>Deadline</span>
+              <div className="mt-6">
+                <div className="mb-2 flex items-center justify-between text-xs text-[#707A72]">
+                  <span>Submissions received</span>
+                  <span>{course.submissions}/{course.enrolled}</span>
                 </div>
-                <p className="text-white font-medium">{project.due}</p>
-              </div>
-              <div className="bg-[#111118] rounded-xl p-3 border border-white/5">
-                <div className="flex items-center gap-2 text-gray-400 mb-1">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Members</span>
+                <div className="h-2.5 overflow-hidden rounded-full bg-[#E3E7E0]">
+                  <div className="h-full rounded-full bg-[#174C3C]" style={{ width: `${progress}%` }} />
                 </div>
-                <p className="text-white font-medium">{project.members} active</p>
               </div>
-            </div>
 
-            <button onClick={() => window.alert('Opening project workspace for ' + project.name)} className="mt-6 w-full flex items-center justify-center gap-2 text-white hover:text-pink-300 border border-white/10 rounded-xl py-2.5 text-sm transition-colors">
-              Open project
-              <ArrowUpRight className="w-4 h-4" />
-            </button>
-          </div>
-        ))}
+              <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+                <div className="rounded-xl border border-[#E3E7E0] bg-[#F7F6F0] p-3">
+                  <div className="mb-1 flex items-center gap-2 text-[#707A72]"><Clock3 size={15} /><span>Schedule</span></div>
+                  <p className="font-medium text-[#202923]">{course.due}</p>
+                </div>
+                <div className="rounded-xl border border-[#E3E7E0] bg-[#F7F6F0] p-3">
+                  <div className="mb-1 flex items-center gap-2 text-[#707A72]"><UsersRound size={15} /><span>Enrolled</span></div>
+                  <p className="font-medium text-[#202923]">{course.enrolled} students</p>
+                </div>
+              </div>
+
+              <Link to="/assignments" className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-[#D9DED8] py-2.5 text-sm font-medium text-[#174C3C] transition-colors hover:border-[#174C3C] hover:bg-[#F7F6F0]">
+                Open assignments <ArrowUpRight size={16} />
+              </Link>
+            </article>
+          );
+        })}
       </div>
     </div>
   );

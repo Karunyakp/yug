@@ -37,7 +37,8 @@ function downloadCSV(filename: string, rows: (string | number)[][]): void {
 }
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState<'Overview' | 'Top Matches' | 'Dossier'>('Overview');
+  const [activeTab, setActiveTab] = useState<'Overview' | 'Top Matches' | 'Review Note'>('Overview');
+  const reportTabs = ['Overview', 'Top Matches', 'Review Note'] as const;
 
   const similarityTrendData = [
     { month: 'Jun', similarity: 22 },
@@ -45,7 +46,6 @@ export default function Reports() {
     { month: 'Aug', similarity: 30 },
     { month: 'Sep', similarity: 28 },
     { month: 'Oct', similarity: 24 },
-    { month: 'Nov', similarity: 26 },
   ];
 
   const languageDistributionData = [
@@ -56,10 +56,10 @@ export default function Reports() {
   ];
 
   const topSimilarityCases = [
-    { id: 1, student1: 'Aarav Sharma', student2: 'Rohan Mehta', assignment: 'Sorting Visualizer', similarity: 92, status: 'Viva Scheduled' },
-    { id: 2, student1: 'Karan Gupta', student2: 'Neha Reddy', assignment: 'Graph Algorithms', similarity: 89, status: 'Pending Review' },
-    { id: 3, student1: 'Priya Nair', student2: 'Sneha Iyer', assignment: 'Data Structures', similarity: 76, status: 'Resolved Clean' },
-    { id: 4, student1: 'Arjun Singh', student2: 'Isha Patel', assignment: 'Dynamic Programming', similarity: 71, status: 'Under Review' },
+    { id: 1, student1: 'Aarav Sharma', student2: 'Rohan Mehta', assignment: 'Sorting Visualizer', similarity: 92, status: 'Context review example' },
+    { id: 2, student1: 'Rohan Mehta', student2: 'Vivaan Joshi', assignment: 'Sorting Visualizer', similarity: 88, status: 'Context review example' },
+    { id: 3, student1: 'Aarav Sharma', student2: 'Vivaan Joshi', assignment: 'Sorting Visualizer', similarity: 84, status: 'Context review example' },
+    { id: 4, student1: 'Priya Nair', student2: 'Sneha Iyer', assignment: 'Data Structures', similarity: 76, status: 'Context review example' },
   ];
   const localAccounts = getLocalAccountsForExport();
 
@@ -95,11 +95,11 @@ export default function Reports() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print-hidden">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E02875]/10 border border-[#E02875]/20 text-[#E02875] text-xs font-semibold uppercase tracking-wider mb-2">
-            <FileText size={13} /> Institutional Records
+            <FileText size={13} /> Illustrative sample data
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Reports & Evidentiary Dossiers</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Reports & Review Notes</h1>
           <p className="text-xs text-[#8E99B7] mt-1">
-            Generate formal, auditable academic integrity documentation for departmental review committees.
+            Explore synthetic demo charts and export an illustrative comparison list. These are not official case records.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -128,10 +128,10 @@ export default function Reports() {
 
       {/* Tabs */}
       <div className="border-b border-[#1F263E] flex gap-8 text-xs font-semibold print-hidden">
-        {['Overview', 'Top Matches', 'Dossier'].map((tab) => (
+        {reportTabs.map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab as any)}
+            onClick={() => setActiveTab(tab)}
             className={`py-3 transition-colors border-b-2 cursor-pointer ${
               activeTab === tab
                 ? 'border-[#E02875] text-[#E02875]'
@@ -149,16 +149,16 @@ export default function Reports() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Trend Chart */}
             <div className="bg-[#101422] rounded-3xl p-6 border border-[#1F263E] shadow-xl">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-1">Monthly Similarity Trajectory</h3>
-              <p className="text-xs text-[#8E99B7] mb-6">Median similarity recorded across introductory courses</p>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-1">Illustrative Overlap Trend</h3>
+              <p className="text-xs text-[#8E99B7] mb-6">Synthetic values for interface demonstration; not measured course history</p>
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={similarityTrendData}>
+                  <LineChart data={similarityTrendData} margin={{ top: 8, right: 20, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1F263E" vertical={false} />
-                    <XAxis dataKey="month" stroke="#69759B" tick={{ fill: '#8E99B7', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="month" padding={{ left: 4, right: 12 }} stroke="#69759B" tick={{ fill: '#8E99B7', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis stroke="#69759B" tick={{ fill: '#8E99B7', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip contentStyle={{ backgroundColor: '#101422', border: '1px solid #1F263E', borderRadius: '12px', color: '#fff', fontSize: '12px' }} />
-                    <Line type="monotone" dataKey="similarity" stroke="#E02875" strokeWidth={3} dot={{ fill: '#E02875', r: 4 }} />
+                    <Line type="monotone" dataKey="similarity" stroke="#E02875" strokeWidth={3} dot={{ fill: '#E02875', r: 4 }} activeDot={{ r: 5 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -167,12 +167,12 @@ export default function Reports() {
             {/* Language Distribution */}
             <div className="bg-[#101422] rounded-3xl p-6 border border-[#1F263E] shadow-xl">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-1">Programming Language Breakdown</h3>
-              <p className="text-xs text-[#8E99B7] mb-6">Volume of code evaluated by runtime grammar</p>
+              <p className="text-xs text-[#8E99B7] mb-6">Illustrative language mix; no code volume is collected for this chart</p>
               <div className="h-[220px] flex items-center justify-between">
-                <div className="w-1/2 h-full">
+                <div className="h-full w-3/5">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={languageDistributionData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value">
+                      <Pie data={languageDistributionData} cx="50%" cy="50%" startAngle={90} endAngle={-270} innerRadius={45} outerRadius={70} dataKey="value">
                         {languageDistributionData.map((e, idx) => (
                           <Cell key={idx} fill={e.color} />
                         ))}
@@ -181,7 +181,7 @@ export default function Reports() {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="w-1/2 space-y-2 text-xs">
+                <div className="w-2/5 space-y-2 text-xs">
                   {languageDistributionData.map(l => (
                     <div key={l.name} className="flex items-center justify-between">
                       <span className="flex items-center gap-2 text-[#8E99B7]">
@@ -243,13 +243,13 @@ export default function Reports() {
       )}
 
       {/* Formal PDF Report Dossier View (Clean, printable academic layout) */}
-      {activeTab === 'Dossier' && (
+      {activeTab === 'Review Note' && (
         <div className="bg-[#101422] border border-[#1F263E] rounded-3xl p-8 space-y-6 shadow-2xl">
           <div className="border-b border-[#1F263E] pb-6 flex justify-between items-start">
             <div>
-              <p className="text-[11px] font-mono uppercase tracking-widest text-[#E02875]">Department of Computer Science • CodeGuard Academic Integrity</p>
-              <h2 className="text-2xl font-bold text-white mt-1">Official Review Dossier #AR-2026-084</h2>
-              <p className="text-xs text-[#8E99B7] mt-1">Generated on 11 Oct 2026 • Lead Reviewer: Prof. Verma</p>
+              <p className="text-[11px] font-mono uppercase tracking-widest text-[#E02875]">CodeGuard AI · illustrative demo</p>
+              <h2 className="text-2xl font-bold text-white mt-1">Sample Comparison Review Note</h2>
+              <p className="text-xs text-[#8E99B7] mt-1">Synthetic example · not an institutional record or finding</p>
             </div>
             <button onClick={handleDownloadPDF} className="px-4 py-2 bg-[#E02875] text-white text-xs font-semibold rounded-xl print-hidden">
               Print / Save PDF
@@ -266,22 +266,22 @@ export default function Reports() {
               <p className="text-white font-semibold mt-1">Aarav Sharma & Rohan Mehta</p>
             </div>
             <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
-              <span className="text-[#8E99B7] uppercase font-bold text-[10px]">AST Congruence Index</span>
-              <p className="text-[#E02875] font-mono font-bold mt-1">92% (High Correlation)</p>
+              <span className="text-[#8E99B7] uppercase font-bold text-[10px]">Local overlap indicator</span>
+              <p className="text-white font-mono font-bold mt-1">92% · uncalibrated demo value</p>
             </div>
           </div>
 
           <div className="p-5 rounded-2xl bg-[#15192B] border border-[#1F263E] text-xs space-y-2">
-            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Methodology & Evidentiary Findings</h4>
+            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">What this value means</h4>
             <p className="text-[#DCE1EE] leading-relaxed">
-              Submissions were canonicalized through multi-pass AST alpha-conversion and lexical token 3-gram indexing. Instructor starter boilerplate code was excluded. The inner loop boundaries and temporary variable mutation sequence display 100% logic preservation across identifier substitutions.
+              This sample percentage represents overlap reported by the local demo comparison. The analyzer does not parse ASTs, exclude instructor starter code, or estimate how likely the overlap is by chance. Common assignment requirements can produce similar solutions.
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-[#0B0D14] border border-[#1F263E] text-xs space-y-2">
-            <h4 className="font-bold text-[#E02875] uppercase text-[11px] tracking-wider">Academic Integrity Committee Recommendation</h4>
+            <h4 className="font-bold text-[#E02875] uppercase text-[11px] tracking-wider">Fair review reminder</h4>
             <p className="text-[#8E99B7] leading-relaxed">
-              Schedule oral viva examination. The student should be asked to explain memory state mutations during the inner loop pass without external notes.
+              Do not use this demo output to make disciplinary decisions. Review assignment constraints and shared materials, invite each student to provide context, and follow your institution’s established process.
             </p>
           </div>
         </div>

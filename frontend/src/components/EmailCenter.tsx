@@ -9,6 +9,7 @@ import {
   Info
 } from 'lucide-react';
 import { sendStudentEmail, isEmailJSConfigured } from '../services/emailService';
+import { recordAuditEvent } from '../services/localAuditLog';
 
 interface Template {
   id: string;
@@ -49,19 +50,16 @@ CodeGuard Academic Integrity Review Team`
   },
   {
     id: 'academic_review',
-    name: '3. Academic Review Notification',
-    subject: 'Academic Integrity Review: Discussion Required for {{case_reference}}',
+    name: '3. Preliminary Review Invitation',
+    subject: 'Request to discuss your submission: {{case_reference}}',
     body: `Dear {{student_name}},
 
-I hope you are having a productive week.
+We would like to discuss questions about your submission for {{case_reference}}. A code-similarity indicator prompted a closer review; it is not a finding of misconduct and may reflect common course materials or assignment requirements.
 
-During our routine academic integrity review of {{case_reference}}, our automated system flagged significant structural overlap between your submission and another student's work.
+You may explain your approach and identify any shared starter code, examples, or other context. Please use the institution's established process to ask for the relevant evidence, provide a response, or arrange a conversation. No conclusion has been reached.
 
-We believe strongly in providing students with an opportunity to explain their thought process. Please book a brief 15-minute slot during my office hours this Wednesday or Thursday so we can review the code logic together.
-
-Sincerely,
-Prof. Verma
-Department of Computer Science`
+Regards,
+Your instructor`
   },
   {
     id: 'request_info',
@@ -73,12 +71,12 @@ During code review of your recent assignment, certain algorithmic choices and ex
 
 Could you please provide:
 1. A brief explanation of the loop invariant reasoning on lines 10-18.
-2. Any external documentation or authorized resources consulted during development.
+2. Any course examples, starter code, or authorized resources relevant to your approach.
 
-Please reply to this email within 3 business days.
+You may ask for clarification or use the institution's established response process. No conclusion has been reached.
 
-Best regards,
-Prof. Verma`
+Regards,
+Your instructor`
   },
   {
     id: 'review_outcome',
@@ -86,14 +84,10 @@ Prof. Verma`
     subject: 'Conclusion of Academic Review: {{case_reference}}',
     body: `Dear {{student_name}},
 
-Thank you for meeting with me to discuss your submission for {{case_reference}}.
+This is a draft template for communicating a review outcome for {{case_reference}}. Before sending, replace this text with the actual decision, reasons, relevant evidence, available appeal or response options, and the applicable institutional process. Do not send this generic template as a final decision.
 
-Following our conversation and examination of your development notes, the department review committee has concluded the review and updated your case status accordingly.
-
-Your grade has been cleared for posting in the student portal.
-
-Best regards,
-Prof. Verma`
+Regards,
+Your instructor`
   },
   {
     id: 'custom',
@@ -110,6 +104,7 @@ export default function EmailCenter() {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [caseRef, setCaseRef] = useState('');
+  const [authorizedToSend, setAuthorizedToSend] = useState(false);
   
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -148,6 +143,10 @@ export default function EmailCenter() {
   };
 
   const handleInitiateSend = () => {
+    if (!authorizedToSend) {
+      setStatusFeedback({ type: 'error', text: 'Confirm that you are authorized to share these details with EmailJS before sending.' });
+      return;
+    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(toEmail.trim())) {
       setStatusFeedback({ type: 'error', text: 'Please enter a valid recipient email address.' });
       return;
@@ -180,7 +179,15 @@ export default function EmailCenter() {
       });
 
       if (res.success) {
-        setStatusFeedback({ type: 'success', text: 'Email was sent successfully through your connected email service.' });
+        try {
+          recordAuditEvent('Email sent', 'EmailJS reported a successful send; recipient and message content are not stored in this activity entry.');
+          setStatusFeedback({ type: 'success', text: 'Email was sent successfully through your connected email service. A local activity entry was recorded.' });
+        } catch (error) {
+          setStatusFeedback({
+            type: 'error',
+            text: `Email was sent successfully, but the local activity entry could not be saved: ${error instanceof Error ? error.message : 'browser storage is unavailable.'}`,
+          });
+        }
       } else {
         setStatusFeedback({ type: 'error', text: res.message });
       }
@@ -204,7 +211,7 @@ export default function EmailCenter() {
               <Mail className="w-5 h-5 text-[#174C3C]" /> Confirm Outgoing Dispatch
             </h3>
             <p className="text-xs text-[#707A72] mt-2 leading-relaxed">
-              Are you sure you want to send this email to <strong className="text-[#202923]">{toEmail}</strong>? This action will deliver the official notice from your department identity.
+              Confirm sending this message to <strong className="text-[#202923]">{toEmail}</strong>. Recipient details and message content will be sent to EmailJS and its configured email provider. This demo does not verify sender identity or provide an institutional delivery guarantee.
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
@@ -218,7 +225,7 @@ export default function EmailCenter() {
                 disabled={isSending}
                 className="px-5 py-2 rounded-xl bg-[#174C3C] hover:bg-[#10382D] text-white text-xs font-semibold transition-colors shadow-sm"
               >
-                {isSending ? 'Dispatching...' : 'Yes, Dispatch Email'}
+                {isSending ? 'Sending...' : 'Confirm and send'}
               </button>
             </div>
           </div>
@@ -233,6 +240,7 @@ export default function EmailCenter() {
             Communicate with students about submissions, reviews, and academic integrity cases.
           </p>
         </div>
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsPreviewMode(!isPreviewMode)}
@@ -251,6 +259,16 @@ export default function EmailCenter() {
           </button>
         </div>
       </div>
+
+      <label className="flex items-start gap-3 rounded-xl border border-[#F6E0B5] bg-[#FFF9EC] p-3 text-xs leading-5 text-[#684713]">
+        <input
+          type="checkbox"
+          checked={authorizedToSend}
+          onChange={event => setAuthorizedToSend(event.target.checked)}
+          className="mt-0.5 h-4 w-4 accent-[#174C3C]"
+        />
+        <span>I am authorized to share these recipient details and message with EmailJS and its configured email provider, and have followed the applicable notice and consent process.</span>
+      </label>
 
       {/* Config Notice if EmailJS env missing */}
       {!configured && (
@@ -393,7 +411,7 @@ export default function EmailCenter() {
             /* Live Email Client Preview */
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-[#F7F6F0] border border-[#E3E7E0] text-xs space-y-1.5">
-                <div><span className="text-[#707A72] font-semibold">From:</span> Prof. Verma &lt;verma@department.edu&gt;</div>
+                <div><span className="text-[#707A72] font-semibold">From:</span> Configured EmailJS sender</div>
                 <div><span className="text-[#707A72] font-semibold">To:</span> {toName || 'Student'} &lt;{toEmail || 'student@university.edu'}&gt;</div>
                 <div><span className="text-[#707A72] font-semibold">Subject:</span> <strong>{subject || '(No subject)'}</strong></div>
               </div>
@@ -405,8 +423,8 @@ export default function EmailCenter() {
           )}
 
           <div className="mt-6 pt-4 border-t border-[#E3E7E0] flex items-center justify-between text-xs text-[#707A72]">
-            <span>Sender: <strong>Prof. Verma (Academic Integrity Office)</strong></span>
-            <span>Security: <strong>TLS Encrypted Academic Dispatch</strong></span>
+            <span>Delivery: <strong>Configured EmailJS service</strong></span>
+            <span>Review the provider&apos;s handling and security terms.</span>
           </div>
         </div>
       </div>

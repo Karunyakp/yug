@@ -18,34 +18,30 @@ import {
 } from 'recharts';
 
 const kpis = [
-  { title: 'Total Submissions', value: '248', subtitle: '4 courses evaluated', badge: '+18 today', badgeColor: 'bg-[#E4F1E9] text-[#10382D]' },
-  { title: 'Flagged Submissions', value: '18', subtitle: 'Above 75% similarity', badge: 'Action Required', badgeColor: 'bg-[#FBE8E6] text-[#A82A2A]' },
-  { title: 'High Similarity Cases', value: '3', subtitle: 'Multi-student clusters', badge: 'High Priority', badgeColor: 'bg-[#FFF1D6] text-[#7C5315]' },
-  { title: 'Pending Reviews', value: '7', subtitle: 'Awaiting viva determination', badge: '1.8d turnaround', badgeColor: 'bg-[#F7F6F0] text-[#707A72]' },
+  { title: 'Demo submissions', value: '203', subtitle: 'Illustrative counts across 7 assignments', badge: 'Sample data', badgeColor: 'bg-[#E4F1E9] text-[#10382D]' },
+  { title: 'Overlap indicators', value: '18', subtitle: '8.9% in the illustrative ≥75% band; not findings', badge: 'Context required', badgeColor: 'bg-[#FFF1D6] text-[#7C5315]' },
+  { title: 'Example groups', value: '3', subtitle: 'Illustrative graph groups', badge: 'Not case findings', badgeColor: 'bg-[#F7F6F0] text-[#707A72]' },
+  { title: 'Context reviews', value: '7', subtitle: 'Example cohort entries for human review', badge: 'No automated decisions', badgeColor: 'bg-[#F7F6F0] text-[#707A72]' },
 ];
 
 const barData = [
-  { name: 'Jun', total: 65, flagged: 18 },
-  { name: 'Jul', total: 59, flagged: 22 },
-  { name: 'Aug', total: 80, flagged: 28 },
-  { name: 'Sep', total: 81, flagged: 15 },
-  { name: 'Oct', total: 56, flagged: 24 },
-  { name: 'Nov', total: 55, flagged: 18 },
+  { name: 'Aug', total: 65, flagged: 5 },
+  { name: 'Sep', total: 68, flagged: 6 },
+  { name: 'Oct', total: 70, flagged: 7 },
 ];
 
 const pieData = [
-  { name: 'Clean Work (<25%)', value: 58, color: '#174C3C' },
-  { name: 'Low Variance (25-50%)', value: 24, color: '#3A7061' },
-  { name: 'Moderate Overlap (50-75%)', value: 12, color: '#B96F52' },
-  { name: 'Severe Match (>75%)', value: 6, color: '#D9534F' },
+  { name: 'Overlap <25%', value: 115, color: '#174C3C' },
+  { name: 'Overlap 25–49%', value: 48, color: '#3A7061' },
+  { name: 'Overlap 50–74%', value: 22, color: '#B96F52' },
+  { name: 'Overlap ≥75%', value: 18, color: '#8A63D2' },
 ];
 
 const recentSubmissions = [
-  { id: 1, initials: 'AS', name: 'Aarav Sharma', assignment: 'CS-204: Sorting Visualizer', date: '24 Nov, 10:42 AM', similarity: '92%', status: 'Needs Review', statusStyle: 'bg-[#FBE8E6] text-[#A82A2A] border border-[#F5C7C3]' },
-  { id: 2, initials: 'RM', name: 'Rohan Mehta', assignment: 'CS-204: Sorting Visualizer', date: '24 Nov, 09:12 AM', similarity: '92%', status: 'Needs Review', statusStyle: 'bg-[#FBE8E6] text-[#A82A2A] border border-[#F5C7C3]' },
-  { id: 3, initials: 'VJ', name: 'Vivaan Joshi', assignment: 'CS-204: Sorting Visualizer', date: '23 Nov, 4:20 PM', similarity: '88%', status: 'Under Review', statusStyle: 'bg-[#FFF1D6] text-[#7C5315] border border-[#F6E0B5]' },
-  { id: 4, initials: 'KG', name: 'Karan Gupta', assignment: 'CS-301: Graph Algorithms', date: '23 Nov, 11:02 AM', similarity: '89%', status: 'Under Review', statusStyle: 'bg-[#FFF1D6] text-[#7C5315] border border-[#F6E0B5]' },
-  { id: 5, initials: 'AR', name: 'Ananya Rao', assignment: 'CS-402: A* Implementation', date: '22 Nov, 6:30 PM', similarity: '8%', status: 'Reviewed', statusStyle: 'bg-[#E4F1E9] text-[#10382D] border border-[#C3E4CF]' },
+  { id: 1, initials: 'AS', name: 'Aarav Sharma', assignment: 'CS-204: Sorting Visualizer', date: '24 Oct 2026, 10:42 AM', similarity: '92%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
+  { id: 2, initials: 'RM', name: 'Rohan Mehta', assignment: 'CS-204: Sorting Visualizer', date: '24 Oct 2026, 09:12 AM', similarity: '92%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
+  { id: 3, initials: 'VJ', name: 'Vivaan Joshi', assignment: 'CS-204: Sorting Visualizer', date: '22 Oct 2026, 2:15 PM', similarity: '88%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
+  { id: 4, initials: 'KG', name: 'Karan Gupta', assignment: 'CS-301: Graph Algorithms', date: '22 Oct 2026, 10:00 AM', similarity: '89%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
 ];
 
 export default function Dashboard() {
@@ -56,7 +52,7 @@ export default function Dashboard() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#202923]">Academic Integrity Overview</h1>
           <p className="text-xs text-[#707A72] mt-1">
-            Department review workspace for introductory and advanced computer science tracks.
+            Illustrative frontend demo data only. Similarity indicates overlap, not authorship or misconduct.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -105,7 +101,7 @@ export default function Dashboard() {
               <p className="text-xs text-[#707A72]">Submissions vs elevated similarity volume</p>
             </div>
             <span className="text-xs font-semibold text-[#707A72] bg-[#F7F6F0] px-3 py-1.5 rounded-lg border border-[#E3E7E0]">
-              Fall Semester 2026
+              Aug–Oct 2026 · Sample
             </span>
           </div>
 
@@ -127,7 +123,7 @@ export default function Dashboard() {
 
           <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-[#E3E7E0] text-xs text-[#707A72]">
             <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#E3E7E0]"></span> Total Ingested</span>
-            <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#174C3C]"></span> Flagged for Review</span>
+            <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#174C3C]"></span> Overlap indicators</span>
           </div>
         </div>
 
@@ -135,7 +131,7 @@ export default function Dashboard() {
         <div className="bg-white rounded-2xl p-6 border border-[#E3E7E0] shadow-xs flex flex-col justify-between">
           <div>
             <h3 className="text-sm font-bold text-[#202923] uppercase tracking-wider">Similarity Distribution</h3>
-            <p className="text-xs text-[#707A72]">Filtered against instructor starter code</p>
+            <p className="text-xs text-[#707A72]">Illustrative distribution by overlap band · 203 samples</p>
           </div>
 
           <div className="my-4 h-[180px]">
@@ -158,7 +154,7 @@ export default function Dashboard() {
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }}></span>
                   {d.name}
                 </span>
-                <span className="font-bold text-[#202923]">{d.value}%</span>
+                <span className="font-bold text-[#202923]">{d.value} · {((d.value / 203) * 100).toFixed(1)}%</span>
               </div>
             ))}
           </div>
@@ -169,8 +165,8 @@ export default function Dashboard() {
       <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden shadow-xs">
         <div className="p-5 border-b border-[#E3E7E0] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
-            <h3 className="text-sm font-bold text-[#202923] uppercase tracking-wider">Active Review Queue</h3>
-            <p className="text-xs text-[#707A72] mt-0.5">High-similarity submissions awaiting faculty determination</p>
+            <h3 className="text-sm font-bold text-[#202923] uppercase tracking-wider">Example context review queue</h3>
+            <p className="text-xs text-[#707A72] mt-0.5">Sample entries for human review; overlap alone is not a finding.</p>
           </div>
           <Link to="/submissions" className="text-xs font-semibold text-[#174C3C] hover:underline flex items-center gap-1">
             View All Submissions <ChevronRight size={14} />
@@ -217,7 +213,7 @@ export default function Dashboard() {
                       to="/compare"
                       className="px-3.5 py-1.5 rounded-lg bg-white border border-[#E3E7E0] text-[#202923] hover:bg-[#174C3C] hover:text-white hover:border-[#174C3C] font-semibold transition-all inline-block shadow-2xs"
                     >
-                      Inspect AST
+                      Inspect sample
                     </Link>
                   </td>
                 </tr>

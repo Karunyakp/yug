@@ -1,18 +1,22 @@
 import { useState, type FormEvent } from 'react';
 import { Bot, MessageCircle, Send, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { askCodeGuardAssistant, type AssistantTurn } from '../services/gemini';
 
 export default function AssistantChat() {
+  const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [history, setHistory] = useState<AssistantTurn[]>([]);
+  const [hasAiConsent, setHasAiConsent] = useState(false);
   const [error, setError] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const hideOnActionPages = ['/compare', '/email-center', '/reports', '/student-response'].includes(pathname);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const text = message.trim();
-    if (!text || isSending) return;
+    if (!text || isSending || !hasAiConsent) return;
 
     const nextHistory = [...history, { role: 'user' as const, text }];
     setHistory(nextHistory);
@@ -28,6 +32,8 @@ export default function AssistantChat() {
       setIsSending(false);
     }
   };
+
+  if (hideOnActionPages) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-[80]">
@@ -59,7 +65,15 @@ export default function AssistantChat() {
           </div>
 
           <div className="border-t border-[#E3E7E0] bg-white p-3">
-            <p className="mb-2 px-1 text-[10px] leading-4 text-[#707A72]">Messages are sent directly to CodeGuard AI. Do not share sensitive data.</p>
+            <label className="mb-3 flex items-start gap-2 px-1 text-[10px] leading-4 text-[#707A72]">
+              <input
+                type="checkbox"
+                checked={hasAiConsent}
+                onChange={event => setHasAiConsent(event.target.checked)}
+                className="mt-0.5 accent-[#174C3C]"
+              />
+              <span>CodeGuard AI uses Google Gemini to process messages. I agree to send this chat, including prior messages, to Google. Do not share sensitive data.</span>
+            </label>
             <form onSubmit={handleSubmit} className="flex items-end gap-2">
               <label htmlFor="assistant-message" className="sr-only">Message the CodeGuard assistant</label>
               <textarea
@@ -71,7 +85,7 @@ export default function AssistantChat() {
                 placeholder="Ask a question..."
                 className="max-h-28 min-h-10 flex-1 resize-y rounded-xl border border-[#D9DED8] px-3 py-2 text-sm outline-none transition placeholder:text-[#A0A8A1] focus:border-[#174C3C] focus:ring-4 focus:ring-[#174C3C]/10"
               />
-              <button type="submit" disabled={isSending || !message.trim()} aria-label="Send message" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#174C3C] text-white transition hover:bg-[#10382D] disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="submit" disabled={isSending || !message.trim() || !hasAiConsent} aria-label="Send message" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#174C3C] text-white transition hover:bg-[#10382D] disabled:cursor-not-allowed disabled:opacity-50">
                 <Send size={17} />
               </button>
             </form>

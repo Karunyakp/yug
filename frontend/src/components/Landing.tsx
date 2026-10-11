@@ -94,7 +94,7 @@ export default function Landing() {
               </div>
               <div className="flex gap-2">
                 <span className="rounded-full bg-[#F0EBE3] px-3 py-1 text-[11px] font-bold tracking-wide text-[#6B6B78]">DEMO DATA</span>
-                <span className="rounded-full bg-[#EDE8FF] px-3 py-1 text-[11px] font-bold tracking-wide text-[#7C5CFC]">SIMILARITY 87%</span>
+                <span className="rounded-full bg-[#EDE8FF] px-3 py-1 text-[11px] font-bold tracking-wide text-[#7C5CFC]">DEMO OVERLAP 87%</span>
               </div>
             </div>
             
@@ -151,12 +151,11 @@ export default function Landing() {
                 </div>
                 <div className="border-t border-[#F0EBE3] bg-[#FCFBF8] p-4 flex justify-between items-center">
                   <div>
-                    <h4 className="text-[13px] font-bold text-[#141413]">AI pattern detected + AST logic match</h4>
-                    <p className="text-xs text-[#6B6B78] mt-0.5">Same control flow, renamed identifiers, stripped comments. Not string match.</p>
+                    <h4 className="text-[13px] font-bold text-[#141413]">Similar structure in this sample</h4>
+                    <p className="text-xs text-[#6B6B78] mt-0.5">Common assignment requirements can produce similar solutions. This overlap is not evidence of misconduct.</p>
                   </div>
                   <div className="flex gap-2">
-                    <Link to="/compare" className="px-4 py-1.5 bg-[#141413] text-white text-xs font-semibold rounded-full hover:bg-black">View defensible report</Link>
-                    <button className="px-4 py-1.5 bg-white text-[#141413] border border-[#E8E3DB] text-xs font-semibold rounded-full hover:bg-gray-50">Dismiss</button>
+                    <Link to="/compare" className="px-4 py-1.5 bg-[#141413] text-white text-xs font-semibold rounded-full hover:bg-black">View comparison details</Link>
                   </div>
                 </div>
               </div>

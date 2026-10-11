@@ -57,7 +57,7 @@ export default function CommandPalette({ isOpen, onClose }: { isOpen: boolean; o
     },
     {
       id: 'compare',
-      title: 'Open Code Comparison & AST Diff Studio',
+      title: 'Open Code Comparison & Overlap Review',
       category: 'Navigation',
       icon: SplitSquareHorizontal,
       action: () => { navigate('/compare'); onClose(); },

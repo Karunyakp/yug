@@ -3,11 +3,13 @@ import { Search, Plus, Calendar, Eye, Edit2, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const mockAssignments = [
-  { id: 1, title: 'Sorting Algorithms', tags: ['py', 'java'], description: 'Implement quicksort and mergesort with step-b...', dueDate: '28 Nov 2024', submissions: 45, total: 60, status: 'Active' },
-  { id: 2, title: 'OOP Lab 4 - Polymorphism', tags: ['java', '.cpp'], description: 'Design a shape hierarchy with abstract classes a...', dueDate: '02 Dec 2024', submissions: 32, total: 60, status: 'Active' },
-  { id: 3, title: 'DBMS Project: ER to Relational', tags: ['.sql'], description: 'Convert given ER diagram into relational schem...', dueDate: '15 Nov 2024', submissions: 60, total: 60, status: 'Archived' },
-  { id: 4, title: 'AI Search - A* Implementation', tags: ['.py'], description: 'Implement A* search for 8-puzzle with admissibi...', dueDate: '10 Dec 2024', submissions: 5, total: 60, status: 'Draft' },
-  { id: 5, title: 'Web Dev - E-commerce Clone UI', tags: ['.js', '.py'], description: 'Recreate e-commerce product listing page with filters...', dueDate: '05 Dec 2024', submissions: 22, total: 60, status: 'Active' },
+  { id: 1, title: 'Sorting Visualizer', code: 'CS-204', tags: ['py', 'java'], description: 'Compare sorting algorithm implementations and explain their behavior.', dueDate: '28 Oct 2026', submissions: 45, total: 60, status: 'Active' },
+  { id: 2, title: 'OOP Lab 4 - Polymorphism', code: 'OOP-104', tags: ['java', '.cpp'], description: 'Design a shape hierarchy with abstract classes and polymorphic behavior.', dueDate: '02 Nov 2026', submissions: 32, total: 60, status: 'Active' },
+  { id: 3, title: 'DBMS Project: ER to Relational', code: 'DB-118', tags: ['.sql'], description: 'Convert an entity relationship model into a relational schema.', dueDate: '15 Sep 2026', submissions: 60, total: 60, status: 'Archived' },
+  { id: 4, title: 'AI Search - A* Implementation', code: 'AI-041', tags: ['.py'], description: 'Implement A* search for an 8-puzzle with an admissible heuristic.', dueDate: '10 Dec 2026', submissions: 0, total: 60, status: 'Draft' },
+  { id: 5, title: 'Web Dev - E-commerce Clone UI', code: 'WEB-210', tags: ['.js', '.py'], description: 'Recreate a product listing page with filters and responsive layout.', dueDate: '05 Nov 2026', submissions: 22, total: 60, status: 'Active' },
+  { id: 6, title: 'Graph Algorithms', code: 'CS-301', tags: ['.py'], description: 'Implement and explain graph traversal and shortest-path algorithms.', dueDate: '06 Nov 2026', submissions: 20, total: 60, status: 'Active' },
+  { id: 7, title: 'Data Structures', code: 'CS-205', tags: ['.java', '.cpp'], description: 'Implement core data structures and analyze their operations.', dueDate: '08 Nov 2026', submissions: 24, total: 60, status: 'Active' },
 ];
 
 const getTagColor = (tag: string) => {
@@ -47,6 +49,7 @@ export default function Assignments() {
 
     const queryText = [
       assignment.title,
+      assignment.code,
       assignment.description,
       assignment.status,
       ...assignment.tags,
@@ -123,6 +126,7 @@ export default function Assignments() {
                 <tr key={assignment.id} className="border-b border-[#E3E7E0] hover:bg-[#F7F6F0]/60 transition-colors">
                   <td className="py-4 px-6">
                     <div className="font-medium text-[#202923] mb-2">{assignment.title}</div>
+                    <div className="mb-2 font-mono text-xs text-[#707A72]">{assignment.code}</div>
                     <div className="flex flex-wrap gap-1.5">
                       {assignment.tags.map((tag) => (
                         <span key={tag} className={`text-[10px] rounded px-1.5 py-0.5 font-medium ${getTagColor(tag)}`}>

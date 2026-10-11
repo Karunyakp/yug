@@ -5,11 +5,16 @@ import {
   BrainCircuit,
   ChartNoAxesCombined,
   Check,
+  CircleHelp,
   Code2,
   Download,
+  Eye,
   FileText,
+  Filter,
   FolderKanban,
+  KeyRound,
   Mail,
+  MessageCircle,
   Network,
   Settings2,
   ShieldCheck,
@@ -47,6 +52,34 @@ const reviewFeatures = [
     link: '/terms',
     action: 'Read responsible-use terms',
   },
+  {
+    icon: <MessageCircle size={21} />,
+    title: 'Explain Your Code questions',
+    description: 'Generate neutral, code-grounded discussion questions with optional Gemini consent. The demo does not time or score answers, and responses do not prove authorship.',
+    link: '/compare',
+    action: 'Explore the question generator',
+  },
+  {
+    icon: <Eye size={21} />,
+    title: 'Explainable paired-line evidence',
+    description: 'Inspect exact normalized line matches with line references. It is a simple text comparison, not AST analysis or proof of copying.',
+    link: '/compare',
+    action: 'Inspect evidence',
+  },
+  {
+    icon: <ShieldCheck size={21} />,
+    title: 'Common-algorithm context',
+    description: 'A lightweight bubble-sort pattern heuristic can add context without changing the overlap percentage or claiming independent authorship.',
+    link: '/compare',
+    action: 'Review context labels',
+  },
+  {
+    icon: <MessageCircle size={21} />,
+    title: 'Student evidence and response view',
+    description: 'Prepare a same-browser view of the compared samples and measurements; a student can save a response locally. It does not deliver a formal appeal.',
+    link: '/student-response',
+    action: 'Open student response',
+  },
 ];
 
 const workflowFeatures = [
@@ -63,6 +96,13 @@ const workflowFeatures = [
     description: 'Browse the demo submission list and assignment workspace, with assignment status and review context.',
     link: '/submissions',
     action: 'Submissions',
+  },
+  {
+    icon: <Filter size={21} />,
+    title: 'Submission filters and bulk demo actions',
+    description: 'Filter by overlap and review context, sort rows, select multiple samples, assign a demo reviewer, or add a common-pattern context tag. Changes stay in this browser.',
+    link: '/submissions',
+    action: 'Try submission tools',
   },
   {
     icon: <Network size={21} />,
@@ -88,9 +128,16 @@ const workflowFeatures = [
   {
     icon: <Settings2 size={21} />,
     title: 'Settings and preferences',
-    description: 'Explore the demo settings for notifications, review thresholds, and workspace preferences.',
+    description: 'Explore preferences and the editable, browser-local activity log. It is not a secure or tamper-proof institutional audit trail.',
     link: '/settings',
-    action: 'Settings',
+    action: 'Settings and activity log',
+  },
+  {
+    icon: <KeyRound size={21} />,
+    title: 'Browser-local demo accounts',
+    description: 'Create a demo account and sign in in the same browser. Accounts do not sync and are not production authentication.',
+    link: '/signup',
+    action: 'Create an account',
   },
 ];
 
@@ -105,7 +152,7 @@ const connectedFeatures = [
   {
     icon: <Bot size={21} />,
     title: 'AI help assistant',
-    description: 'Ask the in-app assistant questions about the demo or general code-review concepts. Do not share confidential information.',
+    description: 'Ask about the demo or code-review concepts. Chat text and prior messages are sent to Google Gemini only after you check the consent box.',
     link: '/privacy',
     action: 'Privacy details',
   },
@@ -179,11 +226,11 @@ export default function Features() {
               <Sparkles size={14} /> CodeGuard AI feature guide
             </span>
             <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-[-0.035em] sm:text-5xl">
-              Everything in one
-              <span className="block text-[#174C3C]">human-led review workspace.</span>
+              Fair review starts
+              <span className="block text-[#174C3C]">with context, not a score.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-[#5E6961]">
-              Compare code, organize review work, create exports, and use optional AI assistance. This page describes what is available in the current CodeGuard AI frontend demo.
+              CodeGuard AI is an academic code-review demo designed to keep evidence, student context, and human judgment in the loop. Explore the working features and the ideas that are not built yet.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link to="/signup" className="inline-flex items-center gap-2 rounded-xl bg-[#174C3C] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#10382D]">
@@ -198,7 +245,6 @@ export default function Features() {
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
-            ['Browser-based demo', 'Accounts and some settings stay in this browser. There is no application backend.'],
             ['Connected services', 'Gemini and EmailJS features require their respective public frontend configuration.'],
             ['Sample records', 'Several dashboard, report, and network screens use illustrative demo data.'],
           ].map(([title, description]) => (
@@ -208,6 +254,37 @@ export default function Features() {
             </div>
           ))}
         </div>
+
+        <section className="mt-14 overflow-hidden rounded-3xl bg-[#174C3C] text-white">
+          <div className="grid lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="p-7 sm:p-9 lg:p-11">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C3E4CF]">The CodeGuard difference</p>
+              <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+                More context.
+                <span className="block text-[#C3E4CF]">Less guesswork.</span>
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-white/75">
+                Similarity is only a prompt for review, never an automated verdict. The demo foregrounds the limits of its simple local heuristics and keeps decisions with people.
+              </p>
+              <Link to="/compare" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#174C3C] transition hover:bg-[#E4F1E9]">
+                See the comparison workspace <ArrowRight size={16} />
+              </Link>
+            </div>
+            <div className="grid gap-px bg-white/15 sm:grid-cols-3">
+              {[
+                { icon: <Eye size={20} />, title: 'Evidence first', detail: 'Inspect the code and local metrics before forming a view.' },
+                { icon: <BrainCircuit size={20} />, title: 'AI with boundaries', detail: 'Optional AI observations stay advisory and can fail visibly.' },
+                { icon: <ShieldCheck size={20} />, title: 'People decide', detail: 'No similarity score should make an academic decision alone.' },
+              ].map(item => (
+                <div key={item.title} className="flex flex-col justify-center bg-[#174C3C] p-6 sm:p-7">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-[#C3E4CF]">{item.icon}</div>
+                  <h3 className="mt-5 text-base font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/70">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <FeatureGroup
           title="Code review and analysis"
@@ -224,6 +301,62 @@ export default function Features() {
           description="Optional integrations extend the browser demo. Their requests are sent from the browser to the configured provider."
           features={connectedFeatures}
         />
+
+        <section className="mt-14 rounded-3xl border border-[#E3E7E0] bg-white p-6 sm:p-9">
+          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#174C3C]">Not implemented · roadmap concepts</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#202923]">A roadmap for fairer review</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#707A72]">
+            These concepts are not implemented and should not be presented as working features. Each needs careful validation, consent, and a safe workflow before it can support academic decisions.
+          </p>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {[
+              ['Assignment coincidence baseline', 'Not available. Would require validated independent-solution data before estimating how often overlap occurs by chance.'],
+              ['AI-assisted code signal', 'Not available. Reliable authorship classification is not established here; any future signal must be probabilistic, evaluated for bias, and never treated as proof.'],
+              ['Historical or public code corpus', 'Not available. Cross-semester, GitHub, and Q&A matching requires licensed, governed data sources and careful attribution controls.'],
+              ['Learning-mode private self-check', 'Not available. A future student-controlled practice mode could explain common patterns without sharing work with faculty.'],
+              ['Learning-management-system integrations', 'Not available. Classroom, Moodle, and GitHub Classroom connectors need secure institutional authorization and backend integration.'],
+              ['Fairness and impact dashboard', 'Not available. It requires governed, high-quality data and privacy-preserving analysis; this demo cannot measure disparate impact.'],
+              ['Multilingual notices', 'Not available. Hindi, Marathi, Tamil, and other message translations need review for accuracy and institutional suitability.'],
+              ['Student-controlled authorship fingerprint', 'Not available. A style profile could be misleading and privacy-sensitive; it must not be treated as proof or silently built from student work.'],
+              ['WebAssembly / in-browser AST parsing', 'Not available. Current analysis is local JavaScript token and line heuristics, not a parser or WebAssembly engine.'],
+              ['Timed or voice viva', 'Not available. The current generator only drafts questions; it does not record voice, time answers, or automatically assess a student.'],
+              ['Student coding provenance', 'Not available. A proposed editor timeline could provide context, but would not prove authorship and would need student control.'],
+            ].map(([title, description]) => (
+              <article key={title} className="rounded-2xl border border-[#E3E7E0] bg-[#F7F6F0] p-5">
+                <h3 className="text-sm font-semibold text-[#202923]">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#707A72]">{description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-14">
+          <div className="mb-6 max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#174C3C]">A quick product tour</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#202923]">From code sample to considered review.</h2>
+            <p className="mt-2 text-sm leading-6 text-[#707A72]">Follow this short path to see the core experience in the demo.</p>
+          </div>
+          <div className="grid gap-4 lg:grid-cols-4">
+            {[
+              { step: '01', title: 'Open Compare', body: 'Start with the sample code or enter code you are authorized to review.', href: '/compare', icon: <Code2 size={19} /> },
+              { step: '02', title: 'Run analysis', body: 'View local similarity indicators and optional AI observations when configured.', href: '/compare', icon: <BrainCircuit size={19} /> },
+              { step: '03', title: 'Review context', body: 'Treat results as prompts for careful investigation, not as proof or a decision.', href: '/terms', icon: <CircleHelp size={19} /> },
+              { step: '04', title: 'Export a report', body: 'Explore CSV export and print-to-PDF options in the reports workspace.', href: '/reports', icon: <Download size={19} /> },
+            ].map(item => (
+              <Link key={item.step} to={item.href} className="group rounded-2xl border border-[#E3E7E0] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#B8D4C0] hover:shadow-md">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold tracking-[0.16em] text-[#9AA49C]">{item.step}</span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#E4F1E9] text-[#174C3C]">{item.icon}</span>
+                </div>
+                <h3 className="mt-5 font-semibold text-[#202923]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#707A72]">{item.body}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#174C3C]">
+                  Open <ArrowRight className="transition-transform group-hover:translate-x-1" size={15} />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <section className="mt-14 rounded-3xl border border-[#E3E7E0] bg-white p-6 sm:p-9">
           <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">

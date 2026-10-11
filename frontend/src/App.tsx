@@ -35,6 +35,7 @@ import EmailCenter from './components/EmailCenter';
 import CommandPalette from './components/CommandPalette';
 import AssistantChat from './components/AssistantChat';
 import { NotFound, PageMetadata, PrivacyPolicy, TermsAndConditions } from './components/PublicPages';
+import StudentResponse from './components/StudentResponse';
 
 import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
@@ -80,7 +81,7 @@ const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onClo
             <p className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider mb-2 px-3">CORE MODULES</p>
             <nav className="space-y-1">
               <NavItem to="/dashboard" icon={<LayoutDashboard size={17} />} label="Overview" active={isActive('/dashboard')} />
-              <NavItem to="/submissions" icon={<FolderKanban size={17} />} label="Submissions" active={isActive('/submissions')} badge="248" />
+              <NavItem to="/submissions" icon={<FolderKanban size={17} />} label="Submissions" active={isActive('/submissions')} badge="203" />
               <NavItem to="/compare" icon={<SplitSquareHorizontal size={17} />} label="Code Analysis" active={isActive('/compare')} />
               <NavItem to="/network" icon={<Share2 size={17} />} label="Collaboration Graph" active={isActive('/network')} />
               <NavItem to="/reports" icon={<FileBarChart size={17} />} label="Reports & Evidence" active={isActive('/reports')} />
@@ -91,7 +92,7 @@ const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onClo
           <div>
             <p className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider mb-2 px-3">COURSES & REVIEWS</p>
             <nav className="space-y-1">
-              <NavItem to="/assignments" icon={<FileText size={17} />} label="Assignments" active={isActive('/assignments')} badge="12" />
+              <NavItem to="/assignments" icon={<FileText size={17} />} label="Assignments" active={isActive('/assignments')} badge="7" />
               <NavItem to="/projects" icon={<FolderKanban size={17} />} label="Courses" active={isActive('/projects')} />
               <NavItem to="/users" icon={<Users size={17} />} label="Review Staff" active={isActive('/users')} />
             </nav>
@@ -264,6 +265,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/student-response" element={<StudentResponse />} />
 
         <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/submissions" element={<ProtectedRoute><Layout><SubmissionsList /></Layout></ProtectedRoute>} />
