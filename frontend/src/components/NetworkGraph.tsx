@@ -63,7 +63,24 @@ export default function NetworkGraph() {
     ...status,
     count: submissions.filter(submission => submission.status === status.label).length,
   })), [submissions]);
+  const overlapDistribution = useMemo(() => [
+    { label: '15–29%', minimum: 15, maximum: 29, color: '#C5D2C7' },
+    { label: '30–49%', minimum: 30, maximum: 49, color: '#73927B' },
+    { label: '50%+', minimum: 50, maximum: 101, color: '#C47731' },
+  ].map(range => ({
+    ...range,
+    count: links.filter(link => link.overlap >= range.minimum && link.overlap < range.maximum).length,
+  })), [links]);
+  const connectedSubmissions = useMemo(() => submissions.map(submission => ({
+    ...submission,
+    connections: links.filter(link => link.source === submission.id || link.target === submission.id).length,
+  }))
+    .filter(submission => submission.connections > 0)
+    .sort((first, second) => second.connections - first.connections || first.learner.localeCompare(second.learner))
+    .slice(0, 5), [submissions, links]);
   const maxAssignmentSubmissions = Math.max(1, ...assignmentInsights.map(item => item.submissions));
+  const maxConnections = Math.max(1, ...connectedSubmissions.map(item => item.connections));
+  const maxOverlapRangeCount = Math.max(1, ...overlapDistribution.map(item => item.count));
   const statusTotal = Math.max(1, reviewStatuses.reduce((total, item) => total + item.count, 0));
 
   const handleCourseChange = (course: string) => {
@@ -166,6 +183,76 @@ export default function NetworkGraph() {
             ))}
           </ul>
         </article>
+      </section>
+
+      <section>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">Relationship insights</h2>
+          <p className="mt-1 text-sm text-[#707A72]">Additional views of the submission connections visible in the graph.</p>
+        </div>
+        <div className="grid gap-4 xl:grid-cols-2">
+          <article className="rounded-2xl border border-[#E3E7E0] bg-white p-5">
+            <div className="flex items-center gap-2">
+              <BarChart3 size={18} className="text-[#174C3C]" />
+              <div>
+                <h3 className="font-semibold">Overlap strength distribution</h3>
+                <p className="mt-1 text-xs text-[#707A72]">Connected pairs currently shown, grouped by overlap score.</p>
+              </div>
+            </div>
+            <div className="mt-6 space-y-4">
+              {overlapDistribution.map(range => (
+                <div key={range.label} className="grid grid-cols-[58px_minmax(0,1fr)_28px] items-center gap-3 text-xs">
+                  <span className="font-medium text-[#59645C]">{range.label}</span>
+                  <div
+                    className="h-3 overflow-hidden rounded-full bg-[#EEF1ED]"
+                    role="img"
+                    aria-label={`${range.count} connected pairs in ${range.label} overlap range`}
+                  >
+                    <div className="h-full rounded-full transition-all" style={{ width: `${(range.count / maxOverlapRangeCount) * 100}%`, backgroundColor: range.color }} />
+                  </div>
+                  <span className="text-right font-semibold tabular-nums text-[#354139]">{range.count}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 border-t border-[#E3E7E0] pt-3 text-[11px] leading-5 text-[#89938B]">
+              The overlap slider and selected course filter both apply to these counts.
+            </p>
+          </article>
+
+          <article className="rounded-2xl border border-[#E3E7E0] bg-white p-5">
+            <div className="flex items-center gap-2">
+              <Users size={18} className="text-[#174C3C]" />
+              <div>
+                <h3 className="font-semibold">Most connected submissions</h3>
+                <p className="mt-1 text-xs text-[#707A72]">Count of visible links for each submission.</p>
+              </div>
+            </div>
+            {connectedSubmissions.length ? (
+              <ol className="mt-5 space-y-4">
+                {connectedSubmissions.map((submission, index) => (
+                  <li key={submission.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSubmissionId(submission.id)}
+                      className="w-full text-left"
+                      aria-label={`Show ${submission.learner}, ${submission.connections} connections`}
+                    >
+                      <span className="flex items-center justify-between gap-3 text-xs">
+                        <span className="truncate font-medium text-[#354139]">{index + 1}. {submission.learner} <span className="font-normal text-[#89938B]">{submission.id}</span></span>
+                        <span className="shrink-0 font-semibold tabular-nums text-[#354139]">{submission.connections} links</span>
+                      </span>
+                      <span className="mt-2 block h-2 overflow-hidden rounded-full bg-[#EEF1ED]">
+                        <span className="block h-full rounded-full bg-[#4F8067] transition-all" style={{ width: `${(submission.connections / maxConnections) * 100}%` }} />
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="mt-5 rounded-xl bg-[#F7F8F5] p-4 text-sm text-[#707A72]">No submissions have connections at this overlap threshold.</p>
+            )}
+          </article>
+        </div>
       </section>
 
       <section className="overflow-hidden rounded-2xl border border-[#E3E7E0] bg-white">
