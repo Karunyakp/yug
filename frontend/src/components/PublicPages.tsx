@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
 
 const pageMetadata: Record<string, { title: string; description: string }> = {
@@ -60,12 +60,22 @@ export function PageMetadata() {
 }
 
 function PublicPageFrame({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <main className="min-h-screen bg-[#F7F6F0] px-5 py-8 text-[#202923] sm:px-8 sm:py-12">
       <div className="mx-auto max-w-4xl">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-[#707A72] transition hover:text-[#174C3C]">
-          <ArrowLeft size={16} /> CodeGuard AI
-        </Link>
+        <button
+          type="button"
+          onClick={() => {
+            if (location.key === 'default') navigate('/');
+            else navigate(-1);
+          }}
+          className="inline-flex items-center gap-2 text-sm font-medium text-[#707A72] transition hover:text-[#174C3C]"
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
         <article className="mt-7 rounded-3xl border border-[#E3E7E0] bg-white p-6 shadow-[0_18px_60px_-36px_rgba(32,41,35,0.22)] sm:p-10 lg:p-14">
           {children}
           <div className="mt-10 flex flex-wrap gap-4 border-t border-[#E3E7E0] pt-6 text-sm">

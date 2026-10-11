@@ -9,7 +9,7 @@ import {
   LockKeyhole,
   ShieldCheck,
 } from 'lucide-react';
-import { signInLocally } from '../services/localAuth';
+import { signInLocally, WORKSPACE_LOGIN_CREDENTIALS } from '../services/localAuth';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -103,6 +103,36 @@ export default function Login() {
             <p className="mt-2 text-sm leading-6 text-[#707A72]">
               Sign in to continue to your CodeGuard review workspace.
             </p>
+
+            <section aria-label="Workspace access credentials" className="mt-6 rounded-xl border border-[#DCE7DC] bg-[#F5F8F4] p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-semibold text-[#354139]">Workspace access</h3>
+                  <p className="mt-1 text-xs text-[#707A72]">Use these credentials to open the workspace.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail(WORKSPACE_LOGIN_CREDENTIALS.email);
+                    setPassword(WORKSPACE_LOGIN_CREDENTIALS.password);
+                    setError('');
+                  }}
+                  className="rounded-lg border border-[#C8D8CA] bg-white px-3 py-1.5 text-xs font-semibold text-[#174C3C] transition hover:bg-[#EAF3EC] focus:outline-none focus:ring-2 focus:ring-[#174C3C]/30"
+                >
+                  Fill credentials
+                </button>
+              </div>
+              <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+                <div>
+                  <dt className="text-[#8A938B]">Email</dt>
+                  <dd className="mt-0.5 select-all font-medium text-[#354139]">{WORKSPACE_LOGIN_CREDENTIALS.email}</dd>
+                </div>
+                <div>
+                  <dt className="text-[#8A938B]">Password</dt>
+                  <dd className="mt-0.5 select-all font-medium text-[#354139]">{WORKSPACE_LOGIN_CREDENTIALS.password}</dd>
+                </div>
+              </dl>
+            </section>
 
             <form onSubmit={handleSignIn} className="mt-8 space-y-5">
               <div className="rounded-lg border border-[#E3E7E0] bg-[#F7F6F0] px-3.5 py-2.5 text-xs leading-5 text-[#707A72]">

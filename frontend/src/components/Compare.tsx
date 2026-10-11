@@ -18,6 +18,62 @@ import { analyzeCodeWithGemini, generateVivaQuestionsWithGemini, type AnalysisOu
 import { recordAuditEvent } from '../services/localAuditLog';
 import ToggleSwitch from './ToggleSwitch';
 
+type ReviewDecision = 'needs_review' | 'viva_scheduled' | 'dismissed' | 'reviewed';
+
+interface SavedReviewProcess {
+  fingerprint: string;
+  decision: ReviewDecision;
+  notes: string;
+  updatedAt: string;
+}
+
+const REVIEW_PROCESS_KEY = 'codeguard:review-process';
+const REVIEW_DECISIONS: ReviewDecision[] = ['needs_review', 'viva_scheduled', 'dismissed', 'reviewed'];
+
+async function getComparisonFingerprint(firstCode: string, secondCode: string): Promise<string> {
+  const data = new TextEncoder().encode(JSON.stringify([firstCode, secondCode]));
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function isReviewDecision(value: unknown): value is ReviewDecision {
+  return typeof value === 'string' && REVIEW_DECISIONS.includes(value as ReviewDecision);
+}
+
+function readSavedReviewProcesses(): SavedReviewProcess[] {
+  const raw = localStorage.getItem(REVIEW_PROCESS_KEY);
+  if (!raw) return [];
+  let value: unknown;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    throw new Error('Saved review progress is invalid. Clear the review-process entry from this browser and try again.');
+  }
+  if (!Array.isArray(value)) {
+    throw new Error('Saved review progress is invalid. Clear the review-process entry from this browser and try again.');
+  }
+  return value.map((item): SavedReviewProcess => {
+    if (typeof item !== 'object' || item === null) {
+      throw new Error('Saved review progress is incomplete. Clear the review-process entry from this browser and try again.');
+    }
+    const record = item as Record<string, unknown>;
+    if (
+      typeof record.fingerprint !== 'string' ||
+      !isReviewDecision(record.decision) ||
+      typeof record.notes !== 'string' ||
+      typeof record.updatedAt !== 'string'
+    ) {
+      throw new Error('Saved review progress is incomplete. Clear the review-process entry from this browser and try again.');
+    }
+    return {
+      fingerprint: record.fingerprint,
+      decision: record.decision,
+      notes: record.notes,
+      updatedAt: record.updatedAt,
+    };
+  });
+}
+
 export default function Compare() {
   const [code1, setCode1] = useState('');
   const [code2, setCode2] = useState('');
@@ -40,7 +96,8 @@ export default function Compare() {
 
   // Reviewer Notes state
   const [reviewerNotes, setReviewerNotes] = useState('');
-  const [decision, setDecision] = useState<'needs_review' | 'viva_scheduled' | 'dismissed' | 'reviewed'>('needs_review');
+  const [decision, setDecision] = useState<ReviewDecision>('needs_review');
+  const [comparisonFingerprint, setComparisonFingerprint] = useState('');
 
   const logActivity = (action: string, detail: string) => {
     try {
@@ -58,11 +115,30 @@ export default function Compare() {
     }
     setLoading(true);
     setAnalysisError('');
+    setComparisonFingerprint('');
     try {
       const activeStarterCode = showStarterConfig ? starterCode : undefined;
       const localResult = runLocalMultiLayerComparison(code1, code2, activeStarterCode);
       setResult(localResult);
       logActivity('Comparison run', `Local overlap review; common-pattern context: ${localResult.commonAlgorithm ?? 'none detected'}.`);
+      try {
+        const fingerprint = await getComparisonFingerprint(code1, code2);
+        setComparisonFingerprint(fingerprint);
+        try {
+          const savedReview = readSavedReviewProcesses().find(review => review.fingerprint === fingerprint);
+          if (savedReview?.fingerprint === fingerprint) {
+            setDecision(savedReview.decision);
+            setReviewerNotes(savedReview.notes);
+          } else {
+            setDecision('needs_review');
+            setReviewerNotes('');
+          }
+        } catch (reviewError) {
+          setAuditWarning(reviewError instanceof Error ? reviewError.message : 'Unable to load saved review progress.');
+        }
+      } catch (reviewError) {
+        setAuditWarning(reviewError instanceof Error ? reviewError.message : 'Unable to load saved review progress.');
+      }
 
       if (!allowCodeToGemini) {
         setGeminiInsights(null);
@@ -89,6 +165,29 @@ export default function Compare() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const saveReviewProcess = (nextDecision: ReviewDecision, notes: string) => {
+    if (!result) return;
+    void getComparisonFingerprint(code1, code2).then(fingerprint => {
+      if (fingerprint !== comparisonFingerprint) {
+        setAuditWarning('Run the comparison again before saving review progress for the edited code.');
+        return;
+      }
+      const savedReview: SavedReviewProcess = {
+        fingerprint,
+        decision: nextDecision,
+        notes,
+        updatedAt: new Date().toISOString(),
+      };
+      const savedReviews = readSavedReviewProcesses()
+        .filter(review => review.fingerprint !== fingerprint);
+      savedReviews.push(savedReview);
+      localStorage.setItem(REVIEW_PROCESS_KEY, JSON.stringify(savedReviews.slice(-100)));
+      setAuditWarning('');
+    }).catch(saveError => {
+      setAuditWarning(saveError instanceof Error ? saveError.message : 'Unable to save review progress in this browser.');
+    });
   };
 
   const simScore = result ? Math.round(result.overall_similarity * 100) : 0;
@@ -485,7 +584,7 @@ export default function Compare() {
         <div className="bg-white border border-[#E3E7E0] rounded-2xl p-6 space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold text-[#202923] uppercase tracking-wider">Review Process</h3>
-            <span className="text-[11px] text-[#707A72]">Saved in this screen only</span>
+            <span className="text-[11px] text-[#707A72]">{result ? 'Saved in this browser' : 'Run an analysis to save review progress'}</span>
           </div>
 
           <div className="flex flex-wrap gap-2.5">
@@ -497,9 +596,12 @@ export default function Compare() {
             ].map(d => (
               <button
                 key={d.id}
+                type="button"
+                aria-pressed={decision === d.id}
                 onClick={() => {
-                  const nextDecision = d.id as typeof decision;
+                  const nextDecision = d.id as ReviewDecision;
                   setDecision(nextDecision);
+                  saveReviewProcess(nextDecision, reviewerNotes);
                   logActivity('Review state changed', `Review state changed to ${d.label}.`);
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
@@ -512,6 +614,11 @@ export default function Compare() {
               </button>
             ))}
           </div>
+          {decision === 'reviewed' && (
+            <p role="status" className="rounded-lg border border-[#C3E4CF] bg-[#E4F1E9] px-3 py-2 text-xs font-medium text-[#174C3C]">
+              Review marked complete. This status is saved locally for the current pair of code samples.
+            </p>
+          )}
 
           <div>
             <label className="text-[11px] text-[#707A72] font-semibold uppercase tracking-wider block mb-1">
@@ -521,6 +628,7 @@ export default function Compare() {
               className="w-full h-20 bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl p-3 text-xs text-[#202923] outline-none focus:border-[#174C3C]"
               value={reviewerNotes}
               onChange={e => setReviewerNotes(e.target.value)}
+              onBlur={e => saveReviewProcess(decision, e.target.value)}
               placeholder="Add notes about this comparison"
             />
           </div>

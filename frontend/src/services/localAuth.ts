@@ -1,5 +1,11 @@
 const ACCOUNTS_KEY = 'codeguard:accounts';
 
+export const WORKSPACE_LOGIN_CREDENTIALS = {
+  name: 'Workspace Faculty',
+  email: 'faculty@codeguard.app',
+  password: 'ReviewAccess2026!',
+};
+
 export interface LocalAccount {
   name: string;
   email: string;
@@ -76,6 +82,17 @@ export async function signInLocally(email: string, password: string): Promise<vo
   const account = accounts.find(saved => saved.email.toLowerCase() === normalizedEmail);
 
   if (!account) {
+    if (
+      normalizedEmail === WORKSPACE_LOGIN_CREDENTIALS.email &&
+      password === WORKSPACE_LOGIN_CREDENTIALS.password
+    ) {
+      await createLocalAccount(
+        WORKSPACE_LOGIN_CREDENTIALS.name,
+        WORKSPACE_LOGIN_CREDENTIALS.email,
+        WORKSPACE_LOGIN_CREDENTIALS.password,
+      );
+      return;
+    }
     throw new Error('No local account matches those credentials. Create an account in this browser first.');
   }
 
