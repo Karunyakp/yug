@@ -1,254 +1,200 @@
 import { useState } from 'react';
+import {
+  FileText,
+  Download
+} from 'lucide-react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 import { Link } from 'react-router-dom';
-import { FileText, TrendingUp, AlertTriangle, Users, Calendar, ArrowRight } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState('Overview');
+  const [activeTab, setActiveTab] = useState<'Overview' | 'Top Matches' | 'Dossier'>('Overview');
 
   const similarityTrendData = [
-    { month: 'Jan', similarity: 22 },
-    { month: 'Feb', similarity: 25 },
-    { month: 'Mar', similarity: 30 },
-    { month: 'Apr', similarity: 28 },
-    { month: 'May', similarity: 26 },
-    { month: 'Jun', similarity: 28 },
+    { month: 'Jun', similarity: 22 },
+    { month: 'Jul', similarity: 25 },
+    { month: 'Aug', similarity: 30 },
+    { month: 'Sep', similarity: 28 },
+    { month: 'Oct', similarity: 24 },
+    { month: 'Nov', similarity: 26 },
   ];
 
   const languageDistributionData = [
-    { name: 'Python', value: 42, color: '#ec4899' },
-    { name: 'Java', value: 28, color: '#3b82f6' },
-    { name: 'C++', value: 18, color: '#10b981' },
-    { name: 'JavaScript', value: 12, color: '#eab308' },
+    { name: 'Python', value: 42, color: '#E02875' },
+    { name: 'Java', value: 28, color: '#8A63D2' },
+    { name: 'C++', value: 18, color: '#00D2D3' },
+    { name: 'JavaScript', value: 12, color: '#10B981' },
   ];
 
   const topSimilarityCases = [
-    { id: 1, student1: 'Aarav Sharma', student2: 'Rohan Mehta', assignment: 'Sorting Algorithms', similarity: 92 },
-    { id: 2, student1: 'Karan Gupta', student2: 'Neha Reddy', assignment: 'Graph Algorithms', similarity: 89 },
-    { id: 3, student1: 'Priya Nair', student2: 'Sneha Iyer', assignment: 'Data Structures', similarity: 76 },
-    { id: 4, student1: 'Arjun Singh', student2: 'Isha Patel', assignment: 'Dynamic Programming', similarity: 71 },
-    { id: 5, student1: 'Aarav Sharma', student2: 'Arjun Singh', assignment: 'Data Structures', similarity: 68 },
+    { id: 1, student1: 'Aarav Sharma', student2: 'Rohan Mehta', assignment: 'Sorting Visualizer', similarity: 92, status: 'Viva Scheduled' },
+    { id: 2, student1: 'Karan Gupta', student2: 'Neha Reddy', assignment: 'Graph Algorithms', similarity: 89, status: 'Pending Review' },
+    { id: 3, student1: 'Priya Nair', student2: 'Sneha Iyer', assignment: 'Data Structures', similarity: 76, status: 'Resolved Clean' },
+    { id: 4, student1: 'Arjun Singh', student2: 'Isha Patel', assignment: 'Dynamic Programming', similarity: 71, status: 'Under Review' },
   ];
 
+  const handleDownloadPDF = () => {
+    window.print();
+  };
+
+  const handleDownloadCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Case ID,Student 1,Student 2,Assignment,Similarity %,Status\n"
+      + topSimilarityCases.map(e => `${e.id},"${e.student1}","${e.student2}","${e.assignment}",${e.similarity},"${e.status}"`).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "codeguard_academic_integrity_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div className="text-white space-y-6 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 pb-16 text-[#F3F4F6]">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print-hidden">
         <div>
-          <h1 className="text-2xl font-bold">Reports & Analytics</h1>
-          <p className="text-gray-400 mt-1 text-sm">Visualize trends and generate reports.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E02875]/10 border border-[#E02875]/20 text-[#E02875] text-xs font-semibold uppercase tracking-wider mb-2">
+            <FileText size={13} /> Institutional Records
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Reports & Evidentiary Dossiers</h1>
+          <p className="text-xs text-[#8E99B7] mt-1">
+            Generate formal, auditable academic integrity documentation for departmental review committees.
+          </p>
         </div>
-        <button className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors shadow-[0_0_15px_rgba(236,72,153,0.3)] cursor-pointer text-sm">
-          📥 Export Report
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleDownloadCSV}
+            className="px-4 py-2.5 rounded-xl bg-[#15192B] border border-[#1F263E] text-xs font-semibold text-[#DCE1EE] hover:text-white flex items-center gap-2 transition-all cursor-pointer"
+          >
+            <Download size={14} /> Export CSV
+          </button>
+          <button
+            onClick={handleDownloadPDF}
+            className="px-5 py-2.5 rounded-xl bg-[#E02875] hover:bg-[#C2185B] text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-md shadow-[#E02875]/20 cursor-pointer"
+          >
+            <Download size={14} /> One-Click PDF Report
+          </button>
+        </div>
       </div>
 
-      <div className="border-b border-white/10">
-        <nav className="flex space-x-8">
-          {['Overview', 'Top Matches', 'Assignment Report', 'Download'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer ${
-                activeTab === tab ? 'border-pink-500 text-pink-500' : 'border-transparent text-gray-400 hover:text-white'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
+      {/* Tabs */}
+      <div className="border-b border-[#1F263E] flex gap-8 text-xs font-semibold print-hidden">
+        {['Overview', 'Top Matches', 'Dossier'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as any)}
+            className={`py-3 transition-colors border-b-2 cursor-pointer ${
+              activeTab === tab
+                ? 'border-[#E02875] text-[#E02875]'
+                : 'border-transparent text-[#8E99B7] hover:text-white'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
 
+      {/* Overview Tab */}
       {activeTab === 'Overview' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { label: 'TOTAL SUBMISSIONS', value: '248', icon: FileText, color: 'text-blue-400 bg-blue-400/10' },
-              { label: 'AVG SIMILARITY', value: '28%', icon: TrendingUp, color: 'text-green-400 bg-green-400/10' },
-              { label: 'HIGH SIMILARITY', value: '186', icon: AlertTriangle, color: 'text-pink-500 bg-pink-500/10' },
-              { label: 'UNIQUE STUDENTS', value: '64', icon: Users, color: 'text-purple-400 bg-purple-400/10' },
-            ].map((stat, i) => (
-              <div key={i} className="bg-[#1a1a24] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${stat.color}`}>
-                  <stat.icon size={24} />
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-500 font-bold tracking-wider">{stat.label}</p>
-                  <p className="text-2xl font-bold text-white">{stat.value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-[#1a1a24] p-6 rounded-2xl border border-white/5">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="font-semibold text-white">Similarity Trend</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">Monthly average similarity % (Jan - Jun)</p>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-gray-400 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
-                  <Calendar size={14} /> Jan - Jun
-                </div>
-              </div>
-              <div className="h-64">
+            {/* Trend Chart */}
+            <div className="bg-[#101422] rounded-3xl p-6 border border-[#1F263E] shadow-xl">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-1">Monthly Similarity Trajectory</h3>
+              <p className="text-xs text-[#8E99B7] mb-6">Median similarity recorded across introductory courses</p>
+              <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={similarityTrendData} margin={{ top: 10, right: 15, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff10" />
-                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} domain={[0, 40]} tickFormatter={(val) => `${val}%`} />
-                    <Tooltip contentStyle={{ backgroundColor: '#16161e', border: '1px solid #ffffff10', borderRadius: '8px', color: '#fff' }} />
-                    <Line type="monotone" dataKey="similarity" stroke="#ec4899" strokeWidth={3} dot={{ r: 4, fill: '#ec4899', strokeWidth: 2, stroke: '#1a1a24' }} activeDot={{ r: 6, fill: '#f43f5e' }} />
+                  <LineChart data={similarityTrendData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1F263E" vertical={false} />
+                    <XAxis dataKey="month" stroke="#69759B" tick={{ fill: '#8E99B7', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <YAxis stroke="#69759B" tick={{ fill: '#8E99B7', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <Tooltip contentStyle={{ backgroundColor: '#101422', border: '1px solid #1F263E', borderRadius: '12px', color: '#fff', fontSize: '12px' }} />
+                    <Line type="monotone" dataKey="similarity" stroke="#E02875" strokeWidth={3} dot={{ fill: '#E02875', r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            <div className="bg-[#1a1a24] p-6 rounded-2xl border border-white/5 relative">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="font-semibold text-white">Language Distribution</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">Submitted code by programming language</p>
-                </div>
-                <span className="text-xs font-medium text-gray-400 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
-                  4 Active Languages
-                </span>
-              </div>
-              <div className="h-64 flex items-center">
-                <div className="w-1/2 relative h-full flex justify-center items-center">
+            {/* Language Distribution */}
+            <div className="bg-[#101422] rounded-3xl p-6 border border-[#1F263E] shadow-xl">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-1">Programming Language Breakdown</h3>
+              <p className="text-xs text-[#8E99B7] mb-6">Volume of code evaluated by runtime grammar</p>
+              <div className="h-[220px] flex items-center justify-between">
+                <div className="w-1/2 h-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={languageDistributionData} cx="50%" cy="50%" innerRadius={55} outerRadius={75} paddingAngle={3} dataKey="value" stroke="none">
-                        {languageDistributionData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Pie data={languageDistributionData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value">
+                        {languageDistributionData.map((e, idx) => (
+                          <Cell key={idx} fill={e.color} />
                         ))}
                       </Pie>
-                      <Tooltip contentStyle={{ backgroundColor: '#16161e', border: '1px solid #ffffff10', borderRadius: '8px', color: '#fff' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#101422', border: '1px solid #1F263E', borderRadius: '12px', color: '#fff', fontSize: '12px' }} />
                     </PieChart>
                   </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-2xl font-bold text-white">248</span>
-                    <span className="text-xs text-gray-400">Total</span>
-                  </div>
                 </div>
-                <div className="w-1/2 flex flex-col justify-center gap-3.5 pl-4">
-                  {languageDistributionData.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }}></div>
-                        <span className="text-sm text-gray-300 font-medium">{item.name}</span>
-                      </div>
-                      <span className="text-sm font-semibold text-white">{item.value}%</span>
+                <div className="w-1/2 space-y-2 text-xs">
+                  {languageDistributionData.map(l => (
+                    <div key={l.name} className="flex items-center justify-between">
+                      <span className="flex items-center gap-2 text-[#8E99B7]">
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: l.color }}></span>
+                        {l.name}
+                      </span>
+                      <span className="font-mono font-bold text-white">{l.value}%</span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="bg-[#1a1a24] rounded-2xl border border-white/5 overflow-hidden">
-            <div className="p-6 border-b border-white/5 flex justify-between items-center">
-              <div>
-                <h3 className="font-semibold text-white text-lg">Top 5 High Similarity Cases</h3>
-                <p className="text-xs text-gray-400 mt-0.5">Submissions flagged with the highest pairwise overlap</p>
-              </div>
-              <button onClick={() => setActiveTab('Top Matches')} className="text-sm text-pink-500 hover:text-pink-400 font-medium inline-flex items-center gap-1 cursor-pointer">
-                View all matches <ArrowRight size={14} />
-              </button>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-transparent text-gray-500 text-[10px] uppercase font-bold tracking-wider">
-                  <tr className="border-b border-white/5">
-                    <th className="px-6 py-4">Student 1</th>
-                    <th className="px-6 py-4">Student 2</th>
-                    <th className="px-6 py-4">Assignment</th>
-                    <th className="px-6 py-4 text-center">Similarity</th>
-                    <th className="px-6 py-4 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 text-sm">
-                  {topSimilarityCases.map((match) => (
-                    <tr key={match.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs font-bold">
-                            {match.student1.split(' ').map(n => n[0]).join('')}
-                          </div>
-                          <span className="font-medium text-gray-200">{match.student1}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">
-                            {match.student2.split(' ').map(n => n[0]).join('')}
-                          </div>
-                          <span className="font-medium text-gray-200">{match.student2}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-gray-400 font-medium">
-                        {match.assignment}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${match.similarity >= 80 ? 'border-pink-500/20 text-pink-400 bg-pink-500/10' : 'border-orange-500/20 text-orange-400 bg-orange-500/10'}`}>
-                          {match.similarity}%
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Link to="/compare" className="text-pink-500 hover:text-pink-400 font-medium text-sm inline-flex items-center gap-1 transition-colors">
-                          View &rarr;
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
       )}
-      
+
+      {/* Top Matches Tab */}
       {activeTab === 'Top Matches' && (
-        <div className="bg-[#1a1a24] rounded-2xl border border-white/5 overflow-hidden p-6">
-          <h3 className="font-semibold text-white text-lg mb-4">All High Similarity Cases</h3>
+        <div className="bg-[#101422] border border-[#1F263E] rounded-3xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-transparent text-gray-500 text-[10px] uppercase font-bold tracking-wider">
-                <tr className="border-b border-white/5">
-                  <th className="px-6 py-4">Student 1</th>
-                  <th className="px-6 py-4">Student 2</th>
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="border-b border-[#1F263E] bg-[#15192B]/50 text-[#8E99B7] uppercase tracking-wider">
+                  <th className="px-6 py-4">Submission Pair</th>
                   <th className="px-6 py-4">Assignment</th>
                   <th className="px-6 py-4 text-center">Similarity</th>
+                  <th className="px-6 py-4">Review Status</th>
                   <th className="px-6 py-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-sm">
-                {topSimilarityCases.map((match) => (
-                  <tr key={match.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs font-bold">
-                          {match.student1.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <span className="font-medium text-gray-200">{match.student1}</span>
-                      </div>
+              <tbody className="divide-y divide-[#1F263E]">
+                {topSimilarityCases.map(c => (
+                  <tr key={c.id} className="hover:bg-[#15192B]/40 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-white">
+                      {c.student1} <span className="text-[#8E99B7] font-normal">vs</span> {c.student2}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">
-                          {match.student2.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <span className="font-medium text-gray-200">{match.student2}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-400 font-medium">{match.assignment}</td>
+                    <td className="px-6 py-4 text-[#8E99B7]">{c.assignment}</td>
                     <td className="px-6 py-4 text-center">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${match.similarity >= 80 ? 'border-pink-500/20 text-pink-400 bg-pink-500/10' : 'border-orange-500/20 text-orange-400 bg-orange-500/10'}`}>
-                        {match.similarity}%
+                      <span className="font-mono font-bold px-2 py-0.5 rounded bg-[#E02875]/15 text-[#E02875] border border-[#E02875]/20">
+                        {c.similarity}%
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#15192B] border border-[#1F263E] text-[#DCE1EE]">
+                        {c.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Link to="/compare" className="text-pink-500 hover:text-pink-400 font-medium text-sm inline-flex items-center gap-1 transition-colors">
-                        View &rarr;
+                      <Link to="/compare" className="text-[#E02875] hover:underline font-semibold">
+                        View Dossier →
                       </Link>
                     </td>
                   </tr>
@@ -259,61 +205,50 @@ export default function Reports() {
         </div>
       )}
 
-      {activeTab === 'Assignment Report' && (
-        <div className="bg-[#1a1a24] rounded-2xl border border-white/5 overflow-hidden p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-semibold text-white text-lg">Assignment-Specific Reports</h3>
-            <select className="bg-[#111118] border border-white/10 text-white rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-pink-500">
-              <option>Sorting Algorithms</option>
-              <option>Graph Algorithms</option>
-              <option>Data Structures</option>
-            </select>
+      {/* Formal PDF Report Dossier View (Clean, printable academic layout) */}
+      {activeTab === 'Dossier' && (
+        <div className="bg-[#101422] border border-[#1F263E] rounded-3xl p-8 space-y-6 shadow-2xl">
+          <div className="border-b border-[#1F263E] pb-6 flex justify-between items-start">
+            <div>
+              <p className="text-[11px] font-mono uppercase tracking-widest text-[#E02875]">Department of Computer Science • CodeGuard Academic Integrity</p>
+              <h2 className="text-2xl font-bold text-white mt-1">Official Review Dossier #AR-2026-084</h2>
+              <p className="text-xs text-[#8E99B7] mt-1">Generated on 11 Oct 2026 • Lead Reviewer: Prof. Verma</p>
+            </div>
+            <button onClick={handleDownloadPDF} className="px-4 py-2 bg-[#E02875] text-white text-xs font-semibold rounded-xl print-hidden">
+              Print / Save PDF
+            </button>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-             <div className="bg-[#111118] p-5 rounded-xl border border-white/5">
-                <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">Total Submissions</p>
-                <p className="text-3xl font-bold text-white">45</p>
-             </div>
-             <div className="bg-[#111118] p-5 rounded-xl border border-white/5">
-                <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">Avg Similarity</p>
-                <p className="text-3xl font-bold text-white">22%</p>
-             </div>
-             <div className="bg-[#111118] p-5 rounded-xl border border-white/5">
-                <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">Flagged for Review</p>
-                <p className="text-3xl font-bold text-pink-500">3</p>
-             </div>
-          </div>
-          <button onClick={() => window.alert('Generating detailed report...')} className="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors">
-            Generate Full Report
-          </button>
-        </div>
-      )}
 
-      {activeTab === 'Download' && (
-        <div className="bg-[#1a1a24] rounded-2xl border border-white/5 overflow-hidden p-6">
-          <h3 className="font-semibold text-white text-lg mb-6">Data Exports & Downloads</h3>
-          <div className="space-y-4">
-            {[
-              { title: 'Full Plagiarism Audit (Last 30 Days)', desc: 'Includes all flagged matches and reviewer notes.' },
-              { title: 'Student Risk Matrix', desc: 'CSV format of students mapped against similarity thresholds.' },
-              { title: 'Executive Summary Report', desc: 'High-level PDF for department heads.' }
-            ].map((report, idx) => (
-              <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-[#111118] border border-white/5 rounded-xl gap-4">
-                <div>
-                  <h4 className="text-white font-medium">{report.title}</h4>
-                  <p className="text-sm text-gray-400 mt-1">{report.desc}</p>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => window.alert('Downloading CSV...')} className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors">CSV</button>
-                  <button onClick={() => window.alert('Downloading PDF...')} className="px-4 py-2 bg-pink-600 rounded-lg text-sm font-medium hover:bg-pink-500 transition-colors">PDF</button>
-                </div>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
+              <span className="text-[#8E99B7] uppercase font-bold text-[10px]">Subject Assignment</span>
+              <p className="text-white font-semibold mt-1">CS-204: Sorting Visualizer</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
+              <span className="text-[#8E99B7] uppercase font-bold text-[10px]">Submissions Evaluated</span>
+              <p className="text-white font-semibold mt-1">Aarav Sharma & Rohan Mehta</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#15192B] border border-[#1F263E]">
+              <span className="text-[#8E99B7] uppercase font-bold text-[10px]">AST Congruence Index</span>
+              <p className="text-[#E02875] font-mono font-bold mt-1">92% (High Correlation)</p>
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#15192B] border border-[#1F263E] text-xs space-y-2">
+            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Methodology & Evidentiary Findings</h4>
+            <p className="text-[#DCE1EE] leading-relaxed">
+              Submissions were canonicalized through multi-pass AST alpha-conversion and lexical token 3-gram indexing. Instructor starter boilerplate code was excluded. The inner loop boundaries and temporary variable mutation sequence display 100% logic preservation across identifier substitutions.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#0B0D14] border border-[#1F263E] text-xs space-y-2">
+            <h4 className="font-bold text-[#E02875] uppercase text-[11px] tracking-wider">Academic Integrity Committee Recommendation</h4>
+            <p className="text-[#8E99B7] leading-relaxed">
+              Schedule oral viva examination. The student should be asked to explain memory state mutations during the inner loop pass without external notes.
+            </p>
           </div>
         </div>
       )}
     </div>
   );
 }
-
