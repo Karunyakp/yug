@@ -13,8 +13,8 @@ import {
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState(import.meta.env.VITE_LOGIN_DEFAULT_EMAIL || '');
-  const [password, setPassword] = useState(import.meta.env.VITE_LOGIN_DEFAULT_PASSWORD || '');
+  const [email, setEmail] = useState('verma@gmail.com');
+  const [password, setPassword] = useState('verma');
 
   const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
