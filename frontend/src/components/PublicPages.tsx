@@ -13,7 +13,7 @@ const pageMetadata: Record<string, { title: string; description: string }> = {
   },
   '/signup': {
     title: 'Create an account | CodeGuard AI',
-    description: 'Create a browser-local demo account and explore the CodeGuard AI review workspace.',
+    description: 'Create a browser-local account and use the CodeGuard AI review workspace.',
   },
   '/features': {
     title: 'Features | CodeGuard AI',
@@ -109,7 +109,7 @@ export function PrivacyPolicy() {
         This policy describes the data flows in the CodeGuard AI frontend demonstration. The app has no application backend or server-side account database. Features and connected providers may change as the demo evolves.
       </p>
       <PolicySection title="Information stored in your browser">
-        <p>When you create a demo account, your name, email address, account creation date, and a password verifier are saved in this browser&apos;s local storage. Passwords are not stored as plain text, but this browser-only sign-in is not production-grade security. Anyone with access to this browser profile or its developer tools may access or alter local data.</p>
+        <p>When you create an account, your name, email address, account creation date, and a password verifier are saved in this browser&apos;s local storage. Passwords are not stored as plain text, but this browser-only sign-in is not production-grade security. Anyone with access to this browser profile or its developer tools may access or alter local data.</p>
         <p>Signing out does not delete a locally saved account. Clearing this site&apos;s browser storage removes it. Local account data does not automatically sync to another browser or device.</p>
         <p>Some screens display sample or in-memory demonstration data. Do not treat it as a secure record system.</p>
         <p>Submission-list reviewer assignments and common-pattern context labels, plus a browser-local activity log of comparison runs, review-state changes, bulk actions, and successful email sends, may also be stored in local storage. The log is editable and clearable and is not tamper-proof. Student response evidence and code are stored locally only when a reviewer explicitly prepares that same-browser view.</p>

@@ -30,7 +30,7 @@ export default function Upgrade() {
           <ul className="space-y-4 mb-8">
             <li className="flex items-center gap-3 text-gray-300"><CheckCircle2 className="w-5 h-5 text-gray-600" /> Local overlap heuristics</li>
             <li className="flex items-center gap-3 text-gray-300"><CheckCircle2 className="w-5 h-5 text-gray-600" /> Optional AI assistance with consent</li>
-            <li className="flex items-center gap-3 text-gray-300"><CheckCircle2 className="w-5 h-5 text-gray-600" /> Illustrative sample records</li>
+            <li className="flex items-center gap-3 text-gray-300"><CheckCircle2 className="w-5 h-5 text-gray-600" /> Comparisons from code you provide</li>
           </ul>
           <button disabled className="w-full bg-gray-800 text-gray-400 rounded-xl py-3 font-semibold cursor-not-allowed">Demo</button>
         </div>

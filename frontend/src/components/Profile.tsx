@@ -1,98 +1,75 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-
-const skills = ['Local code comparison', 'Human-led review', 'Browser demo'];
-
-const activity = [
-  { label: 'Opened the review workspace', time: 'Illustrative activity' },
-  { label: 'Viewed a sample report', time: 'Illustrative activity' },
-  { label: 'Viewed demo assignment settings', time: 'Illustrative activity' },
-];
+import { getCurrentLocalAccount } from '../services/localAuth';
+import { readAuditEvents, type AuditEvent } from '../services/localAuditLog';
 
 export default function Profile() {
+  const account = getCurrentLocalAccount();
+  const [{ events, error }] = useState(() => {
+    try {
+      return { events: readAuditEvents(), error: '' };
+    } catch (loadError) {
+      return {
+        events: [] as AuditEvent[],
+        error: loadError instanceof Error ? loadError.message : 'Unable to read local activity.',
+      };
+    }
+  });
+  const initials = account?.name.split(/\s+/).map(part => part[0]).slice(0, 2).join('').toUpperCase() ?? '';
+
   return (
-    <div className="legacy-dark-page space-y-6 pb-12">
+    <div className="space-y-6 pb-12 text-white">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-white text-2xl font-bold">Profile</h1>
-          <p className="text-gray-400 mt-1">Illustrative profile for the frontend demonstration.</p>
+          <h1 className="text-2xl font-bold">Profile</h1>
+          <p className="mt-1 text-gray-400">Your account information and activity in this browser.</p>
         </div>
-        <Link to="/" className="inline-flex items-center gap-2 border border-white/10 rounded-full px-4 py-2 text-sm text-gray-200 hover:bg-white/5 transition-colors">
-          <ArrowLeft className="w-4 h-4" />
+        <Link to="/dashboard" className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-gray-200 transition-colors hover:bg-white/5">
+          <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
         </Link>
       </div>
 
-      <div className="bg-[#1a1a24] rounded-3xl border border-white/5 overflow-hidden">
-        <div className="bg-gradient-to-r from-pink-600/30 via-purple-600/20 to-transparent p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-violet-500 flex items-center justify-center text-2xl font-bold text-white">
-                PV
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-2xl font-bold text-white">Demo reviewer</h2>
-                </div>
-                <p className="text-gray-300">Sample profile · no connected account</p>
-              </div>
+      {account ? (
+        <section className="rounded-3xl border border-white/5 bg-[#1a1a24] p-6">
+          <div className="flex items-center gap-5">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#174C3C] text-xl font-bold">
+              {initials}
             </div>
-
-            <button className="bg-white text-black rounded-full px-5 py-2.5 font-medium hover:bg-gray-100 transition-colors">
-              Edit Profile
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6 p-6">
-          <div className="space-y-6">
-            <div className="bg-[#111118] rounded-2xl p-5 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">About</h3>
-              <p className="text-gray-400 leading-relaxed">
-                This sample page demonstrates a reviewer profile layout. It does not represent a real faculty member or track review outcomes.
-              </p>
-            </div>
-
-            <div className="bg-[#111118] rounded-2xl p-5 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span key={skill} className="bg-white/5 text-gray-200 border border-white/10 rounded-full px-3 py-1.5 text-sm">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-[#111118] rounded-2xl p-5 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">Recent activity</h3>
-              <div className="space-y-4">
-                {activity.map((item) => (
-                  <div key={item.label} className="flex items-start gap-3">
-                    <div className="mt-1 w-2 h-2 rounded-full bg-pink-500" />
-                    <div>
-                      <p className="text-white">{item.label}</p>
-                      <p className="text-gray-400 text-sm mt-1">{item.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div>
+              <h2 className="text-xl font-semibold">{account.name}</h2>
+              <p className="mt-1 text-gray-300">{account.email}</p>
+              <p className="mt-1 text-xs text-gray-400">Account created {new Date(account.createdAt).toLocaleDateString()}</p>
             </div>
           </div>
+        </section>
+      ) : (
+        <p className="rounded-2xl border border-white/5 bg-[#1a1a24] p-6 text-sm text-gray-400">
+          No local account is currently signed in.
+        </p>
+      )}
 
-          <div className="space-y-6">
-            <div className="bg-[#111118] rounded-2xl p-5 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">Contact</h3>
-              <p className="text-sm leading-relaxed text-gray-400">No contact information is connected in this demo.</p>
-            </div>
-
-            <div className="bg-[#111118] rounded-2xl p-5 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">Performance metrics</h3>
-              <p className="text-sm leading-relaxed text-gray-400">Not available. The demo does not measure reviewer accuracy or resolution rates.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <section className="rounded-2xl border border-white/5 bg-[#1a1a24] p-6">
+        <h2 className="font-semibold">Recent activity</h2>
+        {error ? (
+          <p role="alert" className="mt-4 text-sm text-red-300">{error}</p>
+        ) : events.length ? (
+          <ol className="mt-4 divide-y divide-white/5">
+            {events.slice(0, 10).map(event => (
+              <li key={event.id} className="py-3">
+                <p className="text-sm font-medium">{event.action}</p>
+                <p className="mt-1 text-sm text-gray-400">{event.detail}</p>
+                <time className="mt-1 block text-xs text-gray-500" dateTime={event.timestamp}>
+                  {new Date(event.timestamp).toLocaleString()}
+                </time>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="mt-4 text-sm text-gray-400">No local activity has been recorded.</p>
+        )}
+      </section>
     </div>
   );
 }

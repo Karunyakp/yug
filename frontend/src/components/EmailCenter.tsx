@@ -22,31 +22,28 @@ const templates: Template[] = [
   {
     id: 'assignment_reminder',
     name: '1. Assignment Reminder',
-    subject: 'Friendly Reminder: CS-204 Assignment Submission Deadline Approaching',
+    subject: 'Reminder about your assignment submission',
     body: `Dear {{student_name}},
 
-This is a gentle reminder that the submission window for the upcoming assignment closes in 48 hours.
+This is a reminder to review the submission deadline provided for your assignment.
 
-Please make sure you have submitted your verified source code via the institutional portal. Late submissions will incur standard department grade deductions.
+Please follow the submission instructions provided by your instructor.
 
-If you have any questions or are encountering technical issues, please reach out during office hours.
+If you have any questions, please contact your instructor.
 
-Warm regards,
-Prof. Verma
-Department of Computer Science`
+Regards,
+Your instructor`
   },
   {
     id: 'submission_received',
     name: '2. Submission Received',
-    subject: 'Receipt of Submission: CS-204 Code Assignment',
+    subject: 'Update about your submission',
     body: `Dear {{student_name}},
 
-We have successfully received your source code files for the CS-204 assignment.
+Please replace this message with an accurate update about your submission before sending.
 
-Your submission has been queued for automated syntax verification and structural analysis. If any review inquiries arise, you will be notified via this email address.
-
-Best regards,
-CodeGuard Academic Integrity Review Team`
+Regards,
+Your instructor`
   },
   {
     id: 'academic_review',
@@ -70,7 +67,7 @@ Your instructor`
 During code review of your recent assignment, certain algorithmic choices and external library dependencies were noted.
 
 Could you please provide:
-1. A brief explanation of the loop invariant reasoning on lines 10-18.
+1. A brief explanation of the implementation choices relevant to your work.
 2. Any course examples, starter code, or authorized resources relevant to your approach.
 
 You may ask for clarification or use the institution's established response process. No conclusion has been reached.
@@ -126,8 +123,8 @@ export default function EmailCenter() {
 
     const filledSubject = tmpl.subject.replace('{{case_reference}}', caseRef);
     const filledBody = tmpl.body
-      .replace(/{{student_name}}/g, toName || 'Student')
-      .replace(/{{case_reference}}/g, caseRef || 'Assignment');
+      .replace(/{{student_name}}/g, toName || '{{student_name}}')
+      .replace(/{{case_reference}}/g, caseRef || '{{case_reference}}');
 
     setSubject(filledSubject);
     setMessage(filledBody);
@@ -157,6 +154,10 @@ export default function EmailCenter() {
     }
     if (!message.trim()) {
       setStatusFeedback({ type: 'error', text: 'Email body cannot be empty.' });
+      return;
+    }
+    if (/\{\{(?:student_name|case_reference)\}\}/.test(`${subject}\n${message}`)) {
+      setStatusFeedback({ type: 'error', text: 'Replace the template placeholders with the correct details before sending.' });
       return;
     }
     setStatusFeedback(null);
@@ -211,7 +212,7 @@ export default function EmailCenter() {
               <Mail className="w-5 h-5 text-[#174C3C]" /> Confirm Outgoing Dispatch
             </h3>
             <p className="text-xs text-[#707A72] mt-2 leading-relaxed">
-              Confirm sending this message to <strong className="text-[#202923]">{toEmail}</strong>. Recipient details and message content will be sent to EmailJS and its configured email provider. This demo does not verify sender identity or provide an institutional delivery guarantee.
+              Confirm sending this message to <strong className="text-[#202923]">{toEmail}</strong>. Recipient details and message content will be sent to EmailJS and its configured email provider.               Sender identity and institutional delivery are not verified here.
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
@@ -332,7 +333,7 @@ export default function EmailCenter() {
             <input
               type="text"
               className="w-full bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl px-3 py-2 text-xs text-[#202923] outline-none focus:border-[#174C3C]"
-              placeholder="e.g. CS-204 (#CASE-842)"
+              placeholder="Enter an assignment or case reference"
               value={caseRef}
               onChange={e => setCaseRef(e.target.value)}
             />

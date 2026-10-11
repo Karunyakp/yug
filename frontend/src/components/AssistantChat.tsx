@@ -53,7 +53,7 @@ export default function AssistantChat() {
 
           <div aria-live="polite" className="flex-1 space-y-3 overflow-y-auto bg-[#F7F8F5] p-4">
             <div className="max-w-[90%] rounded-2xl rounded-tl-sm border border-[#E3E7E0] bg-white px-3.5 py-3 text-sm leading-5 text-[#354139]">
-              Hi! I can answer questions about this demo and code review concepts. Similarity indicators are not proof of misconduct.
+              Hi! I can answer questions about CodeGuard and code review concepts. Similarity indicators are not proof of misconduct.
             </div>
             {history.map((turn, index) => (
               <div key={`${turn.role}-${index}`} className={`max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-3 text-sm leading-5 ${turn.role === 'user' ? 'ml-auto rounded-tr-sm bg-[#174C3C] text-white' : 'rounded-tl-sm border border-[#E3E7E0] bg-white text-[#354139]'}`}>

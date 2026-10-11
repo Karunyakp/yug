@@ -1,8 +1,4 @@
 const ACCOUNTS_KEY = 'codeguard:accounts';
-const DEMO_ACCOUNT = {
-  email: 'verma@gmail.com',
-  password: 'verma',
-};
 
 export interface LocalAccount {
   name: string;
@@ -78,18 +74,15 @@ export async function signInLocally(email: string, password: string): Promise<vo
   const normalizedEmail = email.trim().toLowerCase();
   const accounts = getAccounts();
   const account = accounts.find(saved => saved.email.toLowerCase() === normalizedEmail);
-  const isDemoAccount = normalizedEmail === DEMO_ACCOUNT.email && password === DEMO_ACCOUNT.password;
 
-  if (!account && !isDemoAccount) {
+  if (!account) {
     throw new Error('No local account matches those credentials. Create an account in this browser first.');
   }
 
-  if (account) {
-    const salt = Uint8Array.from(account.salt.match(/.{2}/g) ?? [], byte => Number.parseInt(byte, 16));
-    const passwordHash = await hashPassword(password, salt);
-    if (passwordHash !== account.passwordHash) {
-      throw new Error('The email or password is incorrect.');
-    }
+  const salt = Uint8Array.from(account.salt.match(/.{2}/g) ?? [], byte => Number.parseInt(byte, 16));
+  const passwordHash = await hashPassword(password, salt);
+  if (passwordHash !== account.passwordHash) {
+    throw new Error('The email or password is incorrect.');
   }
 
   localStorage.setItem('isAuthenticated', 'true');
@@ -98,4 +91,12 @@ export async function signInLocally(email: string, password: string): Promise<vo
 
 export function getLocalAccountsForExport(): Array<Pick<LocalAccount, 'name' | 'email' | 'createdAt'>> {
   return getAccounts().map(({ name, email, createdAt }) => ({ name, email, createdAt }));
+}
+
+export function getCurrentLocalAccount(): Pick<LocalAccount, 'name' | 'email' | 'createdAt'> | null {
+  const currentEmail = localStorage.getItem('currentUserEmail');
+  if (!currentEmail) return null;
+
+  const account = getAccounts().find(saved => saved.email.toLowerCase() === currentEmail.toLowerCase());
+  return account ? { name: account.name, email: account.email, createdAt: account.createdAt } : null;
 }

@@ -54,8 +54,8 @@ export async function sendStudentEmail(payload: SendEmailPayload): Promise<{ suc
         to_email: toEmail,
         subject,
         message,
-        case_reference: payload.case_reference?.trim() || 'N/A',
-        instructor_name: payload.instructor_name?.trim() || 'Prof. Verma'
+        case_reference: payload.case_reference?.trim() || '',
+        instructor_name: payload.instructor_name?.trim() || ''
       },
       {
         publicKey: PUBLIC_KEY,

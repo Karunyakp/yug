@@ -1,227 +1,119 @@
 import { Link } from 'react-router-dom';
-import {
-  ChevronRight,
-  Plus,
-  FileText
-} from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from 'recharts';
+import { Activity, ArrowRight, Code2, FileText, Mail, Plus, ShieldCheck } from 'lucide-react';
+import { readAuditEvents, type AuditEvent } from '../services/localAuditLog';
+import { getCurrentLocalAccount } from '../services/localAuth';
 
-const kpis = [
-  { title: 'Demo submissions', value: '203', subtitle: 'Illustrative counts across 7 assignments', badge: 'Sample data', badgeColor: 'bg-[#E4F1E9] text-[#10382D]' },
-  { title: 'Overlap indicators', value: '18', subtitle: '8.9% in the illustrative ≥75% band; not findings', badge: 'Context required', badgeColor: 'bg-[#FFF1D6] text-[#7C5315]' },
-  { title: 'Example groups', value: '3', subtitle: 'Illustrative graph groups', badge: 'Not case findings', badgeColor: 'bg-[#F7F6F0] text-[#707A72]' },
-  { title: 'Context reviews', value: '7', subtitle: 'Example cohort entries for human review', badge: 'No automated decisions', badgeColor: 'bg-[#F7F6F0] text-[#707A72]' },
-];
-
-const barData = [
-  { name: 'Aug', total: 65, flagged: 5 },
-  { name: 'Sep', total: 68, flagged: 6 },
-  { name: 'Oct', total: 70, flagged: 7 },
-];
-
-const pieData = [
-  { name: 'Overlap <25%', value: 115, color: '#174C3C' },
-  { name: 'Overlap 25–49%', value: 48, color: '#3A7061' },
-  { name: 'Overlap 50–74%', value: 22, color: '#B96F52' },
-  { name: 'Overlap ≥75%', value: 18, color: '#8A63D2' },
-];
-
-const recentSubmissions = [
-  { id: 1, initials: 'AS', name: 'Aarav Sharma', assignment: 'CS-204: Sorting Visualizer', date: '24 Oct 2026, 10:42 AM', similarity: '92%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
-  { id: 2, initials: 'RM', name: 'Rohan Mehta', assignment: 'CS-204: Sorting Visualizer', date: '24 Oct 2026, 09:12 AM', similarity: '92%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
-  { id: 3, initials: 'VJ', name: 'Vivaan Joshi', assignment: 'CS-204: Sorting Visualizer', date: '22 Oct 2026, 2:15 PM', similarity: '88%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
-  { id: 4, initials: 'KG', name: 'Karan Gupta', assignment: 'CS-301: Graph Algorithms', date: '22 Oct 2026, 10:00 AM', similarity: '89%', status: 'Context review', statusStyle: 'bg-[#F7F6F0] text-[#684713] border border-[#E3E7E0]' },
+const quickLinks = [
+  {
+    title: 'Compare code',
+    description: 'Run a local comparison and inspect matching lines.',
+    href: '/compare',
+    icon: <Code2 size={19} />,
+  },
+  {
+    title: 'Review reports',
+    description: 'Print comparison results or export account information.',
+    href: '/reports',
+    icon: <FileText size={19} />,
+  },
+  {
+    title: 'Email Center',
+    description: 'Prepare a review message for an authorized recipient.',
+    href: '/email-center',
+    icon: <Mail size={19} />,
+  },
 ];
 
 export default function Dashboard() {
+  const account = getCurrentLocalAccount();
+  const [{ events, error }] = useState(() => {
+    try {
+      return { events: readAuditEvents().slice(0, 5), error: '' };
+    } catch (loadError) {
+      return {
+        events: [] as AuditEvent[],
+        error: loadError instanceof Error ? loadError.message : 'Unable to load recent activity.',
+      };
+    }
+  });
+
   return (
     <div className="space-y-6 pb-16 text-[#202923]">
-      {/* Page Title & Primary Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#202923]">Academic Integrity Overview</h1>
-          <p className="text-xs text-[#707A72] mt-1">
-            Illustrative frontend demo data only. Similarity indicates overlap, not authorship or misconduct.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to="/reports"
-            className="px-4 py-2 rounded-xl bg-white border border-[#E3E7E0] hover:bg-[#F7F6F0] text-xs font-semibold text-[#202923] flex items-center gap-2 transition-all shadow-xs"
-          >
-            <FileText size={14} className="text-[#174C3C]" /> View Reports
-          </Link>
-          <Link
-            to="/compare"
-            className="px-5 py-2 rounded-xl bg-[#174C3C] hover:bg-[#10382D] text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-xs"
-          >
-            <Plus size={14} /> Analyze Submission
-          </Link>
-        </div>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi, idx) => (
-          <div key={idx} className="bg-white rounded-2xl p-5 border border-[#E3E7E0] shadow-xs flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider">{kpi.title}</span>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${kpi.badgeColor}`}>
-                  {kpi.badge}
-                </span>
-              </div>
-              <p className="text-3xl font-bold text-[#202923] tracking-tight">{kpi.value}</p>
-            </div>
-            <p className="text-xs text-[#707A72] mt-3 pt-3 border-t border-[#E3E7E0]">
-              {kpi.subtitle}
+      <section className="overflow-hidden rounded-3xl border border-[#DCE7DC] bg-gradient-to-br from-white via-white to-[#EAF3EC] p-6 shadow-[0_20px_50px_-40px_rgba(23,76,60,0.5)] sm:p-8">
+        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+          <div className="max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#56806A]">Workspace overview</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#202923]">
+              Welcome{account?.name ? `, ${account.name.split(/\s+/)[0]}` : ' back'}
+            </h1>
+            <p className="mt-2 text-sm leading-6 text-[#707A72]">
+              Your review workspace is ready. Start a comparison or continue with one of the workspace tools.
             </p>
           </div>
-        ))}
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
-        {/* Activity Volume */}
-        <div className="bg-white rounded-2xl p-6 border border-[#E3E7E0] shadow-xs flex flex-col">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="text-sm font-bold text-[#202923] uppercase tracking-wider">Analysis Activity Volume</h3>
-              <p className="text-xs text-[#707A72]">Submissions vs elevated similarity volume</p>
-            </div>
-            <span className="text-xs font-semibold text-[#707A72] bg-[#F7F6F0] px-3 py-1.5 rounded-lg border border-[#E3E7E0]">
-              Aug–Oct 2026 · Sample
-            </span>
-          </div>
-
-          <div className="flex-1 min-h-[220px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F0F2ED" vertical={false} />
-                <XAxis dataKey="name" stroke="#8E99B7" tick={{ fill: '#707A72', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis stroke="#8E99B7" tick={{ fill: '#707A72', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <Tooltip
-                  cursor={{ fill: '#F7F6F0' }}
-                  contentStyle={{ backgroundColor: '#FFFFFF', border: '1px solid #E3E7E0', borderRadius: '10px', fontSize: '12px' }}
-                />
-                <Bar dataKey="total" fill="#E3E7E0" radius={[4, 4, 0, 0]} barSize={16} />
-                <Bar dataKey="flagged" fill="#174C3C" radius={[4, 4, 0, 0]} barSize={16} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-[#E3E7E0] text-xs text-[#707A72]">
-            <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#E3E7E0]"></span> Total Ingested</span>
-            <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#174C3C]"></span> Overlap indicators</span>
-          </div>
-        </div>
-
-        {/* Similarity Proportions */}
-        <div className="bg-white rounded-2xl p-6 border border-[#E3E7E0] shadow-xs flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-bold text-[#202923] uppercase tracking-wider">Similarity Distribution</h3>
-            <p className="text-xs text-[#707A72]">Illustrative distribution by overlap band · 203 samples</p>
-          </div>
-
-          <div className="my-4 h-[180px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value" stroke="none">
-                  {pieData.map((e, idx) => (
-                    <Cell key={idx} fill={e.color} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', border: '1px solid #E3E7E0', borderRadius: '10px', fontSize: '12px' }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="space-y-1.5 pt-4 border-t border-[#E3E7E0] text-xs">
-            {pieData.map((d, i) => (
-              <div key={i} className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[#707A72]">
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }}></span>
-                  {d.name}
-                </span>
-                <span className="font-bold text-[#202923]">{d.value} · {((d.value / 203) * 100).toFixed(1)}%</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Review Queue Table */}
-      <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden shadow-xs">
-        <div className="p-5 border-b border-[#E3E7E0] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div>
-            <h3 className="text-sm font-bold text-[#202923] uppercase tracking-wider">Example context review queue</h3>
-            <p className="text-xs text-[#707A72] mt-0.5">Sample entries for human review; overlap alone is not a finding.</p>
-          </div>
-          <Link to="/submissions" className="text-xs font-semibold text-[#174C3C] hover:underline flex items-center gap-1">
-            View All Submissions <ChevronRight size={14} />
+          <Link
+            to="/compare"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#174C3C] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#10382D]"
+          >
+            <Plus size={16} /> New comparison
           </Link>
         </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-[#E3E7E0] bg-[#F7F6F0] text-[#707A72] uppercase tracking-wider font-semibold">
-                <th className="px-6 py-3.5">Student</th>
-                <th className="px-6 py-3.5">Assignment</th>
-                <th className="px-6 py-3.5">Submitted</th>
-                <th className="px-6 py-3.5 text-center">Similarity</th>
-                <th className="px-6 py-3.5">Status</th>
-                <th className="px-6 py-3.5 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#E3E7E0]">
-              {recentSubmissions.map((sub) => (
-                <tr key={sub.id} className="hover:bg-[#F7F6F0]/60 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#E4F1E9] text-[#174C3C] flex items-center justify-center font-bold text-xs">
-                        {sub.initials}
-                      </div>
-                      <span className="font-semibold text-[#202923]">{sub.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-[#707A72]">{sub.assignment}</td>
-                  <td className="px-6 py-4 text-[#707A72]">{sub.date}</td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="font-bold text-xs text-[#174C3C] bg-[#E4F1E9] px-2.5 py-1 rounded-md">
-                      {sub.similarity}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${sub.statusStyle}`}>
-                      {sub.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <Link
-                      to="/compare"
-                      className="px-3.5 py-1.5 rounded-lg bg-white border border-[#E3E7E0] text-[#202923] hover:bg-[#174C3C] hover:text-white hover:border-[#174C3C] font-semibold transition-all inline-block shadow-2xs"
-                    >
-                      Inspect sample
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 border-t border-[#DCE7DC] pt-5 text-xs text-[#5E6961]">
+          <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-[#174C3C]" /> Human-led review</span>
+          <span className="inline-flex items-center gap-2"><Activity size={15} className="text-[#174C3C]" /> Local analysis</span>
+          <span>AI assistance is optional</span>
         </div>
-      </div>
+      </section>
+
+      <section>
+        <div className="mb-4 flex items-end justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Workspace tools</h2>
+            <p className="mt-1 text-sm text-[#707A72]">Start where you need to work.</p>
+          </div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {quickLinks.map(item => (
+            <Link
+              key={item.title}
+              to={item.href}
+              className="group rounded-2xl border border-[#E3E7E0] bg-white p-5 shadow-[0_8px_24px_-22px_rgba(32,41,35,0.4)] transition hover:-translate-y-0.5 hover:border-[#B8D4C0] hover:shadow-md"
+            >
+              <div className="flex items-start justify-between">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E4F1E9] text-[#174C3C]">{item.icon}</span>
+                <ArrowRight size={16} className="text-[#9AA49C] transition group-hover:translate-x-1 group-hover:text-[#174C3C]" />
+              </div>
+              <h3 className="mt-4 font-semibold">{item.title}</h3>
+              <p className="mt-1 text-sm leading-5 text-[#707A72]">{item.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-[#E3E7E0] bg-white p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="font-semibold">Recent activity</h2>
+            <p className="mt-1 text-sm text-[#707A72]">Updates recorded in this browser.</p>
+          </div>
+          <Link to="/settings" className="text-sm font-semibold text-[#174C3C] hover:underline">View activity log</Link>
+        </div>
+        {error ? (
+          <p role="alert" className="mt-4 rounded-lg bg-[#FBE8E6] p-3 text-sm text-[#A82A2A]">{error}</p>
+        ) : events.length ? (
+          <ol className="mt-4 divide-y divide-[#E3E7E0]">
+            {events.map(event => (
+              <li key={event.id} className="flex flex-col justify-between gap-1 py-3 sm:flex-row sm:items-center">
+                <span className="text-sm font-medium">{event.action}</span>
+                <time className="text-xs text-[#8A938B]" dateTime={event.timestamp}>{new Date(event.timestamp).toLocaleString()}</time>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div className="mt-4 rounded-xl bg-[#F7F8F5] px-4 py-5 text-sm text-[#707A72]">
+            Activity from this browser will appear here.
+          </div>
+        )}
+      </section>
     </div>
   );
 }

@@ -14,8 +14,8 @@ import { signInLocally } from '../services/localAuth';
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('verma@gmail.com');
-  const [password, setPassword] = useState('verma');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
 
@@ -106,7 +106,7 @@ export default function Login() {
 
             <form onSubmit={handleSignIn} className="mt-8 space-y-5">
               <div className="rounded-lg border border-[#E3E7E0] bg-[#F7F6F0] px-3.5 py-2.5 text-xs leading-5 text-[#707A72]">
-                Accounts are stored in this browser only. This frontend-only sign-in is for demos, not production security.
+                Accounts are stored in this browser only. This sign-in does not provide production security.
               </div>
               {error && <p role="alert" className="rounded-lg border border-[#F5C7C3] bg-[#FBE8E6] px-3.5 py-2.5 text-sm text-[#A82A2A]">{error}</p>}
               <div>

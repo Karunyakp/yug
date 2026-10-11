@@ -89,10 +89,10 @@ export default function SignUp() {
             </Link>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#174C3C]">Faculty workspace</p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight">Create your account</h2>
-            <p className="mt-2 text-sm leading-6 text-[#707A72]">Set up a local demo account to explore CodeGuard AI.</p>
+            <p className="mt-2 text-sm leading-6 text-[#707A72]">Create an account stored in this browser.</p>
 
             <div className="mt-5 rounded-xl border border-[#E3E7E0] bg-[#F7F6F0] p-3 text-xs leading-5 text-[#707A72]">
-              Frontend-only demo accounts are saved in this browser and are not production authentication.
+              Accounts are saved in this browser and do not provide production authentication.
             </div>
 
             <form onSubmit={handleSignUp} className="mt-6 space-y-4">

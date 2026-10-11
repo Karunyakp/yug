@@ -18,41 +18,9 @@ import { analyzeCodeWithGemini, generateVivaQuestionsWithGemini, type AnalysisOu
 import { recordAuditEvent } from '../services/localAuditLog';
 
 export default function Compare() {
-  const defaultCode1 = `def bubble_sort(arr):
-    n = len(arr)
-    # Loop through all elements
-    for i in range(n):
-        for j in range(0, n-i-1):
-            if arr[j] > arr[j+1]:
-                arr[j], arr[j+1] = arr[j+1], arr[j]
-    return arr
-
-# Driver code
-arr = [64, 34, 25, 12, 22, 11, 90]
-print(bubble_sort(arr))`;
-
-  const defaultCode2 = `def sort_array(a):
-    n = len(a)
-    for i in range(n):
-        for j in range(n-i-1):
-            if a[j] > a[j+1]:
-                temp = a[j]
-                a[j] = a[j+1]
-                a[j+1] = temp
-    return a
-
-# Test
-data = [64, 34, 25, 12, 22, 11, 90]
-print(sort_array(data))`;
-
-  const defaultStarter = `# Starter template provided by Instructor
-def solve(items):
-    # Student code starts here
-    pass`;
-
-  const [code1, setCode1] = useState(defaultCode1);
-  const [code2, setCode2] = useState(defaultCode2);
-  const [starterCode, setStarterCode] = useState(defaultStarter);
+  const [code1, setCode1] = useState('');
+  const [code2, setCode2] = useState('');
+  const [starterCode, setStarterCode] = useState('');
   const [showStarterConfig, setShowStarterConfig] = useState(false);
   
   const [result, setResult] = useState<CodeAnalysisResult | null>(null);
@@ -70,7 +38,7 @@ def solve(items):
   const [auditWarning, setAuditWarning] = useState('');
 
   // Reviewer Notes state
-  const [reviewerNotes, setReviewerNotes] = useState('Review the shared algorithm requirements, starter code, and student response before drawing conclusions.');
+  const [reviewerNotes, setReviewerNotes] = useState('');
   const [decision, setDecision] = useState<'needs_review' | 'viva_scheduled' | 'dismissed' | 'reviewed'>('needs_review');
 
   const logActivity = (action: string, detail: string) => {
@@ -83,6 +51,10 @@ def solve(items):
   };
 
   const runAnalysis = async () => {
+    if (!code1.trim() || !code2.trim()) {
+      setAnalysisError('Enter code in both fields before running a comparison.');
+      return;
+    }
     setLoading(true);
     setAnalysisError('');
     try {
@@ -138,14 +110,14 @@ def solve(items):
   const prepareStudentResponseView = () => {
     if (!result || !allowLocalEvidenceShare) return;
     const payload = {
-      assignment: 'Sorting assignment (demo)',
+      assignment: '',
       similarity: simScore,
       lexicalSimilarity: Math.round((result?.lexical_similarity ?? 0) * 100),
       structuralSimilarity: Math.round((result?.structural_similarity ?? 0) * 100),
       commonAlgorithm: result?.commonAlgorithm ?? null,
       lineEvidence: result?.lineEvidence ?? [],
       submittedAt: new Date().toISOString(),
-      source: 'CodeGuard AI frontend demo',
+      source: 'CodeGuard AI',
       code1,
       code2,
     };
@@ -269,6 +241,7 @@ def solve(items):
             className="w-full h-24 bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl p-3 font-mono text-xs text-[#202923] outline-none focus:border-[#174C3C]"
             value={starterCode}
             onChange={e => setStarterCode(e.target.value)}
+            placeholder="Paste instructor-provided starter code here"
           />
         </div>
       )}
@@ -279,10 +252,7 @@ def solve(items):
         <div className="bg-white border border-[#E3E7E0] p-6 rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold tracking-tight text-[#202923]">Pairwise Code Comparison · Demo</h2>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#E4F1E9] text-[#174C3C] font-semibold border border-[#C3E4CF]">
-                CS-204
-              </span>
+              <h2 className="text-xl font-bold tracking-tight text-[#202923]">Pairwise Code Comparison</h2>
             </div>
             <p className="text-xs text-[#707A72] mt-1 leading-relaxed max-w-xl">
               Local token and control-construct overlap, plus optional AI code-reading assistance. This is not parsed AST analysis or a validated chance estimate.
@@ -324,17 +294,15 @@ def solve(items):
           <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden flex flex-col shadow-xs">
             <div className="bg-[#F7F6F0] border-b border-[#E3E7E0] px-4 py-3 flex justify-between items-center">
               <div>
-                <span className="font-semibold text-xs text-[#202923]">Sample A</span>
-                <span className="ml-2 font-mono text-[11px] text-[#707A72] bg-white px-2 py-0.5 rounded border border-[#E3E7E0]">
-                  bubble_sort.py
-                </span>
+                <span className="font-semibold text-xs text-[#202923]">First code sample</span>
               </div>
-              <span className="text-[11px] text-[#707A72]">Illustrative code</span>
+              <span className="text-[11px] text-[#707A72]">Enter code to compare</span>
             </div>
             <textarea 
               className="w-full h-[340px] font-mono text-xs p-4 bg-white text-[#202923] focus:outline-none resize-none leading-relaxed"
               value={code1}
               onChange={(e) => { setCode1(e.target.value); setShareStudentView(false); }}
+              placeholder="Paste the first code sample here"
               spellCheck="false"
             />
           </div>
@@ -343,17 +311,15 @@ def solve(items):
           <div className="bg-white rounded-2xl border border-[#E3E7E0] overflow-hidden flex flex-col shadow-xs">
             <div className="bg-[#F7F6F0] border-b border-[#E3E7E0] px-4 py-3 flex justify-between items-center">
               <div>
-                <span className="font-semibold text-xs text-[#202923]">Sample B</span>
-                <span className="ml-2 font-mono text-[11px] text-[#707A72] bg-white px-2 py-0.5 rounded border border-[#E3E7E0]">
-                  sort_array.py
-                </span>
+                <span className="font-semibold text-xs text-[#202923]">Second code sample</span>
               </div>
-              <span className="text-[11px] text-[#707A72]">Illustrative code</span>
+              <span className="text-[11px] text-[#707A72]">Enter code to compare</span>
             </div>
             <textarea 
               className="w-full h-[340px] font-mono text-xs p-4 bg-white text-[#202923] focus:outline-none resize-none leading-relaxed"
               value={code2}
               onChange={(e) => { setCode2(e.target.value); setShareStudentView(false); }}
+              placeholder="Paste the second code sample here"
               spellCheck="false"
             />
           </div>
@@ -533,7 +499,7 @@ def solve(items):
                 onClick={() => {
                   const nextDecision = d.id as typeof decision;
                   setDecision(nextDecision);
-                  logActivity('Review state changed', `Demo review state changed to ${d.label}.`);
+                  logActivity('Review state changed', `Review state changed to ${d.label}.`);
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                   decision === d.id
@@ -554,11 +520,12 @@ def solve(items):
               className="w-full h-20 bg-[#F7F6F0] border border-[#E3E7E0] rounded-xl p-3 text-xs text-[#202923] outline-none focus:border-[#174C3C]"
               value={reviewerNotes}
               onChange={e => setReviewerNotes(e.target.value)}
+              placeholder="Add notes about this comparison"
             />
           </div>
           <div className="rounded-xl border border-[#E3E7E0] bg-[#F7F6F0] p-4 print-hidden">
             <p className="text-sm font-semibold text-[#202923]">Give the student a chance to respond</p>
-            <p className="mt-1 text-xs leading-5 text-[#707A72]">Prepare a same-browser demo view with both compared code samples and the overlap measurements. Nothing is sent or synced; the code and response are saved in this browser only.</p>
+            <p className="mt-1 text-xs leading-5 text-[#707A72]">Prepare a same-browser view with both code samples and their overlap measurements. Nothing is synced; the code and response are saved in this browser only.</p>
             <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-[#5E6961]">
               <input
                 type="checkbox"

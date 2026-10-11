@@ -9,7 +9,6 @@ import {
   Users,
   Settings,
   Search,
-  Bell,
   Command,
   Share2,
   Mail,
@@ -39,10 +38,13 @@ import StudentResponse from './components/StudentResponse';
 
 import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
+import { getCurrentLocalAccount } from './services/localAuth';
 
 const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onCloseMobile: () => void }) => {
   const location = useLocation();
   const path = location.pathname;
+  const currentUser = getCurrentLocalAccount();
+  const initials = currentUser?.name.split(/\s+/).map(part => part[0]).slice(0, 2).join('').toUpperCase() ?? '';
 
   const isActive = (p: string) => path === p;
 
@@ -81,18 +83,18 @@ const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onClo
             <p className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider mb-2 px-3">CORE MODULES</p>
             <nav className="space-y-1">
               <NavItem to="/dashboard" icon={<LayoutDashboard size={17} />} label="Overview" active={isActive('/dashboard')} />
-              <NavItem to="/submissions" icon={<FolderKanban size={17} />} label="Submissions" active={isActive('/submissions')} badge="203" />
+              <NavItem to="/submissions" icon={<FolderKanban size={17} />} label="Submissions" active={isActive('/submissions')} />
               <NavItem to="/compare" icon={<SplitSquareHorizontal size={17} />} label="Code Analysis" active={isActive('/compare')} />
               <NavItem to="/network" icon={<Share2 size={17} />} label="Collaboration Graph" active={isActive('/network')} />
               <NavItem to="/reports" icon={<FileBarChart size={17} />} label="Reports & Evidence" active={isActive('/reports')} />
-              <NavItem to="/email-center" icon={<Mail size={17} />} label="Email Center" active={isActive('/email-center')} badge="Live" />
+              <NavItem to="/email-center" icon={<Mail size={17} />} label="Email Center" active={isActive('/email-center')} />
             </nav>
           </div>
 
           <div>
             <p className="text-[11px] font-bold text-[#707A72] uppercase tracking-wider mb-2 px-3">COURSES & REVIEWS</p>
             <nav className="space-y-1">
-              <NavItem to="/assignments" icon={<FileText size={17} />} label="Assignments" active={isActive('/assignments')} badge="7" />
+              <NavItem to="/assignments" icon={<FileText size={17} />} label="Assignments" active={isActive('/assignments')} />
               <NavItem to="/projects" icon={<FolderKanban size={17} />} label="Courses" active={isActive('/projects')} />
               <NavItem to="/users" icon={<Users size={17} />} label="Review Staff" active={isActive('/users')} />
             </nav>
@@ -112,11 +114,11 @@ const Sidebar = ({ isMobileOpen, onCloseMobile }: { isMobileOpen: boolean; onClo
         <div className="p-4 border-t border-[#E3E7E0] bg-[#F7F6F0]">
           <Link to="/profile" className="flex items-center gap-3 p-2 rounded-xl hover:bg-white transition-colors">
             <div className="w-8 h-8 rounded-full bg-[#174C3C] text-white flex items-center justify-center font-bold text-xs">
-              PV
+              {initials}
             </div>
             <div className="truncate">
-              <p className="text-xs font-bold text-[#202923] truncate">Prof. Verma</p>
-              <p className="text-[10px] text-[#707A72] truncate">Lead Academic Reviewer</p>
+              <p className="text-xs font-bold text-[#202923] truncate">{currentUser?.name ?? 'Account'}</p>
+              <p className="text-[10px] text-[#707A72] truncate">{currentUser?.email ?? ''}</p>
             </div>
           </Link>
         </div>
@@ -179,11 +181,6 @@ const Header = ({ onOpenCommandPalette, onOpenMobile }: { onOpenCommandPalette: 
         >
           <Mail size={13} /> Email Center
         </Link>
-
-        <button onClick={() => window.alert('You have 3 flagged cases awaiting viva review.')} className="relative text-[#707A72] hover:text-[#202923] transition-colors p-1">
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-[#B96F52]"></span>
-        </button>
 
         <div className="flex items-center gap-3 border-l border-[#E3E7E0] pl-4">
           <button 

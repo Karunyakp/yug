@@ -52,6 +52,9 @@ function readSharedReview(): SharedReview | null {
   ) {
     throw new Error('The prepared review information is incomplete. Return to Compare and prepare it again.');
   }
+  if (review.source === 'CodeGuard AI frontend demo' || review.assignment === 'Sorting assignment (demo)') {
+    throw new Error('This saved comparison used prefilled code and cannot be shown. Prepare a new comparison using your own code.');
+  }
   return {
     assignment: review.assignment,
     similarity: review.similarity,
@@ -102,7 +105,7 @@ export default function StudentResponse() {
         throw new Error('Saved response data is invalid. Clear this site’s browser storage and try again.');
       }
       const responses = [...parsed, {
-        reviewAssignment: review?.assignment ?? 'General response',
+        reviewAssignment: review?.assignment ?? '',
         response: text,
         savedAt: new Date().toISOString(),
       }];
@@ -131,7 +134,7 @@ export default function StudentResponse() {
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E4F1E9] text-[#174C3C]"><ShieldCheck size={23} /></div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#174C3C]">Student response · demo</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#174C3C]">Student response</p>
               <h1 className="mt-1 text-2xl font-semibold tracking-tight">Review the evidence and share your perspective</h1>
             </div>
           </div>
@@ -147,7 +150,10 @@ export default function StudentResponse() {
           ) : review ? (
             <section className="mt-6 rounded-2xl border border-[#E3E7E0] bg-[#F7F6F0] p-5">
               <h2 className="text-sm font-semibold">Prepared comparison context</h2>
-              <p className="mt-1 text-xs text-[#707A72]">{review.assignment} · {new Date(review.submittedAt).toLocaleString()}</p>
+              <p className="mt-1 text-xs text-[#707A72]">
+                {review.assignment && <>{review.assignment} · </>}
+                {new Date(review.submittedAt).toLocaleString()}
+              </p>
               <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {[
                   ['Combined local overlap', review.similarity],

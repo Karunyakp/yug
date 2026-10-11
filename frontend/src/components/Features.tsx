@@ -55,7 +55,7 @@ const reviewFeatures = [
   {
     icon: <MessageCircle size={21} />,
     title: 'Explain Your Code questions',
-    description: 'Generate neutral, code-grounded discussion questions with optional Gemini consent. The demo does not time or score answers, and responses do not prove authorship.',
+    description: 'Generate neutral, code-grounded discussion questions with optional Gemini consent. Questions are not timed or scored, and responses do not prove authorship.',
     link: '/compare',
     action: 'Explore the question generator',
   },
@@ -86,56 +86,56 @@ const workflowFeatures = [
   {
     icon: <ChartNoAxesCombined size={21} />,
     title: 'Overview dashboard',
-    description: 'See a snapshot of review activity and a visual queue for cases that need attention.',
+    description: 'Open the dashboard. Comparison history is not stored in this browser.',
     link: '/dashboard',
     action: 'Dashboard',
   },
   {
     icon: <FolderKanban size={21} />,
     title: 'Submissions and assignments',
-    description: 'Browse the demo submission list and assignment workspace, with assignment status and review context.',
+    description: 'Open the submission and assignment workspaces. These records are not stored in this browser.',
     link: '/submissions',
     action: 'Submissions',
   },
   {
     icon: <Filter size={21} />,
-    title: 'Submission filters and bulk demo actions',
-    description: 'Filter by overlap and review context, sort rows, select multiple samples, assign a demo reviewer, or add a common-pattern context tag. Changes stay in this browser.',
+    title: 'Submission workspace',
+    description: 'Review submission records when they are available.',
     link: '/submissions',
     action: 'Try submission tools',
   },
   {
     icon: <Network size={21} />,
     title: 'Similarity network view',
-    description: 'Explore a visual graph of example submissions and similarity links. The displayed records are sample data.',
+    description: 'View submission relationships when comparison records are available.',
     link: '/network',
     action: 'Network view',
   },
   {
     icon: <FileText size={21} />,
     title: 'Reports and exports',
-    description: 'Export report rows as CSV, print a report to PDF, and export local account names and emails without password hashes.',
+    description: 'Export account names and email addresses stored in this browser. Report data appears when records are available.',
     link: '/reports',
     action: 'Reports',
   },
   {
     icon: <UsersRound size={21} />,
     title: 'Review staff and profile',
-    description: 'Browse reviewer and profile screens designed to demonstrate a faculty review workspace.',
+    description: 'View accounts created in this browser and the current account profile.',
     link: '/users',
     action: 'Review staff',
   },
   {
     icon: <Settings2 size={21} />,
     title: 'Settings and preferences',
-    description: 'Explore preferences and the editable, browser-local activity log. It is not a secure or tamper-proof institutional audit trail.',
+    description: 'Review the editable, browser-local activity log. It is not a secure or tamper-proof institutional audit trail.',
     link: '/settings',
     action: 'Settings and activity log',
   },
   {
     icon: <KeyRound size={21} />,
-    title: 'Browser-local demo accounts',
-    description: 'Create a demo account and sign in in the same browser. Accounts do not sync and are not production authentication.',
+    title: 'Browser-local accounts',
+    description: 'Create an account and sign in in the same browser. Accounts do not sync across devices.',
     link: '/signup',
     action: 'Create an account',
   },
@@ -152,7 +152,7 @@ const connectedFeatures = [
   {
     icon: <Bot size={21} />,
     title: 'AI help assistant',
-    description: 'Ask about the demo or code-review concepts. Chat text and prior messages are sent to Google Gemini only after you check the consent box.',
+    description: 'Ask about CodeGuard or code-review concepts. Chat text and prior messages are sent to Google Gemini only after you check the consent box.',
     link: '/privacy',
     action: 'Privacy details',
   },
@@ -246,7 +246,7 @@ export default function Features() {
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
             ['Connected services', 'Gemini and EmailJS features require their respective public frontend configuration.'],
-            ['Sample records', 'Several dashboard, report, and network screens use illustrative demo data.'],
+            ['Workspace data', 'Workspace views do not include prefilled records. They show account information and results only when available.'],
           ].map(([title, description]) => (
             <div key={title} className="rounded-2xl border border-[#E3E7E0] bg-white p-5">
               <div className="mb-3 flex items-center gap-2 text-[#174C3C]"><Check size={17} /><h2 className="text-sm font-semibold text-[#202923]">{title}</h2></div>
